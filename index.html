@@ -384,6 +384,17 @@ footer{background:var(--navy-deep);border-top:1px solid var(--border-gold);paddi
   .stats-cards{grid-template-columns:1fr 1fr;}
   .admin-form-grid{grid-template-columns:1fr;}
   .occ-grid{grid-template-columns:repeat(2,1fr);}
+  .prod-grid{grid-template-columns:repeat(2,1fr);}
+  .form-row{grid-template-columns:1fr;}
+  .flash-bar{flex-direction:column;text-align:center;gap:.8rem;}
+  .footer-grid{grid-template-columns:1fr;}
+  .hero-h1{font-size:2.6rem;}
+}
+@media(max-width:480px){
+  .prod-grid{grid-template-columns:1fr!important;}
+  .cat-grid{grid-template-columns:repeat(2,1fr)!important;}
+  .trust-bar{grid-template-columns:1fr!important;}
+  .pay-box{padding:1.2rem;}
 }
 
 /* SCROLL REVEAL */
@@ -588,7 +599,7 @@ footer{background:var(--navy-deep);border-top:1px solid var(--border-gold);paddi
 </div>
 
 <!-- ANNOUNCEMENT BAR -->
-<div class="ann-bar" id="annBar">✦ FREE SHIPPING ABOVE ₹2999 &nbsp;|&nbsp; BIS HALLMARKED &nbsp;|&nbsp; 15-DAY RETURNS &nbsp;|&nbsp; PAN INDIA DELIVERY ✦</div>
+<div class="ann-bar" id="annBar">✦ FREE SHIPPING ABOVE ₹2999 &nbsp;|&nbsp; BIS HALLMARKED &nbsp;|&nbsp; NO RETURN / EXCHANGE POLICY &nbsp;|&nbsp; PAN INDIA DELIVERY ✦</div>
 
 <!-- NAVBAR -->
 <nav id="navbar">
@@ -649,7 +660,7 @@ footer{background:var(--navy-deep);border-top:1px solid var(--border-gold);paddi
   <div class="trust-bar">
     <div class="trust-item"><div class="trust-icon">🏅</div><div class="trust-title">BIS HALLMARKED</div><div class="trust-desc">Certified purity on every gold piece</div></div>
     <div class="trust-item"><div class="trust-icon">🔒</div><div class="trust-title">SECURE PAYMENTS</div><div class="trust-desc">UPI, Cards, EMI, COD — 100% encrypted</div></div>
-    <div class="trust-item"><div class="trust-icon">🔄</div><div class="trust-title">15-DAY RETURNS</div><div class="trust-desc">No questions asked, full refund</div></div>
+    <div class="trust-item"><div class="trust-icon">🔄</div><div class="trust-title">NO RETURN POLICY</div><div class="trust-desc">Jewellery ek baar biki toh wapas nahi hogi — please size/design soch ke order karein</div></div>
     <div class="trust-item"><div class="trust-icon">🚚</div><div class="trust-title">PAN INDIA SHIPPING</div><div class="trust-desc">Free above ₹2,999, insured delivery</div></div>
   </div>
 
@@ -796,7 +807,7 @@ footer{background:var(--navy-deep);border-top:1px solid var(--border-gold);paddi
         <p style="font-size:.83rem;color:var(--text-muted);line-height:1.8;margin-bottom:1.4rem">Every bride deserves to feel like royalty. Our bridal collection is crafted with centuries-old techniques, combining traditional Rajasthani artistry with contemporary elegance.</p>
         <div style="display:flex;gap:1rem;flex-wrap:wrap">
           <button class="btn-primary" onclick="showPage('custom')">BOOK CONSULTATION</button>
-          <button class="btn-outline">DOWNLOAD LOOKBOOK</button>
+          <button class="btn-outline" onclick="window.open('https://wa.me/918078604239?text=Hi+Kanikaara%2C+please+share+the+Bridal+Lookbook+2025','_blank')">REQUEST LOOKBOOK</button>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem">
@@ -831,9 +842,9 @@ footer{background:var(--navy-deep);border-top:1px solid var(--border-gold);paddi
         <div style="background:var(--navy);border:1px solid var(--border-gold);padding:2rem;margin-bottom:1.5rem">
           <div class="sec-label">BOOK CONSULTATION</div>
           <div class="consult-opts" style="margin-top:1rem;justify-content:flex-start;flex-wrap:wrap;gap:1rem">
-            <div class="consult-card" style="min-width:120px" onclick="window.open('https://wa.me/917400000053','_blank')"><div class="consult-icon">💬</div><div class="consult-title">WHATSAPP</div></div>
-            <div class="consult-card" style="min-width:120px"><div class="consult-icon">📞</div><div class="consult-title">CALL US</div></div>
-            <div class="consult-card" style="min-width:120px"><div class="consult-icon">📹</div><div class="consult-title">VIDEO CALL</div></div>
+            <div class="consult-card" style="min-width:120px" onclick="window.open('https://wa.me/918078604239','_blank')"><div class="consult-icon">💬</div><div class="consult-title">WHATSAPP</div></div>
+            <div class="consult-card" style="min-width:120px" onclick="window.location.href='tel:+918078604239'"><div class="consult-icon">📞</div><div class="consult-title">CALL US</div></div>
+            <div class="consult-card" style="min-width:120px" onclick="window.open('https://wa.me/918078604239?text=Hi+Kanikaara%2C+I+want+to+book+a+video+consultation','_blank')"><div class="consult-icon">📹</div><div class="consult-title">VIDEO CALL</div></div>
             <div class="consult-card" style="min-width:120px"><div class="consult-icon">📍</div><div class="consult-title">STORE VISIT</div></div>
           </div>
         </div>
@@ -913,8 +924,8 @@ footer{background:var(--navy-deep);border-top:1px solid var(--border-gold);paddi
   </div>
   <div class="sec sec-dark">
     <div class="consult-opts" style="justify-content:flex-start">
-      <div class="consult-card" onclick="window.open('https://wa.me/917400000053','_blank')"><div class="consult-icon">💬</div><div class="consult-title">WHATSAPP</div><div class="consult-desc">Chat instantly</div></div>
-      <div class="consult-card"><div class="consult-icon">📞</div><div class="consult-title">CALL US</div><div class="consult-desc">+91 74XX XXXX 53</div></div>
+      <div class="consult-card" onclick="window.open('https://wa.me/918078604239','_blank')"><div class="consult-icon">💬</div><div class="consult-title">WHATSAPP</div><div class="consult-desc">Chat instantly</div></div>
+      <div class="consult-card"><div class="consult-icon">📞</div><div class="consult-title">CALL US</div><div class="consult-desc">+91 80786 04239</div></div>
       <div class="consult-card"><div class="consult-icon">📧</div><div class="consult-title">EMAIL</div><div class="consult-desc">hello@kanikaara.com</div></div>
       <div class="consult-card"><div class="consult-icon">📍</div><div class="consult-title">STORE</div><div class="consult-desc">Jaipur, Rajasthan</div></div>
       <div class="consult-card"><div class="consult-icon">📸</div><div class="consult-title">INSTAGRAM</div><div class="consult-desc">@kanikaara.official</div></div>
@@ -1183,6 +1194,35 @@ footer{background:var(--navy-deep);border-top:1px solid var(--border-gold);paddi
         <!-- SETTINGS -->
         <div class="admin-section" id="adminSettings">
           <div class="admin-head"><div class="admin-title">SITE SETTINGS</div></div>
+
+          <!-- SALE MANAGER -->
+          <div style="background:var(--navy);border:1px solid var(--gold);padding:1.5rem;margin-bottom:1.5rem">
+            <div style="font-family:'Cinzel',serif;font-size:.8rem;letter-spacing:.15em;color:var(--gold);margin-bottom:1rem">⚡ SALE MANAGER</div>
+            <div class="admin-form-grid" style="gap:.8rem">
+              <div class="form-group">
+                <label class="form-label">SALE ON / OFF</label>
+                <div style="display:flex;align-items:center;gap:.8rem;margin-top:.3rem">
+                  <label class="toggle-switch"><input type="checkbox" id="saleEnabled" onchange="toggleSale(this.checked)"><span class="slider"></span></label>
+                  <span id="saleStatusTxt" style="font-size:.75rem;color:var(--text-muted)">Loading...</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">SALE % (kitna discount)</label>
+                <input type="number" class="form-input" id="salePercent" placeholder="e.g. 10" min="1" max="90" style="max-width:150px">
+              </div>
+              <div class="form-group">
+                <label class="form-label">SALE TITLE (banner pe dikhega)</label>
+                <input type="text" class="form-input" id="saleTitle" placeholder="e.g. Diwali Sale">
+              </div>
+              <div class="form-group">
+                <label class="form-label">SALE END DATE & TIME</label>
+                <input type="datetime-local" class="form-input" id="saleEndDate">
+              </div>
+            </div>
+            <button class="btn-primary" style="margin-top:1rem" onclick="saveSaleSettings()">💾 SALE SAVE KARO</button>
+          </div>
+
+          <!-- ANNOUNCEMENT & GOLD RATES -->
           <div id="adminSettingsForm"></div>
           <button class="btn-primary" style="margin-top:1rem" onclick="saveSettings()">SAVE ALL SETTINGS</button>
         </div>
@@ -1219,7 +1259,7 @@ footer{background:var(--navy-deep);border-top:1px solid var(--border-gold);paddi
       <div class="footer-col-title">POLICIES</div>
       <ul class="footer-links">
         <li><a href="#">Shipping Policy</a></li>
-        <li><a href="#">Return & Refund</a></li>
+        <li><a href="#" onclick="alert('KANIKAARA — NO RETURN POLICY\n\nHamari jewellery handcrafted hoti hai, isliye ek baar bech di toh wapas nahi li jaayegi.\n\nDamaged/wrong item aane pe hum personally handle karenge — WhatsApp karein: 8078604239')">No Return Policy ⚠️</a></li>
         <li><a href="#">Privacy Policy</a></li>
         <li><a href="#">Terms & Conditions</a></li>
         <li><a href="#">FAQs</a></li>
@@ -1228,10 +1268,10 @@ footer{background:var(--navy-deep);border-top:1px solid var(--border-gold);paddi
     <div>
       <div class="footer-col-title">CONTACT</div>
       <ul class="footer-links">
-        <li><a href="#">📞 +91 74XX XXXX 53</a></li>
+        <li><a href="tel:+918078604239">📞 +91 80786 04239</a></li>
         <li><a href="#">📧 hello@kanikaara.com</a></li>
         <li><a href="#">📍 Jaipur, Rajasthan</a></li>
-        <li><a href="#" onclick="window.open('https://wa.me/917400000053','_blank')">💬 WhatsApp</a></li>
+        <li><a href="#" onclick="window.open('https://wa.me/918078604239','_blank')">💬 WhatsApp</a></li>
       </ul>
       <div style="margin-top:1.2rem;background:var(--navy);border:1px solid var(--border-gold);padding:.8rem">
         <div style="font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.12em;color:var(--gold);margin-bottom:.3rem">TRADEMARK</div>
@@ -1308,45 +1348,57 @@ footer{background:var(--navy-deep);border-top:1px solid var(--border-gold);paddi
     <!-- Payment Method -->
     <div class="form-label" style="margin-bottom:.8rem">PAYMENT METHOD</div>
 
+    <!-- UPI QUICK PAY BUTTONS -->
+    <div style="background:rgba(201,168,76,.06);border:1px solid var(--border-gold);padding:1.2rem;margin-bottom:1rem">
+      <div class="form-label" style="margin-bottom:.8rem">⚡ DIRECT PAY — APP KHULEGI AUTOMATIC</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1rem">
+        <button onclick="openUPIApp('phonepe')" style="background:linear-gradient(135deg,#5f2d91,#7c3ac9);border:none;color:#fff;padding:.75rem;font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.1em;cursor:pointer;transition:opacity .2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">📱 PHONEPE</button>
+        <button onclick="openUPIApp('gpay')" style="background:linear-gradient(135deg,#1565c0,#1976d2);border:none;color:#fff;padding:.75rem;font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.1em;cursor:pointer;transition:opacity .2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">💳 GOOGLE PAY</button>
+        <button onclick="openUPIApp('paytm')" style="background:linear-gradient(135deg,#0096c7,#0077b6);border:none;color:#fff;padding:.75rem;font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.1em;cursor:pointer;transition:opacity .2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">💙 PAYTM</button>
+        <button onclick="openUPIApp('any')" style="background:linear-gradient(135deg,#2d6a4f,#40916c);border:none;color:#fff;padding:.75rem;font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.1em;cursor:pointer;transition:opacity .2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">🇮🇳 ANY UPI APP</button>
+      </div>
+      <div style="background:rgba(7,17,42,.7);border:1px solid var(--border-gold);padding:.8rem;text-align:center">
+        <div style="font-size:.6rem;color:var(--text-muted);margin-bottom:.2rem;letter-spacing:.1em">UPI ID</div>
+        <div style="font-family:'Cinzel',serif;font-size:.88rem;color:var(--gold);letter-spacing:.08em">8078604239@ibl</div>
+        <button onclick="copyUpiId()" style="background:none;border:1px solid var(--border-gold);color:var(--text-muted);padding:.2rem .7rem;font-size:.58rem;cursor:pointer;margin-top:.4rem;font-family:'Cinzel',serif;letter-spacing:.1em" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-muted)'">COPY UPI ID</button>
+      </div>
+      <div style="font-size:.68rem;color:var(--text-muted);text-align:center;margin-top:.6rem;line-height:1.6">App khulegi with <strong style="color:var(--gold-light)">exact total amount</strong> already filled ✦ Sirf confirm karo</div>
+    </div>
+
     <div class="pay-method selected" id="pm_upi" onclick="selectPayMethod('upi')">
-      <div class="pay-method-title">📱 UPI PAYMENT</div>
-      <div class="pay-method-desc">Pay via any UPI app — GPay, PhonePe, Paytm, BHIM</div>
+      <div class="pay-method-title">✅ UPI TRANSACTION CONFIRM KARO</div>
+      <div class="pay-method-desc">Payment karne ke baad UTR/Transaction ID daalo</div>
       <div id="upi_details" style="margin-top:1rem">
-        <div class="upi-qr">📱</div>
-        <div style="text-align:center;font-family:'Cinzel',serif;font-size:.8rem;color:var(--gold);margin-bottom:.5rem">UPI ID: kanikaara@upi</div>
-        <div style="text-align:center;font-size:.7rem;color:var(--text-muted)">Scan QR or use UPI ID above</div>
-        <div class="upload-btn" style="margin-top:1rem" onclick="document.getElementById('upiScreenshot').click()">
-          📎 Upload Payment Screenshot (Required)
-        </div>
+        <div class="form-group"><label class="form-label">UTR / TRANSACTION ID *</label><input class="form-input" id="pay_utr" placeholder="12-digit UTR number"></div>
+        <div class="upload-btn" style="margin-top:.5rem" onclick="document.getElementById('upiScreenshot').click()">📎 Payment Screenshot Upload Karo (optional)</div>
         <input type="file" id="upiScreenshot" accept="image/*" style="display:none" onchange="handleScreenshot(this)">
         <div id="screenshotName" style="font-size:.7rem;color:var(--success);margin-top:.4rem;text-align:center"></div>
-        <div class="form-group" style="margin-top:.8rem"><label class="form-label">UTR / TRANSACTION ID *</label><input class="form-input" id="pay_utr" placeholder="12-digit transaction ID"></div>
       </div>
     </div>
 
     <div class="pay-method" id="pm_bank" onclick="selectPayMethod('bank')">
-      <div class="pay-method-title">🏦 BANK TRANSFER (NEFT/IMPS)</div>
+      <div class="pay-method-title">🏦 BANK TRANSFER / NEFT</div>
       <div class="pay-method-desc">Direct bank transfer — safe and secure</div>
       <div id="bank_details" style="display:none;margin-top:1rem">
         <div class="bank-detail">
-          <strong>Account Name:</strong> Kanikaara Jewels<br>
-          <strong>Account No:</strong> XXXX XXXX XXXX 1234<br>
-          <strong>IFSC Code:</strong> SBIN0001234<br>
-          <strong>Bank:</strong> State Bank of India<br>
-          <strong>Branch:</strong> Jaipur Main Branch
+          <strong>Account Name:</strong> Kanikaara<br>
+          <strong>Phone / UPI:</strong> 8078604239<br>
+          <strong>UPI ID:</strong> 8078604239@ibl<br>
+          <strong>Bank:</strong> IndusInd Bank
         </div>
-        <div class="upload-btn" onclick="document.getElementById('bankScreenshot').click()">
-          📎 Upload Transfer Screenshot (Required)
-        </div>
+        <div class="form-group" style="margin-top:.8rem"><label class="form-label">TRANSACTION REFERENCE *</label><input class="form-input" id="pay_ref" placeholder="Transaction reference number"></div>
+        <div class="upload-btn" onclick="document.getElementById('bankScreenshot').click()">📎 Screenshot Upload Karo (optional)</div>
         <input type="file" id="bankScreenshot" accept="image/*" style="display:none" onchange="handleScreenshot(this)">
         <div id="bankScreenshotName" style="font-size:.7rem;color:var(--success);margin-top:.4rem;text-align:center"></div>
-        <div class="form-group" style="margin-top:.8rem"><label class="form-label">TRANSACTION REFERENCE *</label><input class="form-input" id="pay_ref" placeholder="Transaction reference number"></div>
       </div>
     </div>
 
     <div id="payOrderMsg" class="auth-success hidden" style="margin:.8rem 0"></div>
-    <button class="btn-primary" style="width:100%;margin-top:1rem" onclick="confirmOrder()">✦ CONFIRM ORDER</button>
-    <div style="font-size:.65rem;color:var(--text-muted);text-align:center;margin-top:.8rem">Order confirmed via WhatsApp within 2 hours • Need help? <span style="color:var(--gold);cursor:pointer" onclick="window.open('https://wa.me/917400000053','_blank')">Chat with us</span></div>
+    <button class="btn-primary" style="width:100%;margin-top:1rem" onclick="confirmOrder()">✦ ORDER CONFIRM KARO</button>
+    <div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);padding:.6rem .9rem;margin-top:.8rem;font-size:.68rem;color:#fca5a5;text-align:center;line-height:1.6">
+      ⚠️ <strong>NO RETURN POLICY:</strong> Order confirm karne se pehle size, design aur price achhe se check karein. Jewellery ek baar bech di toh wapas nahi hogi.
+    </div>
+    <div style="font-size:.65rem;color:var(--text-muted);text-align:center;margin-top:.6rem">Order WhatsApp pe confirm hoga 2 ghante mein • Help chahiye? <span style="color:var(--gold);cursor:pointer" onclick="window.open('https://wa.me/918078604239','_blank')">Chat with us</span></div>
   </div>
 </div>
 
@@ -1381,7 +1433,7 @@ footer{background:var(--navy-deep);border-top:1px solid var(--border-gold);paddi
   <button onclick="document.getElementById('pwaBanner').classList.add('hidden')" style="background:none;border:none;color:var(--text-muted);cursor:pointer">✕</button>
 </div>
 
-<a href="https://wa.me/917400000053" class="wa-btn" target="_blank" title="Chat on WhatsApp">💬</a>
+<a href="https://wa.me/918078604239" class="wa-btn" target="_blank" title="Chat on WhatsApp">💬</a>
 <script>
 // ══════════════════════════════════════════════════════════
 // SUPABASE INIT
@@ -1874,15 +1926,48 @@ function proceedCheckout() {
 }
 
 function openPayModal() {
-  const total = cartItems.reduce((a,i) => a + (i.products?.price||0) * i.quantity, 0) - couponDiscount;
-  const shipping = total > 2999 ? 0 : 99;
-  document.getElementById('payTotalAmt').textContent = '₹' + (total + shipping).toLocaleString('en-IN');
+  const subtotal = cartItems.reduce((a,i) => a + (i.products?.price||0) * i.quantity, 0);
+  const shipping = (subtotal - couponDiscount) > 2999 ? 0 : (subtotal > 0 ? 99 : 0);
+  const total = subtotal - couponDiscount + shipping;
+  document.getElementById('payTotalAmt').textContent = '₹' + total.toLocaleString('en-IN');
+  // Store total for UPI deep link
+  window._payTotal = total;
   // Autofill from profile
   if (currentProfile) {
     document.getElementById('pay_name').value = currentProfile.full_name || '';
     document.getElementById('pay_phone').value = currentProfile.phone || '';
   }
   document.getElementById('payModal').classList.remove('hidden');
+}
+
+// UPI Deep Link — app opens with exact amount
+function openUPIApp(app) {
+  const total = window._payTotal || 0;
+  if (!total || total <= 0) { toast('Pehle cart mein kuch add karo', 'error'); return; }
+  const upiId = '8078604239@ibl';
+  const name = encodeURIComponent('Kanikaara');
+  const note = encodeURIComponent('Kanikaara Jewellery Order');
+  const amt = total.toFixed(2);
+  let url = '';
+  if (app === 'phonepe') {
+    url = `phonepe://pay?pa=${upiId}&pn=${name}&am=${amt}&cu=INR&tn=${note}`;
+  } else if (app === 'gpay') {
+    url = `tez://upi/pay?pa=${upiId}&pn=${name}&am=${amt}&cu=INR&tn=${note}`;
+  } else if (app === 'paytm') {
+    url = `paytmmp://pay?pa=${upiId}&pn=${name}&am=${amt}&cu=INR&tn=${note}`;
+  } else {
+    // Generic UPI — works for BHIM and most apps
+    url = `upi://pay?pa=${upiId}&pn=${name}&am=${amt}&cu=INR&tn=${note}`;
+  }
+  // Try to open app; fallback to generic UPI link
+  const a = document.createElement('a');
+  a.href = url;
+  a.click();
+  toast(`₹${total.toLocaleString('en-IN')} ke saath ${app === 'any' ? 'UPI app' : app.toUpperCase()} khul raha hai...`, 'success');
+}
+
+function copyUpiId() {
+  navigator.clipboard.writeText('8078604239@ibl').then(() => toast('UPI ID copied! 📋', 'success'));
 }
 
 function closePayModal() {
@@ -1951,7 +2036,7 @@ async function confirmOrder() {
   const waParts = ['*New Order - KANIKAARA*', 'Order: '+orderNum, 'Customer: '+name, 'Phone: '+phone, 'Total: Rs.'+total.toLocaleString('en-IN'), 'Payment: '+selectedPayMethod.toUpperCase(), 'Txn ID: '+txnId, 'Address: '+addr+', '+city+', '+pin];
   const waMsg = encodeURIComponent(waParts.join('\n'));
   const msgEl = document.getElementById('payOrderMsg');
-  msgEl.innerHTML = "<strong>Order Placed!</strong><br>Order #" + orderNum + "<br>We will confirm via WhatsApp soon.<br><a href='https://wa.me/917400000053?text=" + waMsg + "'  target='_blank' style='color:var(--gold)'>Send order on WhatsApp</a>";
+  msgEl.innerHTML = "<strong>Order Placed!</strong><br>Order #" + orderNum + "<br>We will confirm via WhatsApp soon.<br><a href='https://wa.me/918078604239?text=" + waMsg + "'  target='_blank' style='color:var(--gold)'>Send order on WhatsApp</a>";
   msgEl.classList.remove('hidden');
   toast('Order placed! 🎉', 'success');
 }
@@ -2008,6 +2093,22 @@ async function loadSettings() {
     if (siteSettings.announcement_text) document.getElementById('annBar').textContent = siteSettings.announcement_text;
     if (siteSettings.gold_rate_22k) document.getElementById('r22k').textContent = '₹' + Number(siteSettings.gold_rate_22k).toLocaleString('en-IN');
     if (siteSettings.gold_rate_24k) document.getElementById('r24k').textContent = '₹' + Number(siteSettings.gold_rate_24k).toLocaleString('en-IN');
+    // Sale settings
+    const saleEnabled = siteSettings.sale_enabled === 'true';
+    const saleBar = document.getElementById('flashSaleBar');
+    if (saleBar) {
+      if (saleEnabled && siteSettings.sale_percent) {
+        saleBar.style.display = '';
+        const titleEl = saleBar.querySelector('.flash-title');
+        if (titleEl) titleEl.textContent = (siteSettings.sale_title || 'Special Sale') + ' — Extra ' + siteSettings.sale_percent + '% OFF';
+        // Update timer if end date set
+        if (siteSettings.sale_end_date) {
+          window._saleEndDate = new Date(siteSettings.sale_end_date).getTime();
+        }
+      } else {
+        saleBar.style.display = 'none';
+      }
+    }
   }
 }
 
@@ -2485,14 +2586,52 @@ async function loadAdminSubs() {
 }
 
 async function loadAdminSettings() {
-  const { data } = await sb.from('site_settings').select('*').order('key');
+  // Load sale settings
+  const { data: saleData } = await sb.from('site_settings').select('*').in('key',['sale_enabled','sale_percent','sale_title','sale_end_date']);
+  const saleMap = {};
+  (saleData||[]).forEach(s => saleMap[s.key] = s.value);
+  const saleEl = document.getElementById('saleEnabled');
+  if (saleEl) {
+    saleEl.checked = saleMap['sale_enabled'] === 'true';
+    document.getElementById('saleStatusTxt').textContent = saleEl.checked ? '✅ Sale openi' : '❌ Sale closed';
+    document.getElementById('salePercent').value = saleMap['sale_percent'] || '';
+    document.getElementById('saleTitle').value = saleMap['sale_title'] || '';
+    document.getElementById('saleEndDate').value = saleMap['sale_end_date'] || '';
+  }
+  // Load general settings
+  const { data } = await sb.from('site_settings').select('*').not('key','in','(sale_enabled,sale_percent,sale_title,sale_end_date)').order('key');
   const el = document.getElementById('adminSettingsForm');
-  el.innerHTML = (data||[]).map(s => `
+  el.innerHTML = '<div style="font-family:Cinzel,serif;font-size:.7rem;letter-spacing:.15em;color:var(--gold);margin-bottom:1rem">⚙️ GENERAL SETTINGS</div>'
+    + (data||[]).map(s => `
     <div class="form-group" style="margin-bottom:.8rem">
       <label class="form-label">${s.label || s.key}</label>
       <input type="text" class="form-input" id="setting_${s.key}" value="${s.value||''}" style="max-width:500px">
     </div>`).join('');
   el._settings = data || [];
+}
+
+function toggleSale(checked) {
+  document.getElementById('saleStatusTxt').textContent = checked ? '✅ Sale chal rahi hai' : '❌ Sale band hai';
+}
+
+async function saveSaleSettings() {
+  const enabled = document.getElementById('saleEnabled').checked;
+  const percent = document.getElementById('salePercent').value.trim();
+  const title = document.getElementById('saleTitle').value.trim();
+  const endDate = document.getElementById('saleEndDate').value;
+  if (enabled && (!percent || !title)) { toast('Sale % aur title dono daalo', 'error'); return; }
+  const upserts = [
+    { key: 'sale_enabled', value: String(enabled), label: 'Sale Enabled' },
+    { key: 'sale_percent', value: percent, label: 'Sale Discount %' },
+    { key: 'sale_title', value: title, label: 'Sale Title' },
+    { key: 'sale_end_date', value: endDate, label: 'Sale End Date' }
+  ];
+  for (const u of upserts) {
+    await sb.from('site_settings').upsert(u, { onConflict: 'key' });
+  }
+  toast(enabled ? `Sale live! ${percent}% off — "${title}" 🎉` : 'Sale band kar di ✅', 'success');
+  // Reload flash bar on website
+  loadSettings();
 }
 
 async function saveSettings() {
@@ -2543,7 +2682,7 @@ function whatsappInquiry() {
 *${currentInquiryProduct.name}*
 Price: Rs.${Number(currentInquiryProduct.price).toLocaleString('en-IN')}
 Please share more details.`);
-  window.open('https://wa.me/917400000053?text=' + msg, '_blank');
+  window.open('https://wa.me/918078604239?text=' + msg, '_blank');
   document.getElementById('inqModal').classList.add('hidden');
 }
 
@@ -2552,23 +2691,15 @@ function whatsappProduct(product) {
 *${product.name}*
 Price: Rs.${Number(product.price).toLocaleString('en-IN')}
 Please confirm availability.`);
-  window.open('https://wa.me/917400000053?text=' + msg, '_blank');
+  window.open('https://wa.me/918078604239?text=' + msg, '_blank');
 }
 
 // ══════════════════════════════════════════════════════════
 // FLASH SALE TIMER
 // ══════════════════════════════════════════════════════════
 function startFlashTimer() {
-  // Set sale end to 48 hours from page load
-  const stored = localStorage.getItem('kk_sale_end');
-  let saleEnd;
-  if (stored) {
-    saleEnd = parseInt(stored);
-  } else {
-    saleEnd = Date.now() + (48 * 60 * 60 * 1000);
-    localStorage.setItem('kk_sale_end', saleEnd);
-  }
   function tick() {
+    const saleEnd = window._saleEndDate || new Date('2025-12-31T23:59:59').getTime();
     const diff = saleEnd - Date.now();
     if (diff <= 0) {
       document.getElementById('flashSaleBar').style.display = 'none';
