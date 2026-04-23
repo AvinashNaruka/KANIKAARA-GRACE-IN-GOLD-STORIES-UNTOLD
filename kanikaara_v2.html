@@ -1,0 +1,2668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0d1b3e">
+<meta name="description" content="KANIKAARA - Grace in Gold, Stories Untold. Premium jewellery from Rajasthan.">
+<link rel="manifest" id="pwaManifest">
+<title>KANIKAARA — Grace in Gold, Stories Untold</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Cinzel:wght@400;500;600;700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --navy:#0d1b3e;--navy-deep:#07112a;--navy-mid:#152347;
+  --gold:#c9a84c;--gold-light:#e8c97a;--gold-bright:#f5d98b;--gold-dark:#9e7a2a;
+  --cream:#faf5eb;--cream-dark:#f0e6cc;--white:#ffffff;
+  --text-light:#e8dcc8;--text-muted:#9e8f7a;--border-gold:rgba(201,168,76,0.3);
+  --success:#4ade80;--danger:#ef4444;--warning:#f59e0b;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Raleway',sans-serif;background:var(--navy-deep);color:var(--cream);overflow-x:hidden;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--navy-deep);}::-webkit-scrollbar-thumb{background:var(--gold-dark);border-radius:3px;}
+
+/* UTILITY */
+.hidden{display:none!important;}
+.gold{color:var(--gold);}
+.sec-title{font-family:'Cinzel',serif;font-size:clamp(1.5rem,3vw,2.4rem);color:var(--gold);letter-spacing:.12em;text-align:center;margin-bottom:.4rem;}
+.sec-sub{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--text-muted);text-align:center;font-style:italic;margin-bottom:2rem;}
+.divider{width:70px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:.8rem auto 2rem;}
+.sec-label{display:inline-block;font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.4em;color:var(--gold-dark);border:1px solid var(--border-gold);padding:.25rem .9rem;margin-bottom:.8rem;}
+.btn-primary{display:inline-block;padding:.72rem 2rem;background:linear-gradient(135deg,var(--gold-dark),var(--gold),var(--gold-light));color:var(--navy-deep);font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:.18em;text-decoration:none;border:none;cursor:pointer;transition:all .3s;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);}
+.btn-primary:hover{background:linear-gradient(135deg,var(--gold),var(--gold-bright));transform:translateY(-2px);box-shadow:0 8px 25px rgba(201,168,76,.4);}
+.btn-outline{display:inline-block;padding:.65rem 1.8rem;border:1px solid var(--gold);color:var(--gold);font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.16em;text-decoration:none;background:transparent;cursor:pointer;transition:all .3s;}
+.btn-outline:hover{background:rgba(201,168,76,.1);}
+.btn-danger{background:var(--danger);color:#fff;border:none;padding:.5rem 1rem;cursor:pointer;font-size:.75rem;font-family:'Cinzel',serif;}
+.toast-container{position:fixed;bottom:5rem;right:1.5rem;z-index:9999;display:flex;flex-direction:column;gap:.5rem;}
+.toast{background:var(--navy-mid);border:1px solid var(--border-gold);padding:.8rem 1.2rem;font-size:.8rem;color:var(--cream);animation:slideIn .3s ease;max-width:280px;}
+.toast.success{border-color:var(--success);color:var(--success);}
+.toast.error{border-color:var(--danger);color:var(--danger);}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0;}to{transform:translateX(0);opacity:1;}}
+
+/* ANNOUNCEMENT */
+.ann-bar{background:linear-gradient(90deg,var(--gold-dark),var(--gold),var(--gold-dark));color:var(--navy-deep);text-align:center;padding:.45rem;font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.18em;}
+
+/* NAVBAR */
+nav{position:fixed;top:32px;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:.9rem 4%;background:rgba(7,17,42,.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--border-gold);transition:top .3s;}
+nav.scrolled{top:0;box-shadow:0 4px 30px rgba(0,0,0,.5);}
+.nav-logo{font-family:'Cinzel',serif;font-size:1.3rem;letter-spacing:.3em;color:var(--gold);text-decoration:none;display:flex;flex-direction:column;}
+.nav-logo span{font-size:.45rem;letter-spacing:.15em;color:var(--text-muted);}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{color:var(--text-light);text-decoration:none;font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.16em;transition:color .3s;position:relative;}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--gold);transition:width .3s;}
+.nav-links a:hover,.nav-links a.active{color:var(--gold);}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%;}
+.nav-icons{display:flex;gap:1rem;align-items:center;}
+.nav-icons button{background:none;border:none;color:var(--text-light);font-size:1rem;cursor:pointer;transition:color .3s;position:relative;}
+.nav-icons button:hover{color:var(--gold);}
+.badge{position:absolute;top:-6px;right:-6px;background:var(--gold);color:var(--navy-deep);font-size:.5rem;width:15px;height:15px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;}
+.hamburger{display:none;flex-direction:column;gap:4px;cursor:pointer;background:none;border:none;}
+.hamburger span{width:22px;height:1px;background:var(--gold);}
+
+/* PAGES */
+.page{display:none;}
+.page.active{display:block;}
+
+/* HERO */
+.hero{min-height:100vh;background:radial-gradient(ellipse at 30% 50%,rgba(201,168,76,.08),transparent 60%),radial-gradient(ellipse at 70% 30%,rgba(201,168,76,.05),transparent 50%),linear-gradient(160deg,var(--navy-deep),var(--navy),var(--navy-deep));display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding-top:100px;}
+.hero::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 80px,rgba(201,168,76,.025) 80px,rgba(201,168,76,.025) 81px),repeating-linear-gradient(90deg,transparent,transparent 80px,rgba(201,168,76,.025) 80px,rgba(201,168,76,.025) 81px);pointer-events:none;}
+.orb{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.12),transparent 70%);animation:pulseOrb 4s ease-in-out infinite;}
+.orb1{width:600px;height:600px;top:-100px;right:-100px;}
+.orb2{width:380px;height:380px;bottom:-50px;left:-50px;animation-delay:-2s;}
+@keyframes pulseOrb{0%,100%{transform:scale(1);opacity:.6;}50%{transform:scale(1.1);opacity:1;}}
+.hero-inner{text-align:center;z-index:1;max-width:780px;padding:2rem;animation:fadeUp .9s ease forwards;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(36px);}to{opacity:1;transform:translateY(0);}}
+.hero-eye{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.5em;color:var(--gold);margin-bottom:1.4rem;opacity:0;animation:fadeUp .9s .2s ease forwards;}
+.hero-h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.8rem,8vw,6rem);font-weight:300;line-height:1;color:var(--white);margin-bottom:.8rem;opacity:0;animation:fadeUp .9s .4s ease forwards;}
+.hero-h1 em{color:var(--gold);font-style:italic;display:block;}
+.hero-tag{font-family:'Cormorant Garamond',serif;font-size:clamp(.95rem,1.8vw,1.3rem);color:var(--text-muted);font-style:italic;letter-spacing:.08em;margin-bottom:2.2rem;opacity:0;animation:fadeUp .9s .6s ease forwards;}
+.hero-cta{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;opacity:0;animation:fadeUp .9s .8s ease forwards;}
+.scroll-hint{position:absolute;bottom:1.8rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.4rem;color:var(--text-muted);font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.3em;animation:bounce 2s ease infinite;}
+.scroll-hint::after{content:'';width:1px;height:36px;background:linear-gradient(to bottom,var(--gold),transparent);}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(7px);}}
+
+/* GOLD RATE BAR */
+.gold-bar{background:rgba(7,17,42,.92);border-top:1px solid var(--border-gold);border-bottom:1px solid var(--border-gold);padding:.55rem 2rem;display:flex;align-items:center;gap:2rem;overflow:hidden;}
+.gold-bar-label{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.2em;color:var(--gold);white-space:nowrap;}
+.ticker-wrap{overflow:hidden;flex:1;}
+.ticker{display:flex;gap:4rem;animation:ticker 28s linear infinite;width:max-content;}
+.ticker-item{display:flex;gap:.8rem;align-items:center;white-space:nowrap;font-family:'Cormorant Garamond',serif;font-size:.85rem;color:var(--text-light);}
+.ticker-item strong{color:var(--gold-light);}
+.up{color:var(--success);}
+@keyframes ticker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
+/* TRUST BAR */
+.trust-bar{background:linear-gradient(90deg,var(--navy-mid),var(--navy),var(--navy-mid));padding:2rem 5%;display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;border-bottom:1px solid var(--border-gold);}
+.trust-item{display:flex;flex-direction:column;align-items:center;gap:.5rem;padding:1rem;border:1px solid transparent;transition:all .3s;text-align:center;cursor:default;}
+.trust-item:hover{border-color:var(--border-gold);background:rgba(201,168,76,.04);}
+.trust-icon{font-size:1.5rem;}
+.trust-title{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.14em;color:var(--gold);}
+.trust-desc{font-size:.7rem;color:var(--text-muted);line-height:1.5;}
+
+/* SECTION */
+.sec{padding:4.5rem 5%;}
+.sec-dark{background:var(--navy-deep);}
+.sec-mid{background:var(--navy-mid);}
+.sec-navy{background:var(--navy);}
+
+/* CATEGORY GRID */
+.cat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;}
+.cat-card{position:relative;overflow:hidden;cursor:pointer;border:1px solid var(--border-gold);transition:all .4s;aspect-ratio:3/4;background:var(--navy);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:1.2rem;}
+.cat-card:hover{border-color:var(--gold);transform:translateY(-5px);box-shadow:0 15px 40px rgba(0,0,0,.4);}
+.cat-card::before{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(7,17,42,.9),transparent 60%);z-index:1;}
+.cat-bg{position:absolute;inset:0;background:linear-gradient(135deg,var(--navy),var(--navy-mid));}
+.cat-pat{position:absolute;inset:0;opacity:.05;background-image:repeating-linear-gradient(45deg,var(--gold) 0,var(--gold) 1px,transparent 0,transparent 50%);background-size:18px 18px;}
+.cat-em{position:absolute;top:50%;left:50%;transform:translate(-50%,-65%);font-size:2.8rem;z-index:0;opacity:.3;}
+.cat-name{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.16em;color:var(--gold);z-index:2;text-align:center;}
+.cat-count{font-size:.7rem;color:var(--text-muted);z-index:2;margin-top:.18rem;}
+
+/* PRODUCT GRID */
+.prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.4rem;}
+.prod-card{background:var(--navy);border:1px solid var(--border-gold);transition:all .4s;cursor:pointer;position:relative;overflow:hidden;}
+.prod-card:hover{border-color:var(--gold);transform:translateY(-5px);box-shadow:0 18px 45px rgba(0,0,0,.5);}
+.prod-img{width:100%;aspect-ratio:1;background:linear-gradient(135deg,var(--navy-mid),var(--navy-deep));display:flex;align-items:center;justify-content:center;font-size:3.2rem;position:relative;}
+.prod-badge{position:absolute;top:.7rem;left:0;background:linear-gradient(90deg,var(--gold-dark),var(--gold));color:var(--navy-deep);padding:.18rem .7rem;font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.12em;clip-path:polygon(0 0,100% 0,calc(100% - 7px) 100%,0 100%);}
+.prod-wish{position:absolute;top:.7rem;right:.7rem;background:rgba(7,17,42,.8);border:1px solid var(--border-gold);color:var(--text-muted);width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:.85rem;cursor:pointer;transition:all .3s;border-radius:50%;}
+.prod-wish:hover,.prod-wish.active{color:var(--danger);border-color:var(--danger);}
+.prod-info{padding:.9rem 1rem 1rem;}
+.prod-cat{font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.18em;color:var(--text-muted);margin-bottom:.25rem;}
+.prod-name{font-family:'Cormorant Garamond',serif;font-size:.95rem;color:var(--cream);margin-bottom:.25rem;line-height:1.3;}
+.prod-wt{font-size:.68rem;color:var(--text-muted);margin-bottom:.5rem;}
+.stars{color:var(--gold);font-size:.65rem;}
+.rat-count{font-size:.62rem;color:var(--text-muted);}
+.prod-price-row{display:flex;align-items:center;gap:.5rem;margin:.5rem 0 .7rem;}
+.prod-price{font-family:'Cinzel',serif;font-size:.95rem;color:var(--gold);}
+.prod-mrp{font-size:.7rem;color:var(--text-muted);text-decoration:line-through;}
+.prod-disc{font-size:.62rem;color:var(--success);font-family:'Cinzel',serif;}
+.prod-actions{display:flex;gap:.4rem;}
+.btn-cart{flex:1;padding:.45rem;background:transparent;border:1px solid var(--gold);color:var(--gold);font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.1em;cursor:pointer;transition:all .3s;}
+.btn-cart:hover{background:rgba(201,168,76,.1);}
+.btn-buy{flex:1;padding:.45rem;background:linear-gradient(135deg,var(--gold-dark),var(--gold));border:none;color:var(--navy-deep);font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.1em;cursor:pointer;transition:all .3s;}
+.btn-buy:hover{background:linear-gradient(135deg,var(--gold),var(--gold-bright));}
+
+/* OCCASION */
+.occ-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:.8rem;}
+.occ-card{text-align:center;padding:1.2rem .5rem;border:1px solid var(--border-gold);cursor:pointer;transition:all .3s;background:var(--navy);}
+.occ-card:hover{border-color:var(--gold);background:rgba(201,168,76,.05);transform:translateY(-3px);}
+.occ-icon{font-size:1.8rem;margin-bottom:.5rem;}
+.occ-name{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.1em;color:var(--text-light);}
+
+/* WHY */
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.8rem;}
+.why-card{padding:1.8rem;border-left:2px solid var(--border-gold);transition:border-color .3s;}
+.why-card:hover{border-color:var(--gold);}
+.why-num{font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:rgba(201,168,76,.15);font-weight:700;line-height:1;}
+.why-title{font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.14em;color:var(--gold);margin:.4rem 0;}
+.why-desc{font-size:.8rem;color:var(--text-muted);line-height:1.7;}
+
+/* REVIEWS */
+.rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;}
+.rev-card{background:var(--navy);border:1px solid var(--border-gold);padding:1.6rem;transition:all .3s;}
+.rev-card:hover{border-color:var(--gold);}
+.rev-q{font-size:2.8rem;color:rgba(201,168,76,.2);font-family:'Cormorant Garamond',serif;line-height:.5;margin-bottom:.4rem;}
+.rev-text{font-family:'Cormorant Garamond',serif;font-size:.9rem;color:var(--text-light);line-height:1.7;font-style:italic;margin-bottom:.8rem;}
+.rev-author{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.1em;color:var(--gold);}
+.rev-loc{font-size:.68rem;color:var(--text-muted);margin-top:.15rem;}
+
+/* CUSTOM ORDER FORM */
+.custom-grid{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:start;}
+.form-group{display:flex;flex-direction:column;gap:.35rem;margin-bottom:.8rem;}
+.form-label{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.16em;color:var(--gold);}
+.form-input,.form-select,.form-textarea{background:rgba(7,17,42,.7);border:1px solid var(--border-gold);color:var(--cream);padding:.65rem .9rem;font-family:'Raleway',sans-serif;font-size:.8rem;outline:none;transition:border-color .3s;width:100%;}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--gold);}
+.form-select option{background:var(--navy-deep);}
+.form-textarea{height:90px;resize:vertical;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
+
+/* INSTA GRID */
+.insta-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:.4rem;}
+.insta-item{aspect-ratio:1;background:var(--navy-mid);display:flex;align-items:center;justify-content:center;font-size:2rem;border:1px solid var(--border-gold);cursor:pointer;overflow:hidden;transition:all .3s;}
+.insta-item:hover{border-color:var(--gold);transform:scale(1.03);}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;}
+.about-vis{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
+.about-img{background:linear-gradient(135deg,var(--navy),var(--navy-deep));border:1px solid var(--border-gold);display:flex;align-items:center;justify-content:center;font-size:2.8rem;}
+.about-img-tall{grid-row:span 2;aspect-ratio:1/2;}
+.about-img-sq{aspect-ratio:1;}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin:1.5rem 0;}
+.stat-box{text-align:center;padding:.9rem;border:1px solid var(--border-gold);}
+.stat-num{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold);}
+.stat-label{font-size:.62rem;color:var(--text-muted);letter-spacing:.08em;margin-top:.15rem;}
+.about-para{font-size:.82rem;color:var(--text-muted);line-height:1.9;margin-bottom:.8rem;}
+
+/* BRIDAL */
+.bridal-banner{margin:0 5% 2.5rem;background:linear-gradient(135deg,var(--navy-mid),var(--navy));border:1px solid var(--border-gold);padding:3rem;display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;align-items:center;position:relative;overflow:hidden;}
+.bridal-banner::before{content:'';position:absolute;right:-60px;top:-60px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.1),transparent);}
+.bridal-eye{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.4em;color:var(--gold);margin-bottom:.9rem;}
+.bridal-h2{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,4vw,3.2rem);color:var(--white);line-height:1.1;margin-bottom:.9rem;}
+.bridal-h2 em{color:var(--gold);font-style:italic;}
+.bridal-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:2.5rem;}
+.bridal-card{background:var(--navy);border:1px solid var(--border-gold);padding:2rem;position:relative;overflow:hidden;transition:all .4s;}
+.bridal-card:hover{border-color:var(--gold);}
+.bridal-icon{font-size:2.2rem;margin-bottom:.8rem;}
+.bridal-title{font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:.15em;color:var(--gold);margin-bottom:.6rem;}
+.bridal-desc{font-family:'Cormorant Garamond',serif;font-size:.9rem;color:var(--text-muted);line-height:1.7;margin-bottom:1rem;}
+
+/* CONSULT */
+.consult-opts{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;margin-top:1.8rem;}
+.consult-card{background:var(--navy);border:1px solid var(--border-gold);padding:1.8rem 2.5rem;text-align:center;cursor:pointer;transition:all .3s;min-width:160px;}
+.consult-card:hover{border-color:var(--gold);transform:translateY(-3px);}
+.consult-icon{font-size:1.8rem;margin-bottom:.6rem;}
+.consult-title{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.14em;color:var(--gold);}
+.consult-desc{font-size:.7rem;color:var(--text-muted);margin-top:.3rem;}
+
+/* ── AUTH MODAL ── */
+.modal-overlay{position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,.85);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;}
+.modal-overlay.hidden{display:none;}
+.modal-box{background:var(--navy);border:1px solid var(--gold);padding:2.5rem;max-width:420px;width:92%;position:relative;animation:slideUp .4s ease;}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.modal-close{position:absolute;top:.8rem;right:.9rem;background:none;border:none;color:var(--text-muted);font-size:1.1rem;cursor:pointer;}
+.modal-close:hover{color:var(--gold);}
+.modal-title{font-family:'Cinzel',serif;font-size:1.1rem;letter-spacing:.15em;color:var(--gold);margin-bottom:.4rem;text-align:center;}
+.modal-sub{font-family:'Cormorant Garamond',serif;font-size:.9rem;color:var(--text-muted);text-align:center;font-style:italic;margin-bottom:1.8rem;}
+.auth-tabs{display:flex;border-bottom:1px solid var(--border-gold);margin-bottom:1.5rem;}
+.auth-tab{flex:1;padding:.6rem;background:none;border:none;color:var(--text-muted);font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.12em;cursor:pointer;transition:all .3s;}
+.auth-tab.active{color:var(--gold);border-bottom:2px solid var(--gold);}
+.auth-error{background:rgba(239,68,68,.1);border:1px solid var(--danger);color:var(--danger);padding:.6rem .9rem;font-size:.75rem;margin-bottom:1rem;}
+.auth-success{background:rgba(74,222,128,.1);border:1px solid var(--success);color:var(--success);padding:.6rem .9rem;font-size:.75rem;margin-bottom:1rem;}
+.auth-link{font-size:.72rem;color:var(--text-muted);text-align:center;margin-top:.8rem;}
+.auth-link span{color:var(--gold);cursor:pointer;}
+.auth-link span:hover{text-decoration:underline;}
+
+/* ── CART SIDEBAR ── */
+.cart-sidebar{position:fixed;right:0;top:0;bottom:0;width:380px;background:var(--navy);border-left:1px solid var(--border-gold);z-index:9997;transform:translateX(100%);transition:transform .35s ease;display:flex;flex-direction:column;}
+.cart-sidebar.open{transform:translateX(0);}
+.cart-header{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 1.5rem;border-bottom:1px solid var(--border-gold);}
+.cart-header-title{font-family:'Cinzel',serif;font-size:.9rem;letter-spacing:.15em;color:var(--gold);}
+.cart-close{background:none;border:none;color:var(--text-muted);font-size:1.2rem;cursor:pointer;}
+.cart-close:hover{color:var(--gold);}
+.cart-items-list{flex:1;overflow-y:auto;padding:1rem 1.5rem;}
+.cart-item{display:flex;gap:1rem;padding:.9rem 0;border-bottom:1px solid var(--border-gold);}
+.cart-item-img{width:60px;height:60px;background:var(--navy-mid);display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0;}
+.cart-item-info{flex:1;}
+.cart-item-name{font-family:'Cormorant Garamond',serif;font-size:.9rem;color:var(--cream);margin-bottom:.2rem;}
+.cart-item-price{font-family:'Cinzel',serif;font-size:.82rem;color:var(--gold);}
+.cart-item-qty{display:flex;align-items:center;gap:.5rem;margin-top:.4rem;}
+.qty-btn{background:rgba(201,168,76,.1);border:1px solid var(--border-gold);color:var(--gold);width:22px;height:22px;cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;}
+.qty-val{font-size:.8rem;color:var(--cream);min-width:20px;text-align:center;}
+.cart-remove{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:.75rem;margin-left:auto;}
+.cart-remove:hover{color:var(--danger);}
+.cart-empty{text-align:center;padding:3rem 1rem;color:var(--text-muted);}
+.cart-empty div{font-size:3rem;margin-bottom:1rem;}
+.cart-footer{padding:1.2rem 1.5rem;border-top:1px solid var(--border-gold);}
+.cart-coupon{display:flex;gap:0;margin-bottom:1rem;}
+.coupon-input{flex:1;background:rgba(7,17,42,.7);border:1px solid var(--border-gold);border-right:none;color:var(--cream);padding:.55rem .8rem;font-size:.75rem;outline:none;}
+.coupon-btn{background:linear-gradient(135deg,var(--gold-dark),var(--gold));border:none;color:var(--navy-deep);padding:0 1rem;font-family:'Cinzel',serif;font-size:.62rem;cursor:pointer;}
+.cart-total-row{display:flex;justify-content:space-between;margin-bottom:.5rem;font-size:.8rem;color:var(--text-muted);}
+.cart-grand{display:flex;justify-content:space-between;font-family:'Cinzel',serif;font-size:.95rem;color:var(--gold);margin:.8rem 0 1rem;padding-top:.6rem;border-top:1px solid var(--border-gold);}
+.cart-overlay-bg{position:fixed;inset:0;z-index:9996;background:rgba(0,0,0,.5);display:none;}
+.cart-overlay-bg.show{display:block;}
+
+/* ── POPUP ── */
+.popup-overlay{position:fixed;inset:0;z-index:9995;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;}
+.popup-overlay.hidden{display:none;}
+.popup-box{background:var(--navy);border:1px solid var(--gold);padding:2.5rem;max-width:400px;width:90%;text-align:center;position:relative;animation:slideUp .4s ease;}
+.popup-close{position:absolute;top:.8rem;right:.9rem;background:none;border:none;color:var(--text-muted);font-size:1.1rem;cursor:pointer;}
+.popup-close:hover{color:var(--gold);}
+.popup-gold{font-family:'Cinzel',serif;font-size:2.4rem;color:var(--gold);margin:.8rem 0;}
+.popup-input-row{display:flex;gap:0;margin-bottom:1rem;}
+.popup-input{flex:1;background:rgba(7,17,42,.8);border:1px solid var(--border-gold);border-right:none;color:var(--cream);padding:.65rem .9rem;font-size:.8rem;outline:none;font-family:'Raleway',sans-serif;}
+.popup-btn{background:linear-gradient(135deg,var(--gold-dark),var(--gold));border:none;color:var(--navy-deep);padding:0 1.1rem;font-family:'Cinzel',serif;font-size:.62rem;cursor:pointer;}
+.popup-skip{font-size:.68rem;color:var(--text-muted);cursor:pointer;text-decoration:underline;}
+
+/* ── USER DASHBOARD ── */
+.dash-grid{display:grid;grid-template-columns:220px 1fr;gap:1.5rem;padding:1.5rem 5%;min-height:80vh;}
+.dash-sidebar{background:var(--navy);border:1px solid var(--border-gold);padding:1.5rem;}
+.dash-user-info{text-align:center;margin-bottom:1.5rem;padding-bottom:1.2rem;border-bottom:1px solid var(--border-gold);}
+.dash-avatar{width:64px;height:64px;background:linear-gradient(135deg,var(--gold-dark),var(--gold));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto .8rem;}
+.dash-username{font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.12em;color:var(--gold);}
+.dash-email{font-size:.68rem;color:var(--text-muted);margin-top:.2rem;}
+.dash-nav{list-style:none;display:flex;flex-direction:column;gap:.3rem;}
+.dash-nav li{display:flex;align-items:center;gap:.7rem;padding:.6rem .8rem;font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.1em;color:var(--text-muted);cursor:pointer;transition:all .3s;border:1px solid transparent;}
+.dash-nav li:hover,.dash-nav li.active{color:var(--gold);border-color:var(--border-gold);background:rgba(201,168,76,.05);}
+.dash-content{background:var(--navy);border:1px solid var(--border-gold);padding:1.8rem;}
+.dash-section{display:none;}
+.dash-section.active{display:block;}
+.dash-head{font-family:'Cinzel',serif;font-size:1rem;letter-spacing:.15em;color:var(--gold);margin-bottom:1.5rem;padding-bottom:.8rem;border-bottom:1px solid var(--border-gold);}
+.orders-table{width:100%;border-collapse:collapse;}
+.orders-table th{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.12em;color:var(--gold);padding:.6rem;text-align:left;border-bottom:1px solid var(--border-gold);}
+.orders-table td{font-size:.75rem;color:var(--text-muted);padding:.7rem .6rem;border-bottom:1px solid rgba(201,168,76,.1);}
+.status-badge{display:inline-block;padding:.18rem .6rem;font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.1em;}
+.status-pending{background:rgba(245,158,11,.15);color:var(--warning);border:1px solid rgba(245,158,11,.3);}
+.status-delivered{background:rgba(74,222,128,.15);color:var(--success);border:1px solid rgba(74,222,128,.3);}
+.status-cancelled{background:rgba(239,68,68,.15);color:var(--danger);border:1px solid rgba(239,68,68,.3);}
+.status-processing{background:rgba(96,165,250,.15);color:#60a5fa;border:1px solid rgba(96,165,250,.3);}
+
+/* ── ADMIN PANEL ── */
+.admin-layout{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 60px);}
+.admin-sidebar{background:var(--navy-deep);border-right:1px solid var(--border-gold);padding:1.5rem 0;}
+.admin-logo{font-family:'Cinzel',serif;font-size:.85rem;letter-spacing:.2em;color:var(--gold);padding:.8rem 1.5rem;margin-bottom:1rem;border-bottom:1px solid var(--border-gold);}
+.admin-logo small{display:block;font-size:.5rem;color:var(--danger);letter-spacing:.2em;}
+.admin-nav{list-style:none;}
+.admin-nav li{display:flex;align-items:center;gap:.7rem;padding:.65rem 1.5rem;font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.1em;color:var(--text-muted);cursor:pointer;transition:all .3s;}
+.admin-nav li:hover,.admin-nav li.active{color:var(--gold);background:rgba(201,168,76,.06);border-left:2px solid var(--gold);}
+.admin-main{background:var(--navy-deep);padding:1.8rem;}
+.admin-section{display:none;}
+.admin-section.active{display:block;}
+.admin-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;padding-bottom:.8rem;border-bottom:1px solid var(--border-gold);}
+.admin-title{font-family:'Cinzel',serif;font-size:1rem;letter-spacing:.15em;color:var(--gold);}
+.stats-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;}
+.stat-card{background:var(--navy);border:1px solid var(--border-gold);padding:1.2rem;}
+.stat-card-label{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.14em;color:var(--text-muted);margin-bottom:.5rem;}
+.stat-card-val{font-family:'Cinzel',serif;font-size:1.5rem;color:var(--gold);}
+.stat-card-change{font-size:.68rem;color:var(--success);margin-top:.3rem;}
+.admin-table{width:100%;border-collapse:collapse;font-size:.75rem;}
+.admin-table th{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.12em;color:var(--gold);padding:.6rem;text-align:left;border-bottom:1px solid var(--border-gold);background:var(--navy-deep);}
+.admin-table td{color:var(--text-muted);padding:.65rem .6rem;border-bottom:1px solid rgba(201,168,76,.08);}
+.admin-table tr:hover td{background:rgba(201,168,76,.03);color:var(--text-light);}
+.admin-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.filter-bar{display:flex;gap:.8rem;margin-bottom:1.2rem;flex-wrap:wrap;align-items:center;}
+.filter-select,.filter-input{background:rgba(7,17,42,.7);border:1px solid var(--border-gold);color:var(--cream);padding:.45rem .7rem;font-size:.75rem;outline:none;}
+.filter-select option{background:var(--navy-deep);}
+.action-btn{background:none;border:1px solid var(--border-gold);color:var(--text-muted);padding:.25rem .6rem;cursor:pointer;font-size:.65rem;transition:all .3s;}
+.action-btn:hover{border-color:var(--gold);color:var(--gold);}
+.action-btn.del:hover{border-color:var(--danger);color:var(--danger);}
+.toggle-switch{position:relative;width:38px;height:20px;}
+.toggle-switch input{opacity:0;width:0;height:0;}
+.slider{position:absolute;cursor:pointer;inset:0;background:var(--navy-mid);transition:.3s;border-radius:20px;border:1px solid var(--border-gold);}
+.slider:before{content:'';position:absolute;width:14px;height:14px;left:2px;bottom:2px;background:var(--text-muted);transition:.3s;border-radius:50%;}
+input:checked + .slider{background:rgba(201,168,76,.2);}
+input:checked + .slider:before{transform:translateX(18px);background:var(--gold);}
+.pagination{display:flex;gap:.4rem;justify-content:center;margin-top:1.5rem;}
+.page-btn{background:var(--navy);border:1px solid var(--border-gold);color:var(--text-muted);width:32px;height:32px;cursor:pointer;font-family:'Cinzel',serif;font-size:.65rem;transition:all .3s;}
+.page-btn.active,.page-btn:hover{border-color:var(--gold);color:var(--gold);}
+
+/* WHATSAPP */
+.wa-btn{position:fixed;bottom:1.5rem;right:1.5rem;z-index:990;background:#25d366;color:#fff;width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;text-decoration:none;box-shadow:0 4px 18px rgba(37,211,102,.4);animation:waPulse 2.5s ease infinite;}
+@keyframes waPulse{0%,100%{box-shadow:0 4px 18px rgba(37,211,102,.4);}50%{box-shadow:0 4px 28px rgba(37,211,102,.7);}}
+
+/* FOOTER */
+footer{background:var(--navy-deep);border-top:1px solid var(--border-gold);padding:3.5rem 5% 1.8rem;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2.5rem;margin-bottom:2.5rem;}
+.footer-brand{font-family:'Cinzel',serif;font-size:1.3rem;letter-spacing:.3em;color:var(--gold);margin-bottom:.4rem;}
+.footer-tag{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.82rem;color:var(--text-muted);margin-bottom:.9rem;}
+.footer-about{font-size:.77rem;color:var(--text-muted);line-height:1.8;margin-bottom:1rem;}
+.footer-social{display:flex;gap:.7rem;}
+.social-btn{width:34px;height:34px;border:1px solid var(--border-gold);display:flex;align-items:center;justify-content:center;color:var(--text-muted);text-decoration:none;font-size:.85rem;transition:all .3s;border-radius:50%;}
+.social-btn:hover{border-color:var(--gold);color:var(--gold);}
+.footer-col-title{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.18em;color:var(--gold);margin-bottom:1rem;}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:.5rem;}
+.footer-links a{color:var(--text-muted);text-decoration:none;font-size:.75rem;transition:color .3s;}
+.footer-links a:hover{color:var(--gold);}
+.footer-bottom{border-top:1px solid var(--border-gold);padding-top:1.2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.footer-copy{font-size:.68rem;color:var(--text-muted);}
+.pay-icons{display:flex;gap:.5rem;flex-wrap:wrap;}
+.pay-badge{background:rgba(201,168,76,.08);border:1px solid var(--border-gold);padding:.18rem .55rem;font-family:'Cinzel',serif;font-size:.52rem;color:var(--text-muted);}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .cat-grid{grid-template-columns:repeat(3,1fr);}
+  .prod-grid{grid-template-columns:repeat(2,1fr);}
+  .footer-grid{grid-template-columns:1fr 1fr;}
+  .about-grid{grid-template-columns:1fr;}
+  .occ-grid{grid-template-columns:repeat(3,1fr);}
+  .insta-grid{grid-template-columns:repeat(3,1fr);}
+  .trust-bar{grid-template-columns:repeat(2,1fr);}
+  .bridal-banner{grid-template-columns:1fr;}
+  .custom-grid{grid-template-columns:1fr;}
+  .admin-layout{grid-template-columns:1fr;}
+  .admin-sidebar{display:none;}
+  .stats-cards{grid-template-columns:repeat(2,1fr);}
+  .dash-grid{grid-template-columns:1fr;}
+  .dash-sidebar{display:none;}
+}
+@media(max-width:768px){
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  .cat-grid{grid-template-columns:repeat(2,1fr);}
+  .bridal-cards{grid-template-columns:1fr;}
+  .why-grid{grid-template-columns:1fr;}
+  .rev-grid{grid-template-columns:1fr;}
+  .cart-sidebar{width:100%;}
+  .stats-cards{grid-template-columns:1fr 1fr;}
+  .admin-form-grid{grid-template-columns:1fr;}
+  .occ-grid{grid-template-columns:repeat(2,1fr);}
+}
+
+/* SCROLL REVEAL */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* FLASH SALE TIMER */
+.flash-bar{background:linear-gradient(135deg,#7f1d1d,#991b1b);border:1px solid rgba(239,68,68,.4);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;}
+.flash-label{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.2em;color:#fca5a5;}
+.flash-title{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:#fff;}
+.timer-boxes{display:flex;gap:.5rem;align-items:center;}
+.tbox{background:rgba(0,0,0,.4);border:1px solid rgba(239,68,68,.3);padding:.4rem .6rem;text-align:center;min-width:48px;}
+.tbox-num{font-family:'Cinzel',serif;font-size:1.2rem;color:#fca5a5;line-height:1;}
+.tbox-label{font-size:.5rem;color:rgba(252,165,165,.6);letter-spacing:.15em;}
+.tcolon{color:#fca5a5;font-size:1.2rem;font-weight:bold;}
+
+/* STOCK URGENCY */
+.stock-bar{height:4px;background:rgba(201,168,76,.15);border-radius:2px;margin:.4rem 0;}
+.stock-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--success),var(--warning));}
+.stock-txt{font-size:.65rem;color:var(--warning);}
+
+/* SIZE GUIDE MODAL */
+.size-modal{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:10000;display:flex;align-items:center;justify-content:center;padding:1rem;}
+.size-box{background:var(--navy);border:1px solid var(--border-gold);max-width:540px;width:100%;padding:2rem;max-height:85vh;overflow-y:auto;}
+.size-table{width:100%;border-collapse:collapse;margin-top:1rem;font-size:.78rem;}
+.size-table th{background:rgba(201,168,76,.15);color:var(--gold);padding:.6rem;text-align:center;font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.1em;}
+.size-table td{padding:.5rem;text-align:center;border-bottom:1px solid var(--border-gold);color:var(--text-light);}
+
+/* PAYMENT MODAL */
+.pay-modal{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:10000;display:flex;align-items:center;justify-content:center;padding:1rem;}
+.pay-box{background:var(--navy);border:1px solid var(--border-gold);max-width:520px;width:100%;padding:2rem;max-height:90vh;overflow-y:auto;}
+.pay-method{border:2px solid var(--border-gold);padding:1.2rem;margin-bottom:1rem;cursor:pointer;transition:all .3s;}
+.pay-method.selected{border-color:var(--gold);background:rgba(201,168,76,.06);}
+.pay-method-title{font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:.12em;color:var(--gold);}
+.pay-method-desc{font-size:.72rem;color:var(--text-muted);margin-top:.3rem;line-height:1.5;}
+.upi-qr{background:white;width:140px;height:140px;margin:1rem auto;display:flex;align-items:center;justify-content:center;font-size:3rem;border-radius:4px;}
+.bank-detail{background:rgba(201,168,76,.05);border:1px solid var(--border-gold);padding:1rem;margin:.5rem 0;font-size:.78rem;line-height:2;}
+.bank-detail strong{color:var(--gold);}
+.upload-btn{border:1px dashed var(--border-gold);padding:.8rem;text-align:center;cursor:pointer;transition:all .3s;font-size:.75rem;color:var(--text-muted);}
+.upload-btn:hover{border-color:var(--gold);color:var(--gold);}
+
+/* WHATSAPP ORDER BUTTON */
+.wa-order-btn{background:linear-gradient(135deg,#128c7e,#25d366);color:white;border:none;padding:.65rem 1.5rem;font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:.12em;cursor:pointer;display:flex;align-items:center;gap:.5rem;transition:all .3s;}
+.wa-order-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(37,211,102,.3);}
+
+/* INQUIRY MODAL */
+.inq-modal{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:10000;display:flex;align-items:center;justify-content:center;padding:1rem;}
+.inq-box{background:var(--navy);border:1px solid var(--border-gold);max-width:460px;width:100%;padding:2rem;}
+
+/* ORDER TRACKING */
+.track-timeline{display:flex;flex-direction:column;gap:0;}
+.track-step{display:flex;gap:1rem;padding:.8rem 0;position:relative;}
+.track-step::before{content:'';position:absolute;left:10px;top:32px;bottom:-8px;width:1px;background:var(--border-gold);}
+.track-step:last-child::before{display:none;}
+.track-dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--border-gold);background:var(--navy-deep);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:.6rem;}
+.track-dot.done{background:var(--gold);border-color:var(--gold);}
+.track-dot.current{background:var(--navy);border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.2);}
+.track-info{flex:1;}
+.track-title{font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:.1em;color:var(--cream);}
+.track-date{font-size:.65rem;color:var(--text-muted);}
+
+/* LOYALTY POINTS */
+.loyalty-card{background:linear-gradient(135deg,var(--navy-mid),var(--navy));border:1px solid var(--border-gold);padding:1.5rem;text-align:center;}
+.loyalty-pts{font-family:'Cinzel',serif;font-size:2.5rem;color:var(--gold);}
+.loyalty-label{font-size:.65rem;color:var(--text-muted);letter-spacing:.2em;}
+.loyalty-bar{height:6px;background:rgba(201,168,76,.15);border-radius:3px;margin:1rem 0;}
+.loyalty-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold-dark),var(--gold));}
+
+/* REFER SECTION */
+.refer-box{background:var(--navy);border:1px dashed var(--border-gold);padding:1.5rem;text-align:center;}
+.refer-code{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold);letter-spacing:.3em;border:1px solid var(--border-gold);padding:.5rem 2rem;display:inline-block;margin:1rem 0;}
+
+/* ADMIN CHART */
+.chart-wrap{background:var(--navy);border:1px solid var(--border-gold);padding:1.5rem;margin-bottom:1.5rem;}
+.chart-bar-row{display:flex;align-items:center;gap:.8rem;margin-bottom:.6rem;font-size:.75rem;}
+.chart-bar-label{width:60px;color:var(--text-muted);text-align:right;font-size:.65rem;}
+.chart-bar-bg{flex:1;height:20px;background:rgba(201,168,76,.1);border-radius:2px;overflow:hidden;}
+.chart-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold-dark),var(--gold));border-radius:2px;transition:width .8s ease;}
+.chart-bar-val{width:60px;color:var(--gold);font-size:.65rem;font-family:'Cinzel',serif;}
+
+/* LOW STOCK BADGE */
+.low-stock{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#fca5a5;font-size:.58rem;padding:.15rem .5rem;letter-spacing:.1em;font-family:'Cinzel',serif;}
+
+/* INSTALL PWA BANNER */
+.pwa-banner{position:fixed;bottom:80px;left:1rem;right:1rem;background:var(--navy-mid);border:1px solid var(--border-gold);padding:1rem 1.2rem;display:flex;align-items:center;gap:1rem;z-index:9000;max-width:380px;}
+.pwa-banner.hidden{display:none!important;}
+
+/* PRODUCT INQUIRY BTN */
+.inq-btn{background:none;border:1px solid var(--border-gold);color:var(--text-muted);padding:.45rem 1rem;font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.1em;cursor:pointer;transition:all .3s;}
+.inq-btn:hover{border-color:var(--gold);color:var(--gold);}
+
+</style>
+</head>
+<body>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- EMAIL POPUP -->
+<div class="popup-overlay hidden" id="emailPopup">
+  <div class="popup-box">
+    <button class="popup-close" onclick="closePopup()">✕</button>
+    <div style="font-size:2rem">💛</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--white);margin:.5rem 0">Welcome to Kanikaara</div>
+    <div class="popup-gold">10% OFF</div>
+    <div style="font-size:.8rem;color:var(--text-muted);margin-bottom:1.4rem;line-height:1.6">on your first order — join our community of jewellery lovers</div>
+    <div class="popup-input-row">
+      <input type="email" class="popup-input" id="popupEmail" placeholder="your@email.com">
+      <button class="popup-btn" onclick="subscribeEmail()">CLAIM</button>
+    </div>
+    <div class="popup-skip" onclick="closePopup()">No thanks, I'll pay full price</div>
+  </div>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay hidden" id="authModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeAuth()">✕</button>
+    <div class="modal-title">KANIKAARA</div>
+    <div class="modal-sub">Your jewellery journey awaits</div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchTab('login')">SIGN IN</button>
+      <button class="auth-tab" onclick="switchTab('signup')">CREATE ACCOUNT</button>
+    </div>
+    <!-- Login -->
+    <div id="loginForm">
+      <div id="loginErr" class="auth-error hidden"></div>
+      <div class="form-group">
+        <label class="form-label">EMAIL</label>
+        <input type="email" class="form-input" id="loginEmail" placeholder="your@email.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">PASSWORD</label>
+        <input type="password" class="form-input" id="loginPass" placeholder="••••••••">
+      </div>
+      <button class="btn-primary" style="width:100%;margin-top:.5rem" onclick="handleLogin()">SIGN IN</button>
+      <div style="text-align:right;margin-top:.6rem">
+        <span style="font-size:.7rem;color:var(--gold);cursor:pointer" onclick="showForgotPass()">Forgot password?</span>
+      </div>
+      <div class="auth-link">New here? <span onclick="switchTab('signup')">Create an account</span></div>
+    </div>
+    <!-- Signup -->
+    <div id="signupForm" class="hidden">
+      <div id="signupErr" class="auth-error hidden"></div>
+      <div id="signupOk" class="auth-success hidden"></div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">FULL NAME</label>
+          <input type="text" class="form-input" id="signupName" placeholder="Your name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">MOBILE</label>
+          <input type="tel" class="form-input" id="signupPhone" placeholder="+91 XXXXX XXXXX">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">EMAIL</label>
+        <input type="email" class="form-input" id="signupEmail" placeholder="your@email.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">PASSWORD</label>
+        <input type="password" class="form-input" id="signupPass" placeholder="Min 6 characters">
+      </div>
+      <button class="btn-primary" style="width:100%;margin-top:.5rem" onclick="handleSignup()">CREATE ACCOUNT</button>
+      <div class="auth-link">Already have an account? <span onclick="switchTab('login')">Sign in</span></div>
+    </div>
+    <!-- Forgot -->
+    <div id="forgotForm" class="hidden">
+      <div id="forgotMsg" class="auth-success hidden"></div>
+      <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:1rem">Enter your email and we'll send a reset link.</p>
+      <div class="form-group">
+        <label class="form-label">EMAIL</label>
+        <input type="email" class="form-input" id="forgotEmail" placeholder="your@email.com">
+      </div>
+      <button class="btn-primary" style="width:100%;margin-top:.5rem" onclick="handleForgot()">SEND RESET LINK</button>
+      <div class="auth-link"><span onclick="switchTab('login')">← Back to sign in</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- CART SIDEBAR -->
+<div class="cart-overlay-bg" id="cartBg" onclick="toggleCart()"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <div class="cart-header-title">YOUR BAG <span id="cartCount" style="color:var(--text-muted);font-size:.7rem"></span></div>
+    <button class="cart-close" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-items-list" id="cartItemsList">
+    <div class="cart-empty"><div>🛍️</div>Your bag is empty<br><small style="font-size:.72rem">Add some jewellery to get started</small></div>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-coupon">
+      <input type="text" class="coupon-input" id="couponInput" placeholder="Enter coupon code">
+      <button class="coupon-btn" onclick="applyCoupon()">APPLY</button>
+    </div>
+    <div class="cart-total-row"><span>Subtotal</span><span id="cartSubtotal">₹0</span></div>
+    <div class="cart-total-row"><span>Discount</span><span id="cartDiscount" style="color:var(--success)">-₹0</span></div>
+    <div class="cart-total-row"><span>Shipping</span><span id="cartShipping">FREE</span></div>
+    <div class="cart-grand"><span>TOTAL</span><span id="cartTotal">₹0</span></div>
+    <button class="btn-primary" style="width:100%" onclick="proceedCheckout()">PROCEED TO CHECKOUT</button>
+  </div>
+</div>
+
+<!-- ANNOUNCEMENT BAR -->
+<div class="ann-bar" id="annBar">✦ FREE SHIPPING ABOVE ₹2999 &nbsp;|&nbsp; BIS HALLMARKED &nbsp;|&nbsp; 15-DAY RETURNS &nbsp;|&nbsp; PAN INDIA DELIVERY ✦</div>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a href="#" class="nav-logo" onclick="showPage('home')">KANIKAARA<span>GRACE IN GOLD, STORIES UNTOLD</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#" onclick="showPage('home')" class="active" id="navHome">HOME</a></li>
+    <li><a href="#" onclick="showPage('shop')" id="navShop">SHOP</a></li>
+    <li><a href="#" onclick="showPage('bridal')" id="navBridal">BRIDAL</a></li>
+    <li><a href="#" onclick="showPage('custom')" id="navCustom">CUSTOM ORDERS</a></li>
+    <li><a href="#" onclick="showPage('about')" id="navAbout">ABOUT US</a></li>
+    <li><a href="#" onclick="showPage('contact')" id="navContact">CONTACT</a></li>
+    <li id="adminNavItem" class="hidden"><a href="#" onclick="showPage('admin')" id="navAdmin" style="color:var(--danger)">ADMIN ⚙</a></li>
+  </ul>
+  <div class="nav-icons">
+    <button onclick="toggleSearch()" title="Search">🔍</button>
+    <button onclick="showPage('wishlist')" title="Wishlist" style="position:relative">♡<span class="badge hidden" id="wishBadge">0</span></button>
+    <button onclick="toggleCart()" title="Cart" style="position:relative">🛒<span class="badge" id="cartBadge">0</span></button>
+    <button onclick="handleAuthBtn()" id="authBtn" title="Account">👤</button>
+  </div>
+  <button class="hamburger" onclick="toggleMobileMenu()"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- ═══════════════════════════════════════ HOME PAGE ═══════════════════════════════════════ -->
+<div class="page active" id="homePage">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="orb orb1"></div><div class="orb orb2"></div>
+    <div class="hero-inner">
+      <div class="hero-eye">✦ JAIPUR, RAJASTHAN — SINCE 2024 ✦</div>
+      <h1 class="hero-h1">Grace in Gold,<em>Stories Untold</em></h1>
+      <p class="hero-tag">Handcrafted jewellery that carries centuries of artistry.<br>Wear your story with Kanikaara.</p>
+      <div class="hero-cta">
+        <button class="btn-primary" onclick="showPage('shop')">EXPLORE COLLECTIONS</button>
+        <button class="btn-outline" onclick="showPage('bridal')">BRIDAL LOOKBOOK</button>
+      </div>
+    </div>
+    <div class="scroll-hint">SCROLL</div>
+  </section>
+
+  <!-- GOLD RATE BAR -->
+  <div class="gold-bar">
+    <div class="gold-bar-label">⬡ GOLD RATE</div>
+    <div class="ticker-wrap"><div class="ticker" id="goldTicker">
+      <div class="ticker-item">22K Gold (10g) <strong id="r22k">₹67,450</strong> <span class="up">▲</span></div>
+      <div class="ticker-item">24K Gold (10g) <strong id="r24k">₹73,200</strong> <span class="up">▲</span></div>
+      <div class="ticker-item">Silver (1kg) <strong>₹86,500</strong> <span class="up">▲</span></div>
+      <div class="ticker-item">Diamond (1ct) <strong>₹3,20,000</strong></div>
+      <div class="ticker-item">Updated <strong>Today</strong></div>
+      <!-- duplicates for loop -->
+      <div class="ticker-item">22K Gold (10g) <strong>₹67,450</strong> <span class="up">▲</span></div>
+      <div class="ticker-item">24K Gold (10g) <strong>₹73,200</strong> <span class="up">▲</span></div>
+      <div class="ticker-item">Silver (1kg) <strong>₹86,500</strong> <span class="up">▲</span></div>
+      <div class="ticker-item">Diamond (1ct) <strong>₹3,20,000</strong></div>
+    </div></div>
+  </div>
+
+  <!-- TRUST BAR -->
+  <div class="trust-bar">
+    <div class="trust-item"><div class="trust-icon">🏅</div><div class="trust-title">BIS HALLMARKED</div><div class="trust-desc">Certified purity on every gold piece</div></div>
+    <div class="trust-item"><div class="trust-icon">🔒</div><div class="trust-title">SECURE PAYMENTS</div><div class="trust-desc">UPI, Cards, EMI, COD — 100% encrypted</div></div>
+    <div class="trust-item"><div class="trust-icon">🔄</div><div class="trust-title">15-DAY RETURNS</div><div class="trust-desc">No questions asked, full refund</div></div>
+    <div class="trust-item"><div class="trust-icon">🚚</div><div class="trust-title">PAN INDIA SHIPPING</div><div class="trust-desc">Free above ₹2,999, insured delivery</div></div>
+  </div>
+
+
+  <!-- FLASH SALE TIMER -->
+  <div class="flash-bar" id="flashSaleBar">
+    <div>
+      <div class="flash-label">⚡ LIMITED TIME OFFER</div>
+      <div class="flash-title">Festival Collection Sale — Extra 8% OFF</div>
+    </div>
+    <div class="timer-boxes">
+      <div class="tbox"><div class="tbox-num" id="th">00</div><div class="tbox-label">HRS</div></div>
+      <div class="tcolon">:</div>
+      <div class="tbox"><div class="tbox-num" id="tm">00</div><div class="tbox-label">MIN</div></div>
+      <div class="tcolon">:</div>
+      <div class="tbox"><div class="tbox-num" id="ts">00</div><div class="tbox-label">SEC</div></div>
+    </div>
+    <button class="btn-primary" style="font-size:.6rem;padding:.5rem 1.2rem" onclick="showPage('shop')">SHOP NOW</button>
+  </div>
+
+  <!-- SHOP BY CATEGORY -->
+  <section class="sec sec-dark">
+    <div style="text-align:center"><div class="sec-label">EXPLORE</div></div>
+    <h2 class="sec-title">Shop By Category</h2>
+    <p class="sec-sub">Discover our curated world of fine jewellery</p>
+    <div class="divider"></div>
+    <div class="cat-grid" id="homeCatGrid">
+      <!-- Rendered by JS -->
+    </div>
+  </section>
+
+  <!-- SHOP BY OCCASION -->
+  <section class="sec sec-mid">
+    <div style="text-align:center"><div class="sec-label">OCCASIONS</div></div>
+    <h2 class="sec-title">Shop By Occasion</h2>
+    <p class="sec-sub">Every moment deserves the perfect jewellery</p>
+    <div class="divider"></div>
+    <div class="occ-grid">
+      <div class="occ-card reveal"><div class="occ-icon">👰</div><div class="occ-name">WEDDING</div></div>
+      <div class="occ-card reveal"><div class="occ-icon">💍</div><div class="occ-name">ENGAGEMENT</div></div>
+      <div class="occ-card reveal"><div class="occ-icon">🪔</div><div class="occ-name">DIWALI</div></div>
+      <div class="occ-card reveal"><div class="occ-icon">🎁</div><div class="occ-name">GIFTING</div></div>
+      <div class="occ-card reveal"><div class="occ-icon">🎓</div><div class="occ-name">GRADUATION</div></div>
+      <div class="occ-card reveal"><div class="occ-icon">💝</div><div class="occ-name">ANNIVERSARY</div></div>
+    </div>
+  </section>
+
+  <!-- FEATURED PRODUCTS -->
+  <section class="sec sec-dark">
+    <div style="text-align:center"><div class="sec-label">POPULAR</div></div>
+    <h2 class="sec-title">Bestsellers</h2>
+    <p class="sec-sub">Our most loved pieces, chosen by thousands of customers</p>
+    <div class="divider"></div>
+    <div class="prod-grid" id="featuredProds">
+      <div style="grid-column:span 4;text-align:center;padding:3rem;color:var(--text-muted)">Loading products…</div>
+    </div>
+    <div style="text-align:center;margin-top:2rem">
+      <button class="btn-outline" onclick="showPage('shop')">VIEW ALL PRODUCTS</button>
+    </div>
+  </section>
+
+  <!-- WHY KANIKAARA -->
+  <section class="sec sec-mid">
+    <div style="text-align:center"><div class="sec-label">OUR PROMISE</div></div>
+    <h2 class="sec-title">Why Choose Kanikaara</h2>
+    <div class="divider"></div>
+    <div class="why-grid">
+      <div class="why-card reveal"><div class="why-num">01</div><div class="why-title">CERTIFIED AUTHENTICITY</div><div class="why-desc">All gold jewellery carries BIS hallmark. Diamond pieces come with IGI/GIA certification. Every stone, every gram — verified and documented.</div></div>
+      <div class="why-card reveal"><div class="why-num">02</div><div class="why-title">RAJASTHANI ARTISTRY</div><div class="why-desc">Our jewellery draws from centuries of Jaipur's gemstone and metalwork heritage. Each piece is crafted by skilled artisans keeping traditions alive.</div></div>
+      <div class="why-card reveal"><div class="why-num">03</div><div class="why-title">TRANSPARENT PRICING</div><div class="why-desc">No hidden making charges. Gold weight, stone weight, and making charges shown separately. Know exactly what you're paying for.</div></div>
+      <div class="why-card reveal"><div class="why-num">04</div><div class="why-title">LIFETIME SUPPORT</div><div class="why-desc">Complimentary cleaning, re-polishing and minor repair for life. Your Kanikaara jewellery is an investment we stand behind forever.</div></div>
+      <div class="why-card reveal"><div class="why-num">05</div><div class="why-title">SECURE & INSURED DELIVERY</div><div class="why-desc">All orders above ₹5,000 are shipped with full insurance. GPS tracked, tamper-proof packaging with signature confirmation.</div></div>
+      <div class="why-card reveal"><div class="why-num">06</div><div class="why-title">CUSTOM CREATIONS</div><div class="why-desc">Design your dream jewellery with us. Share your vision, get a 3D preview, and receive your one-of-a-kind piece in 15–21 working days.</div></div>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="sec sec-dark">
+    <div style="text-align:center"><div class="sec-label">CUSTOMER LOVE</div></div>
+    <h2 class="sec-title">What Our Customers Say</h2>
+    <div class="divider"></div>
+    <div class="rev-grid" id="reviewsGrid">
+      <div class="rev-card reveal"><div class="rev-q">"</div><div class="rev-text">I ordered a custom bridal set for my wedding. The craftsmanship was breathtaking and delivery was on time. Every guest asked where I got my jewellery. Kanikaara has a customer for life!</div><div class="stars">★★★★★</div><div class="rev-author">PRIYA MEHRA</div><div class="rev-loc">Mumbai, Maharashtra</div></div>
+      <div class="rev-card reveal"><div class="rev-q">"</div><div class="rev-text">Bought diamond earrings as an anniversary gift. They came with IGI certificate, beautiful box, and a handwritten note. The quality is exceptional for the price. Highly recommend!</div><div class="stars">★★★★★</div><div class="rev-author">RAHUL KAPOOR</div><div class="rev-loc">Delhi, NCR</div></div>
+      <div class="rev-card reveal"><div class="rev-q">"</div><div class="rev-text">The Meenakari jhumkas I ordered are absolutely stunning. Lightweight, vibrant colors, perfect finish. Ordered 3 more pairs after seeing the quality. Kanikaara never disappoints!</div><div class="stars">★★★★★</div><div class="rev-author">SNEHA AGARWAL</div><div class="rev-loc">Jaipur, Rajasthan</div></div>
+    </div>
+  </section>
+
+  <!-- INSTAGRAM -->
+  <section class="sec sec-mid">
+    <div style="text-align:center"><div class="sec-label">SOCIAL</div></div>
+    <h2 class="sec-title">Seen on Instagram</h2>
+    <p class="sec-sub">Follow @kanikaara.official for daily inspiration</p>
+    <div class="divider"></div>
+    <div class="insta-grid">
+      <div class="insta-item">💍</div><div class="insta-item">✨</div><div class="insta-item">💛</div>
+      <div class="insta-item">👑</div><div class="insta-item">💎</div><div class="insta-item">🌸</div>
+      <div class="insta-item">🔮</div><div class="insta-item">💫</div><div class="insta-item">🪔</div>
+      <div class="insta-item">👰</div><div class="insta-item">🌟</div><div class="insta-item">💠</div>
+    </div>
+    <div style="text-align:center;margin-top:1.8rem"><a href="#" class="btn-outline">FOLLOW ON INSTAGRAM</a></div>
+  </section>
+</div>
+<!-- END HOME -->
+
+<!-- ═══════════════════════════════════════ SHOP PAGE ═══════════════════════════════════════ -->
+<div class="page" id="shopPage">
+  <div style="padding:7rem 5% 2rem;background:var(--navy-deep)">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem">
+      <div>
+        <div class="sec-label">CATALOGUE</div>
+        <h2 class="sec-title" style="text-align:left">All Jewellery</h2>
+      </div>
+      <button class="btn-outline" style="font-size:.6rem;padding:.4rem 1rem" onclick="openSizeGuide()">📏 SIZE GUIDE</button>
+    </div>
+    <div style="display:flex;gap:1rem;margin-top:1.5rem;flex-wrap:wrap;align-items:center">
+      <select class="filter-select" id="shopCatFilter" onchange="loadShopProducts()">
+        <option value="">All Categories</option>
+      </select>
+      <select class="filter-select" id="shopSortFilter" onchange="loadShopProducts()">
+        <option value="created_at">Latest First</option>
+        <option value="price_asc">Price: Low to High</option>
+        <option value="price_desc">Price: High to Low</option>
+        <option value="rating_avg">Top Rated</option>
+        <option value="sold_count">Best Selling</option>
+      </select>
+      <input type="text" class="filter-input" id="shopSearch" placeholder="Search jewellery..." oninput="loadShopProducts()" style="flex:1;max-width:300px">
+    </div>
+  </div>
+  <div class="sec sec-dark">
+    <div class="prod-grid" id="shopProdGrid">
+      <div style="grid-column:span 4;text-align:center;padding:3rem;color:var(--text-muted)">Loading…</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ BRIDAL PAGE ═══════════════════════════════════════ -->
+<div class="page" id="bridalPage">
+  <div style="padding-top:80px">
+    <div class="bridal-banner">
+      <div>
+        <div class="bridal-eye">✦ EXCLUSIVE BRIDAL COLLECTION 2025 ✦</div>
+        <h2 class="bridal-h2">The Bridal<br><em>Lookbook 2025</em></h2>
+        <p style="font-size:.83rem;color:var(--text-muted);line-height:1.8;margin-bottom:1.4rem">Every bride deserves to feel like royalty. Our bridal collection is crafted with centuries-old techniques, combining traditional Rajasthani artistry with contemporary elegance.</p>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap">
+          <button class="btn-primary" onclick="showPage('custom')">BOOK CONSULTATION</button>
+          <button class="btn-outline">DOWNLOAD LOOKBOOK</button>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem">
+        <div style="grid-column:span 2;aspect-ratio:2/1;background:var(--navy-deep);border:1px solid var(--border-gold);display:flex;align-items:center;justify-content:center;font-size:3.5rem">👑</div>
+        <div style="aspect-ratio:1;background:var(--navy-deep);border:1px solid var(--border-gold);display:flex;align-items:center;justify-content:center;font-size:2.5rem">💍</div>
+        <div style="aspect-ratio:1;background:var(--navy-deep);border:1px solid var(--border-gold);display:flex;align-items:center;justify-content:center;font-size:2.5rem">✨</div>
+      </div>
+    </div>
+    <div class="sec sec-dark">
+      <div class="bridal-cards">
+        <div class="bridal-card reveal"><div class="bridal-icon">💛</div><div class="bridal-title">GOLD BRIDAL SET</div><div class="bridal-desc">Traditional 22K gold complete bridal sets. BIS hallmarked with buyback guarantee.</div><button class="btn-outline">EXPLORE</button></div>
+        <div class="bridal-card reveal"><div class="bridal-icon">💎</div><div class="bridal-title">DIAMOND BRIDAL</div><div class="bridal-desc">IGI & GIA certified diamond sets. Available in white gold, yellow gold & platinum.</div><button class="btn-outline">EXPLORE</button></div>
+        <div class="bridal-card reveal"><div class="bridal-icon">🎨</div><div class="bridal-title">POLKI & KUNDAN</div><div class="bridal-desc">Timeless Rajasthani Polki and Kundan work. Heritage craftsmanship, each piece tells a story.</div><button class="btn-outline">EXPLORE</button></div>
+      </div>
+      <div class="prod-grid" id="bridalProds" style="margin-top:2rem">
+        <div style="grid-column:span 4;text-align:center;padding:2rem;color:var(--text-muted)">Loading bridal collection…</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ CUSTOM PAGE ═══════════════════════════════════════ -->
+<div class="page" id="customPage">
+  <div style="padding:7rem 5% 0;background:var(--navy-deep)">
+    <div class="sec-label">BESPOKE JEWELLERY</div>
+    <h2 class="sec-title" style="text-align:left">Custom Order Request</h2>
+    <p style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--text-muted);font-size:1.05rem;margin-bottom:2rem">Design your dream jewellery with our master craftsmen</p>
+  </div>
+  <div class="sec sec-dark">
+    <div class="custom-grid">
+      <div>
+        <div style="background:var(--navy);border:1px solid var(--border-gold);padding:2rem;margin-bottom:1.5rem">
+          <div class="sec-label">BOOK CONSULTATION</div>
+          <div class="consult-opts" style="margin-top:1rem;justify-content:flex-start;flex-wrap:wrap;gap:1rem">
+            <div class="consult-card" style="min-width:120px" onclick="window.open('https://wa.me/917400000053','_blank')"><div class="consult-icon">💬</div><div class="consult-title">WHATSAPP</div></div>
+            <div class="consult-card" style="min-width:120px"><div class="consult-icon">📞</div><div class="consult-title">CALL US</div></div>
+            <div class="consult-card" style="min-width:120px"><div class="consult-icon">📹</div><div class="consult-title">VIDEO CALL</div></div>
+            <div class="consult-card" style="min-width:120px"><div class="consult-icon">📍</div><div class="consult-title">STORE VISIT</div></div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.8rem">
+          <div style="display:flex;align-items:center;gap:.8rem;font-size:.8rem;color:var(--text-muted)"><span class="gold">✦</span> Free design consultation call</div>
+          <div style="display:flex;align-items:center;gap:.8rem;font-size:.8rem;color:var(--text-muted)"><span class="gold">✦</span> 3D preview before production</div>
+          <div style="display:flex;align-items:center;gap:.8rem;font-size:.8rem;color:var(--text-muted)"><span class="gold">✦</span> Ready in 15–21 working days</div>
+          <div style="display:flex;align-items:center;gap:.8rem;font-size:.8rem;color:var(--text-muted)"><span class="gold">✦</span> Engraving & personalization available</div>
+          <div style="display:flex;align-items:center;gap:.8rem;font-size:.8rem;color:var(--text-muted)"><span class="gold">✦</span> Gift packaging on request</div>
+        </div>
+      </div>
+      <div>
+        <div id="customFormMsg" class="auth-success hidden"></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">FULL NAME *</label><input type="text" class="form-input" id="cf_name" placeholder="Your name"></div>
+          <div class="form-group"><label class="form-label">MOBILE *</label><input type="tel" class="form-input" id="cf_phone" placeholder="+91 XXXXX XXXXX"></div>
+        </div>
+        <div class="form-group"><label class="form-label">EMAIL</label><input type="email" class="form-input" id="cf_email" placeholder="your@email.com"></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">JEWELLERY TYPE</label>
+            <select class="form-select" id="cf_type"><option>Select…</option><option>Gold Jewellery</option><option>Diamond Jewellery</option><option>Polki / Kundan</option><option>Silver</option><option>Imitation</option></select>
+          </div>
+          <div class="form-group"><label class="form-label">OCCASION</label>
+            <select class="form-select" id="cf_occasion"><option>Select…</option><option>Wedding / Bridal</option><option>Engagement</option><option>Festival</option><option>Daily Wear</option><option>Gift</option></select>
+          </div>
+        </div>
+        <div class="form-group"><label class="form-label">BUDGET RANGE</label>
+          <select class="form-select" id="cf_budget"><option>Select…</option><option>Below ₹5,000</option><option>₹5,000 – ₹25,000</option><option>₹25,000 – ₹1,00,000</option><option>Above ₹1,00,000</option></select>
+        </div>
+        <div class="form-group"><label class="form-label">DESCRIBE YOUR DESIGN</label>
+          <textarea class="form-textarea" id="cf_desc" placeholder="Tell us about your dream piece — style, stones, finish, occasion…"></textarea>
+        </div>
+        <button class="btn-primary" style="width:100%" onclick="submitCustomOrder()">SUBMIT CUSTOM ORDER REQUEST</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ ABOUT PAGE ═══════════════════════════════════════ -->
+<div class="page" id="aboutPage">
+  <div style="padding-top:80px">
+    <div class="sec sec-mid">
+      <div class="about-grid">
+        <div class="about-vis">
+          <div class="about-img about-img-tall">👑</div>
+          <div class="about-img about-img-sq">💛</div>
+          <div class="about-img about-img-sq">✨</div>
+        </div>
+        <div>
+          <div class="sec-label">OUR STORY</div>
+          <h2 class="sec-title" style="text-align:left">About Kanikaara</h2>
+          <div class="sec-sub" style="text-align:left">Grace in Gold, Stories Untold</div>
+          <div class="divider" style="margin-left:0"></div>
+          <p class="about-para">Kanikaara was born from a passion for preserving India's rich jewellery heritage while making it accessible to every woman who deserves to shine. Founded in Jaipur — the Pink City and the heart of India's gemstone trade — we blend centuries of Rajasthani artistry with modern sensibilities.</p>
+          <p class="about-para">The name <strong class="gold">Kanikaara</strong> evokes grace, beauty, and timeless elegance. Every piece in our collection carries the soul of skilled artisans who have dedicated their lives to this craft — from Kundan setters in Jaipur to meenakari painters of Nathdwara.</p>
+          <p class="about-para">Whether it's your wedding day, a festival, or a casual afternoon — we believe jewellery should tell your story. That's our promise: Grace in Gold, Stories Untold.</p>
+          <div class="stats-row">
+            <div class="stat-box"><div class="stat-num">2500+</div><div class="stat-label">HAPPY CUSTOMERS</div></div>
+            <div class="stat-box"><div class="stat-num">500+</div><div class="stat-label">DESIGNS</div></div>
+            <div class="stat-box"><div class="stat-num">100%</div><div class="stat-label">CERTIFIED</div></div>
+          </div>
+          <div style="background:var(--navy);border:1px solid var(--border-gold);padding:1.2rem;margin-bottom:1.5rem">
+            <div style="font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.15em;color:var(--gold);margin-bottom:.4rem">REGISTERED TRADEMARK</div>
+            <div style="font-size:.75rem;color:var(--text-muted);line-height:1.7">KANIKAARA — TM Ref No: 13643387<br>Class 14 — Jewellery, Gold Ornaments, Diamond Jewellery, Artificial Jewellery, Precious Stones</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ CONTACT PAGE ═══════════════════════════════════════ -->
+<div class="page" id="contactPage">
+  <div style="padding:7rem 5% 2rem;background:var(--navy-deep)">
+    <div class="sec-label">GET IN TOUCH</div>
+    <h2 class="sec-title" style="text-align:left">Contact Us</h2>
+  </div>
+  <div class="sec sec-dark">
+    <div class="consult-opts" style="justify-content:flex-start">
+      <div class="consult-card" onclick="window.open('https://wa.me/917400000053','_blank')"><div class="consult-icon">💬</div><div class="consult-title">WHATSAPP</div><div class="consult-desc">Chat instantly</div></div>
+      <div class="consult-card"><div class="consult-icon">📞</div><div class="consult-title">CALL US</div><div class="consult-desc">+91 74XX XXXX 53</div></div>
+      <div class="consult-card"><div class="consult-icon">📧</div><div class="consult-title">EMAIL</div><div class="consult-desc">hello@kanikaara.com</div></div>
+      <div class="consult-card"><div class="consult-icon">📍</div><div class="consult-title">STORE</div><div class="consult-desc">Jaipur, Rajasthan</div></div>
+      <div class="consult-card"><div class="consult-icon">📸</div><div class="consult-title">INSTAGRAM</div><div class="consult-desc">@kanikaara.official</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ WISHLIST PAGE ═══════════════════════════════════════ -->
+<div class="page" id="wishlistPage">
+  <div style="padding:7rem 5% 2rem"><div class="sec-label">SAVED ITEMS</div><h2 class="sec-title" style="text-align:left">Your Wishlist</h2></div>
+  <div class="sec sec-dark"><div class="prod-grid" id="wishlistGrid"><div style="grid-column:span 4;text-align:center;padding:3rem;color:var(--text-muted)">Your wishlist is empty.<br><button class="btn-outline" style="margin-top:1rem" onclick="showPage('shop')">BROWSE JEWELLERY</button></div></div></div>
+</div>
+
+<!-- ═══════════════════════════════════════ USER DASHBOARD ═══════════════════════════════════════ -->
+<div class="page" id="dashboardPage">
+  <div style="padding-top:72px;background:var(--navy-deep)">
+    <div class="dash-grid">
+      <div class="dash-sidebar">
+        <div class="dash-user-info">
+          <div class="dash-avatar" id="dashAvatar">👤</div>
+          <div class="dash-username" id="dashName">Loading…</div>
+          <div class="dash-email" id="dashEmail"></div>
+        </div>
+        <ul class="dash-nav">
+          <li class="active" onclick="switchDash('orders')" id="dnavOrders">📦 MY ORDERS</li>
+          <li onclick="switchDash('wishlist')" id="dnavWishlist">♡ WISHLIST</li>
+          <li onclick="switchDash('addresses')" id="dnavAddresses">📍 ADDRESSES</li>
+          <li onclick="switchDash('profile')" id="dnavProfile">👤 PROFILE</li>
+          <li onclick="switchDash('custom')" id="dnavCustom">⚙️ CUSTOM REQUESTS</li>
+          <li onclick="switchDash('loyalty')" id="dnavLoyalty">⭐ LOYALTY & REFER</li>
+          <li onclick="handleLogout()" style="color:var(--danger)">🚪 LOGOUT</li>
+        </ul>
+      </div>
+      <div class="dash-content">
+        <!-- Orders -->
+        <div class="dash-section active" id="dashOrders">
+          <div class="dash-head">MY ORDERS</div>
+          <div id="userOrdersList"><div style="text-align:center;padding:2rem;color:var(--text-muted)">Loading orders…</div></div>
+        </div>
+        <!-- Wishlist in dash -->
+        <div class="dash-section" id="dashWishlist">
+          <div class="dash-head">MY WISHLIST</div>
+          <div class="prod-grid" id="dashWishGrid"><div style="grid-column:span 4;text-align:center;padding:2rem;color:var(--text-muted)">No saved items yet.</div></div>
+        </div>
+        <!-- Addresses -->
+        <div class="dash-section" id="dashAddresses">
+          <div class="dash-head">SAVED ADDRESSES</div>
+          <div id="addressesList"></div>
+          <button class="btn-outline" style="margin-top:1rem" onclick="showAddAddressForm()">+ ADD NEW ADDRESS</button>
+          <div id="addAddressForm" class="hidden" style="margin-top:1.5rem;background:var(--navy-mid);border:1px solid var(--border-gold);padding:1.5rem">
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">FULL NAME</label><input type="text" class="form-input" id="addr_name"></div>
+              <div class="form-group"><label class="form-label">PHONE</label><input type="tel" class="form-input" id="addr_phone"></div>
+            </div>
+            <div class="form-group"><label class="form-label">ADDRESS LINE 1</label><input type="text" class="form-input" id="addr_line1"></div>
+            <div class="form-group"><label class="form-label">ADDRESS LINE 2</label><input type="text" class="form-input" id="addr_line2"></div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">CITY</label><input type="text" class="form-input" id="addr_city"></div>
+              <div class="form-group"><label class="form-label">STATE</label><input type="text" class="form-input" id="addr_state"></div>
+              <div class="form-group"><label class="form-label">PINCODE</label><input type="text" class="form-input" id="addr_pin"></div>
+            </div>
+            <button class="btn-primary" onclick="saveAddress()">SAVE ADDRESS</button>
+          </div>
+        </div>
+        <!-- Profile -->
+        <div class="dash-section" id="dashProfile">
+          <div class="dash-head">MY PROFILE</div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">FULL NAME</label><input type="text" class="form-input" id="prof_name"></div>
+            <div class="form-group"><label class="form-label">PHONE</label><input type="tel" class="form-input" id="prof_phone"></div>
+          </div>
+          <div class="form-group"><label class="form-label">EMAIL (cannot change)</label><input type="email" class="form-input" id="prof_email" disabled></div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">DATE OF BIRTH</label><input type="date" class="form-input" id="prof_dob"></div>
+            <div class="form-group"><label class="form-label">ANNIVERSARY</label><input type="date" class="form-input" id="prof_anniv"></div>
+          </div>
+          <button class="btn-primary" onclick="updateProfile()">UPDATE PROFILE</button>
+        </div>
+        <!-- Custom requests in dash -->
+        <div class="dash-section" id="dashLoyalty">
+          <div class="admin-title" style="margin-bottom:1.2rem">LOYALTY POINTS & REFERRAL</div>
+          <div id="dashLoyaltyContent"></div>
+        </div>
+        <div class="dash-section" id="dashCustom">
+          <div class="dash-head">MY CUSTOM ORDER REQUESTS</div>
+          <div id="customRequestsList"><div style="text-align:center;padding:2rem;color:var(--text-muted)">Loading requests…</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ ADMIN PANEL ═══════════════════════════════════════ -->
+<div class="page" id="adminPage">
+  <div style="padding-top:60px">
+    <div class="admin-layout">
+      <div class="admin-sidebar">
+        <div class="admin-logo">KANIKAARA<small>ADMIN PANEL</small></div>
+        <ul class="admin-nav">
+          <li class="active" onclick="switchAdmin('dashboard')" id="anavDash">📊 DASHBOARD</li>
+          <li onclick="switchAdmin('products')" id="anavProds">💍 PRODUCTS</li>
+          <li onclick="switchAdmin('categories')" id="anavCats">📂 CATEGORIES</li>
+          <li onclick="switchAdmin('orders')" id="anavOrders">📦 ORDERS</li>
+          <li onclick="switchAdmin('customers')" id="anavCust">👥 CUSTOMERS</li>
+          <li onclick="switchAdmin('customOrders')" id="anavCustom">⚙️ CUSTOM ORDERS</li>
+          <li onclick="switchAdmin('reviews')" id="anavRevs">⭐ REVIEWS</li>
+          <li onclick="switchAdmin('coupons')" id="anavCoupons">🎫 COUPONS</li>
+          <li onclick="switchAdmin('subscriptions')" id="anavSubs">📧 SUBSCRIPTIONS</li>
+          <li onclick="switchAdmin('settings')" id="anavSettings">⚙️ SETTINGS</li>
+          <li onclick="showPage('home')" style="margin-top:1rem;color:var(--text-muted)">← BACK TO STORE</li>
+        </ul>
+      </div>
+      <div class="admin-main">
+
+        <!-- DASHBOARD -->
+        <div class="admin-section active" id="adminDashboard">
+          <div class="admin-head"><div class="admin-title">DASHBOARD OVERVIEW</div></div>
+          <div class="stats-cards" id="adminStats">
+            <div class="stat-card"><div class="stat-card-label">TOTAL REVENUE</div><div class="stat-card-val" id="sTotalRev">₹0</div></div>
+            <div class="stat-card"><div class="stat-card-label">TOTAL ORDERS</div><div class="stat-card-val" id="sTotalOrders">0</div></div>
+            <div class="stat-card"><div class="stat-card-label">TOTAL CUSTOMERS</div><div class="stat-card-val" id="sTotalCust">0</div></div>
+            <div class="stat-card"><div class="stat-card-label">PENDING ORDERS</div><div class="stat-card-val" id="sPending">0</div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem">
+            <div class="chart-wrap">
+              <div style="font-family:Cinzel,serif;font-size:.6rem;letter-spacing:.15em;color:var(--gold);margin-bottom:1rem">MONTHLY REVENUE</div>
+              <div id="adminSalesChart"><div style="color:var(--text-muted);font-size:.75rem">Loading chart...</div></div>
+            </div>
+            <div class="chart-wrap" id="adminLowStock" style="display:none">
+              <div style="font-family:Cinzel,serif;font-size:.6rem;letter-spacing:.15em;color:var(--danger);margin-bottom:.8rem">⚠ STOCK ALERTS</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+            <div style="background:var(--navy);border:1px solid var(--border-gold);padding:1.2rem">
+              <div class="admin-title" style="font-size:.75rem;margin-bottom:1rem">RECENT ORDERS</div>
+              <div id="recentOrdersList"></div>
+            </div>
+            <div style="background:var(--navy);border:1px solid var(--border-gold);padding:1.2rem">
+              <div class="admin-title" style="font-size:.75rem;margin-bottom:1rem">CUSTOM ORDER REQUESTS</div>
+              <div id="recentCustomList"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRODUCTS -->
+        <div class="admin-section" id="adminProducts">
+          <div class="admin-head">
+            <div class="admin-title">PRODUCTS</div>
+            <button class="btn-primary" onclick="showAddProduct()">+ ADD PRODUCT</button>
+          </div>
+          <div id="addProductForm" class="hidden" style="background:var(--navy);border:1px solid var(--border-gold);padding:1.5rem;margin-bottom:1.5rem">
+            <div style="font-family:'Cinzel',serif;font-size:.8rem;color:var(--gold);margin-bottom:1rem" id="prodFormTitle">ADD NEW PRODUCT</div>
+            <div class="admin-form-grid">
+              <div class="form-group"><label class="form-label">PRODUCT NAME *</label><input type="text" class="form-input" id="p_name"></div>
+              <div class="form-group"><label class="form-label">CATEGORY *</label><select class="form-select" id="p_category"></select></div>
+              <div class="form-group"><label class="form-label">PRICE (₹) *</label><input type="number" class="form-input" id="p_price"></div>
+              <div class="form-group"><label class="form-label">MRP (₹)</label><input type="number" class="form-input" id="p_mrp"></div>
+              <div class="form-group"><label class="form-label">WEIGHT (grams)</label><input type="number" class="form-input" id="p_weight" step="0.001"></div>
+              <div class="form-group"><label class="form-label">MATERIAL</label><input type="text" class="form-input" id="p_material" placeholder="e.g. 22K Gold, Diamond, Silver"></div>
+              <div class="form-group"><label class="form-label">PURITY / HALLMARK</label><input type="text" class="form-input" id="p_purity" placeholder="e.g. BIS 22K, IGI Certified"></div>
+              <div class="form-group"><label class="form-label">STOCK QUANTITY</label><input type="number" class="form-input" id="p_stock" value="10"></div>
+              <div class="form-group"><label class="form-label">BADGE (optional)</label><input type="text" class="form-input" id="p_badge" placeholder="BESTSELLER / NEW / LIMITED"></div>
+              <div class="form-group"><label class="form-label">DELIVERY DAYS</label><input type="number" class="form-input" id="p_delivery" value="5"></div>
+            </div>
+            <div class="form-group"><label class="form-label">DESCRIPTION</label><textarea class="form-textarea" id="p_desc"></textarea></div>
+            <div class="form-group"><label class="form-label">IMAGE URLs (one per line)</label><textarea class="form-textarea" id="p_images" placeholder="https://..."></textarea></div>
+            <div class="form-group"><label class="form-label">STONE DETAILS</label><input type="text" class="form-input" id="p_stone" placeholder="e.g. 0.5ct SI1 G-color Diamond"></div>
+            <div style="display:flex;gap:1.5rem;margin-bottom:1rem">
+              <label style="display:flex;align-items:center;gap:.5rem;font-size:.75rem;color:var(--text-muted);cursor:pointer"><input type="checkbox" id="p_featured"> Featured</label>
+              <label style="display:flex;align-items:center;gap:.5rem;font-size:.75rem;color:var(--text-muted);cursor:pointer"><input type="checkbox" id="p_bestseller"> Bestseller</label>
+              <label style="display:flex;align-items:center;gap:.5rem;font-size:.75rem;color:var(--text-muted);cursor:pointer"><input type="checkbox" id="p_new_arrival"> New Arrival</label>
+              <label style="display:flex;align-items:center;gap:.5rem;font-size:.75rem;color:var(--text-muted);cursor:pointer"><input type="checkbox" id="p_customizable"> Customizable</label>
+            </div>
+            <input type="hidden" id="p_editId">
+            <div style="display:flex;gap:.8rem">
+              <button class="btn-primary" onclick="saveProduct()">SAVE PRODUCT</button>
+              <button class="btn-outline" onclick="hideAddProduct()">CANCEL</button>
+            </div>
+          </div>
+          <div class="filter-bar">
+            <select class="filter-select" id="adminProdCatFilter" onchange="loadAdminProducts()"><option value="">All Categories</option></select>
+            <input type="text" class="filter-input" id="adminProdSearch" placeholder="Search products…" oninput="loadAdminProducts()">
+          </div>
+          <div id="adminProdsTable"></div>
+        </div>
+
+        <!-- CATEGORIES -->
+        <div class="admin-section" id="adminCategories">
+          <div class="admin-head"><div class="admin-title">CATEGORIES</div><button class="btn-primary" onclick="showAddCat()">+ ADD CATEGORY</button></div>
+          <div id="addCatForm" class="hidden" style="background:var(--navy);border:1px solid var(--border-gold);padding:1.2rem;margin-bottom:1.2rem">
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">CATEGORY NAME *</label><input type="text" class="form-input" id="cat_name"></div>
+              <div class="form-group"><label class="form-label">SLUG *</label><input type="text" class="form-input" id="cat_slug"></div>
+              <div class="form-group"><label class="form-label">ICON (emoji)</label><input type="text" class="form-input" id="cat_icon" style="width:80px"></div>
+            </div>
+            <div style="display:flex;gap:.8rem;margin-top:.5rem">
+              <button class="btn-primary" onclick="saveCategory()">SAVE</button>
+              <button class="btn-outline" onclick="document.getElementById('addCatForm').classList.add('hidden')">CANCEL</button>
+            </div>
+          </div>
+          <div id="adminCatsTable"></div>
+        </div>
+
+        <!-- ORDERS -->
+        <div class="admin-section" id="adminOrders">
+          <div class="admin-head"><div class="admin-title">ALL ORDERS</div></div>
+          <div class="filter-bar">
+            <select class="filter-select" id="adminOrderStatus" onchange="loadAdminOrders()">
+              <option value="">All Status</option>
+              <option>pending</option><option>confirmed</option><option>processing</option>
+              <option>packed</option><option>shipped</option><option>delivered</option><option>cancelled</option>
+            </select>
+          </div>
+          <div id="adminOrdersTable"></div>
+        </div>
+
+        <!-- CUSTOMERS -->
+        <div class="admin-section" id="adminCustomers">
+          <div class="admin-head"><div class="admin-title">CUSTOMERS</div></div>
+          <div id="adminCustTable"></div>
+        </div>
+
+        <!-- CUSTOM ORDERS -->
+        <div class="admin-section" id="adminCustomOrders">
+          <div class="admin-head"><div class="admin-title">CUSTOM ORDER REQUESTS</div></div>
+          <div class="filter-bar">
+            <select class="filter-select" id="adminCustomStatus" onchange="loadAdminCustom()">
+              <option value="">All Status</option>
+              <option>new</option><option>reviewing</option><option>quoted</option><option>in_production</option><option>completed</option>
+            </select>
+          </div>
+          <div id="adminCustomTable"></div>
+        </div>
+
+        <!-- REVIEWS -->
+        <div class="admin-section" id="adminReviews">
+          <div class="admin-head"><div class="admin-title">REVIEWS (Pending Approval)</div></div>
+          <div id="adminRevsTable"></div>
+        </div>
+
+        <!-- COUPONS -->
+        <div class="admin-section" id="adminCoupons">
+          <div class="admin-head"><div class="admin-title">COUPONS</div><button class="btn-primary" onclick="showAddCoupon()">+ ADD COUPON</button></div>
+          <div id="addCouponForm" class="hidden" style="background:var(--navy);border:1px solid var(--border-gold);padding:1.2rem;margin-bottom:1.2rem">
+            <div class="admin-form-grid">
+              <div class="form-group"><label class="form-label">COUPON CODE</label><input type="text" class="form-input" id="coup_code" placeholder="SUMMER20"></div>
+              <div class="form-group"><label class="form-label">DISCOUNT TYPE</label><select class="form-select" id="coup_type"><option value="percent">Percent (%)</option><option value="fixed">Fixed (₹)</option></select></div>
+              <div class="form-group"><label class="form-label">DISCOUNT VALUE</label><input type="number" class="form-input" id="coup_val"></div>
+              <div class="form-group"><label class="form-label">MIN ORDER (₹)</label><input type="number" class="form-input" id="coup_min" value="0"></div>
+              <div class="form-group"><label class="form-label">USAGE LIMIT</label><input type="number" class="form-input" id="coup_limit" placeholder="Unlimited"></div>
+              <div class="form-group"><label class="form-label">VALID UNTIL</label><input type="date" class="form-input" id="coup_until"></div>
+            </div>
+            <div class="form-group"><label class="form-label">DESCRIPTION</label><input type="text" class="form-input" id="coup_desc"></div>
+            <button class="btn-primary" onclick="saveCoupon()" style="margin-top:.5rem">SAVE COUPON</button>
+            <button class="btn-outline" style="margin-left:.8rem" onclick="document.getElementById('addCouponForm').classList.add('hidden')">CANCEL</button>
+          </div>
+          <div id="adminCouponsTable"></div>
+        </div>
+
+        <!-- SUBSCRIPTIONS -->
+        <div class="admin-section" id="adminSubscriptions">
+          <div class="admin-head"><div class="admin-title">EMAIL SUBSCRIPTIONS</div></div>
+          <div id="adminSubsTable"></div>
+        </div>
+
+        <!-- SETTINGS -->
+        <div class="admin-section" id="adminSettings">
+          <div class="admin-head"><div class="admin-title">SITE SETTINGS</div></div>
+          <div id="adminSettingsForm"></div>
+          <button class="btn-primary" style="margin-top:1rem" onclick="saveSettings()">SAVE ALL SETTINGS</button>
+        </div>
+
+      </div><!-- end admin-main -->
+    </div><!-- end admin-layout -->
+  </div>
+</div>
+<!-- END ADMIN -->
+
+<!-- FOOTER (shown on most pages) -->
+<footer id="siteFooter">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">KANIKAARA</div>
+      <div class="footer-tag">Grace in Gold, Stories Untold</div>
+      <p class="footer-about">Jaipur's finest jewellery brand, blending centuries of Rajasthani artistry with contemporary elegance. Every piece is a story waiting to be told.</p>
+      <div class="footer-social">
+        <a href="#" class="social-btn">📸</a><a href="#" class="social-btn">💬</a>
+        <a href="#" class="social-btn">🎵</a><a href="#" class="social-btn">📧</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">SHOP</div>
+      <ul class="footer-links">
+        <li><a href="#" onclick="showPage('shop')">All Jewellery</a></li>
+        <li><a href="#" onclick="showPage('bridal')">Bridal Collection</a></li>
+        <li><a href="#" onclick="showPage('shop')">New Arrivals</a></li>
+        <li><a href="#" onclick="showPage('shop')">Bestsellers</a></li>
+        <li><a href="#" onclick="showPage('custom')">Custom Orders</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">POLICIES</div>
+      <ul class="footer-links">
+        <li><a href="#">Shipping Policy</a></li>
+        <li><a href="#">Return & Refund</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms & Conditions</a></li>
+        <li><a href="#">FAQs</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">CONTACT</div>
+      <ul class="footer-links">
+        <li><a href="#">📞 +91 74XX XXXX 53</a></li>
+        <li><a href="#">📧 hello@kanikaara.com</a></li>
+        <li><a href="#">📍 Jaipur, Rajasthan</a></li>
+        <li><a href="#" onclick="window.open('https://wa.me/917400000053','_blank')">💬 WhatsApp</a></li>
+      </ul>
+      <div style="margin-top:1.2rem;background:var(--navy);border:1px solid var(--border-gold);padding:.8rem">
+        <div style="font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.12em;color:var(--gold);margin-bottom:.3rem">TRADEMARK</div>
+        <div style="font-size:.68rem;color:var(--text-muted);line-height:1.6">TM Ref: 13643387<br>Class 14 — Jewellery</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 Kanikaara. Prop: Shri Ram Sharma, Jaipur</div>
+    <div class="pay-icons">
+      <span class="pay-badge">UPI</span><span class="pay-badge">VISA</span>
+      <span class="pay-badge">MASTERCARD</span><span class="pay-badge">NET BANKING</span>
+      <span class="pay-badge">EMI</span><span class="pay-badge">COD</span>
+    </div>
+  </div>
+</footer>
+
+<!-- WHATSAPP FLOAT -->
+
+<!-- SIZE GUIDE MODAL -->
+<div class="size-modal hidden" id="sizeModal">
+  <div class="size-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+      <div class="sec-label" style="margin:0">RING SIZE GUIDE</div>
+      <button onclick="document.getElementById('sizeModal').classList.add('hidden')" style="background:none;border:none;color:var(--gold);font-size:1.2rem;cursor:pointer">✕</button>
+    </div>
+    <table class="size-table">
+      <thead><tr><th>INDIA SIZE</th><th>DIAMETER (mm)</th><th>CIRCUMFERENCE (mm)</th><th>US SIZE</th></tr></thead>
+      <tbody>
+        <tr><td>6</td><td>14.8</td><td>46.5</td><td>4</td></tr>
+        <tr><td>8</td><td>15.6</td><td>49.0</td><td>4.5</td></tr>
+        <tr><td>10</td><td>16.5</td><td>51.8</td><td>5.5</td></tr>
+        <tr><td>12</td><td>17.3</td><td>54.4</td><td>6</td></tr>
+        <tr><td>14</td><td>18.2</td><td>57.2</td><td>7</td></tr>
+        <tr><td>16</td><td>19.0</td><td>59.7</td><td>8</td></tr>
+        <tr><td>18</td><td>19.8</td><td>62.3</td><td>9</td></tr>
+        <tr><td>20</td><td>20.7</td><td>65.0</td><td>10</td></tr>
+        <tr><td>22</td><td>21.6</td><td>67.8</td><td>11</td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:1rem;font-size:.72rem;color:var(--text-muted);line-height:1.8">
+      <strong style="color:var(--gold)">How to measure:</strong><br>
+      Wrap a thin strip of paper around your finger. Mark where it meets. Measure the length in mm — that's your circumference. Match to the table above.
+    </div>
+  </div>
+</div>
+
+<!-- PAYMENT MODAL -->
+<div class="pay-modal hidden" id="payModal">
+  <div class="pay-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+      <div>
+        <div class="sec-label" style="margin:0">COMPLETE YOUR ORDER</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--white);margin-top:.3rem">Order Total: <span class="gold" id="payTotalAmt">₹0</span></div>
+      </div>
+      <button onclick="closePayModal()" style="background:none;border:none;color:var(--gold);font-size:1.2rem;cursor:pointer">✕</button>
+    </div>
+
+    <!-- Address -->
+    <div style="margin-bottom:1.5rem">
+      <div class="form-label" style="margin-bottom:.6rem">DELIVERY ADDRESS</div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">NAME *</label><input class="form-input" id="pay_name" placeholder="Full name"></div>
+        <div class="form-group"><label class="form-label">MOBILE *</label><input class="form-input" id="pay_phone" placeholder="+91 XXXXX XXXXX"></div>
+      </div>
+      <div class="form-group"><label class="form-label">ADDRESS *</label><input class="form-input" id="pay_addr" placeholder="House no, Street, Area"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">CITY *</label><input class="form-input" id="pay_city" placeholder="City"></div>
+        <div class="form-group"><label class="form-label">STATE</label><input class="form-input" id="pay_state" placeholder="State"></div>
+        <div class="form-group"><label class="form-label">PINCODE *</label><input class="form-input" id="pay_pin" placeholder="6 digits"></div>
+      </div>
+    </div>
+
+    <!-- Payment Method -->
+    <div class="form-label" style="margin-bottom:.8rem">PAYMENT METHOD</div>
+
+    <div class="pay-method selected" id="pm_upi" onclick="selectPayMethod('upi')">
+      <div class="pay-method-title">📱 UPI PAYMENT</div>
+      <div class="pay-method-desc">Pay via any UPI app — GPay, PhonePe, Paytm, BHIM</div>
+      <div id="upi_details" style="margin-top:1rem">
+        <div class="upi-qr">📱</div>
+        <div style="text-align:center;font-family:'Cinzel',serif;font-size:.8rem;color:var(--gold);margin-bottom:.5rem">UPI ID: kanikaara@upi</div>
+        <div style="text-align:center;font-size:.7rem;color:var(--text-muted)">Scan QR or use UPI ID above</div>
+        <div class="upload-btn" style="margin-top:1rem" onclick="document.getElementById('upiScreenshot').click()">
+          📎 Upload Payment Screenshot (Required)
+        </div>
+        <input type="file" id="upiScreenshot" accept="image/*" style="display:none" onchange="handleScreenshot(this)">
+        <div id="screenshotName" style="font-size:.7rem;color:var(--success);margin-top:.4rem;text-align:center"></div>
+        <div class="form-group" style="margin-top:.8rem"><label class="form-label">UTR / TRANSACTION ID *</label><input class="form-input" id="pay_utr" placeholder="12-digit transaction ID"></div>
+      </div>
+    </div>
+
+    <div class="pay-method" id="pm_bank" onclick="selectPayMethod('bank')">
+      <div class="pay-method-title">🏦 BANK TRANSFER (NEFT/IMPS)</div>
+      <div class="pay-method-desc">Direct bank transfer — safe and secure</div>
+      <div id="bank_details" style="display:none;margin-top:1rem">
+        <div class="bank-detail">
+          <strong>Account Name:</strong> Kanikaara Jewels<br>
+          <strong>Account No:</strong> XXXX XXXX XXXX 1234<br>
+          <strong>IFSC Code:</strong> SBIN0001234<br>
+          <strong>Bank:</strong> State Bank of India<br>
+          <strong>Branch:</strong> Jaipur Main Branch
+        </div>
+        <div class="upload-btn" onclick="document.getElementById('bankScreenshot').click()">
+          📎 Upload Transfer Screenshot (Required)
+        </div>
+        <input type="file" id="bankScreenshot" accept="image/*" style="display:none" onchange="handleScreenshot(this)">
+        <div id="bankScreenshotName" style="font-size:.7rem;color:var(--success);margin-top:.4rem;text-align:center"></div>
+        <div class="form-group" style="margin-top:.8rem"><label class="form-label">TRANSACTION REFERENCE *</label><input class="form-input" id="pay_ref" placeholder="Transaction reference number"></div>
+      </div>
+    </div>
+
+    <div id="payOrderMsg" class="auth-success hidden" style="margin:.8rem 0"></div>
+    <button class="btn-primary" style="width:100%;margin-top:1rem" onclick="confirmOrder()">✦ CONFIRM ORDER</button>
+    <div style="font-size:.65rem;color:var(--text-muted);text-align:center;margin-top:.8rem">Order confirmed via WhatsApp within 2 hours • Need help? <span style="color:var(--gold);cursor:pointer" onclick="window.open('https://wa.me/917400000053','_blank')">Chat with us</span></div>
+  </div>
+</div>
+
+<!-- PRODUCT INQUIRY MODAL -->
+<div class="inq-modal hidden" id="inqModal">
+  <div class="inq-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem">
+      <div class="sec-label" style="margin:0">PRODUCT INQUIRY</div>
+      <button onclick="document.getElementById('inqModal').classList.add('hidden')" style="background:none;border:none;color:var(--gold);font-size:1.2rem;cursor:pointer">✕</button>
+    </div>
+    <div id="inqProductName" style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--gold);margin-bottom:1rem"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">YOUR NAME *</label><input class="form-input" id="inq_name" placeholder="Full name"></div>
+      <div class="form-group"><label class="form-label">MOBILE *</label><input class="form-input" id="inq_phone" placeholder="+91 XXXXX XXXXX"></div>
+    </div>
+    <div class="form-group"><label class="form-label">MESSAGE</label><textarea class="form-input" id="inq_msg" rows="3" placeholder="Any specific questions about this product?"></textarea></div>
+    <div style="display:flex;gap:.8rem;margin-top:1rem">
+      <button class="btn-primary" style="flex:1" onclick="submitInquiry()">SEND INQUIRY</button>
+      <button class="wa-order-btn" onclick="whatsappInquiry()">💬 WHATSAPP</button>
+    </div>
+  </div>
+</div>
+
+<!-- PWA INSTALL BANNER -->
+<div class="pwa-banner hidden" id="pwaBanner">
+  <div style="font-size:1.5rem">💍</div>
+  <div style="flex:1">
+    <div style="font-family:'Cinzel',serif;font-size:.68rem;color:var(--gold)">INSTALL KANIKAARA APP</div>
+    <div style="font-size:.65rem;color:var(--text-muted)">Get quick access on your phone</div>
+  </div>
+  <button class="btn-primary" style="padding:.4rem 1rem;font-size:.6rem" onclick="installPWA()">INSTALL</button>
+  <button onclick="document.getElementById('pwaBanner').classList.add('hidden')" style="background:none;border:none;color:var(--text-muted);cursor:pointer">✕</button>
+</div>
+
+<a href="https://wa.me/917400000053" class="wa-btn" target="_blank" title="Chat on WhatsApp">💬</a>
+<script>
+// ══════════════════════════════════════════════════════════
+// SUPABASE INIT
+// ══════════════════════════════════════════════════════════
+const SUPABASE_URL = 'https://gmlfsygirhnutunodeec.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdtbGZzeWdpcmhudXR1bm9kZWVjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4MjMzOTksImV4cCI6MjA5MjM5OTM5OX0.DY8P9u1Epz2Dm9p05jxw7pzba2hdj3LAdIIX_aT1GVM';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ══════════════════════════════════════════════════════════
+// APP STATE
+// ══════════════════════════════════════════════════════════
+let currentUser = null, currentProfile = null;
+let cartItems = [], wishlistIds = new Set();
+let appliedCoupon = null, couponDiscount = 0;
+let allCategories = [], siteSettings = {};
+let editingProductId = null;
+
+// ══════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadCategories();
+  await loadSettings();
+  await initAuth();
+  loadHomeProducts();
+  renderHomeCats();
+  initScrollReveal();
+  startFlashTimer();
+  setupPWA();
+  // Popup after 4s
+  setTimeout(() => {
+    if (!localStorage.getItem('kk_popup_seen')) {
+      document.getElementById('emailPopup').classList.remove('hidden');
+    }
+  }, 4000);
+});
+
+// ══════════════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════════════
+function toast(msg, type='info') {
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.textContent = msg;
+  document.getElementById('toastContainer').appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+// ══════════════════════════════════════════════════════════
+// SCROLL REVEAL
+// ══════════════════════════════════════════════════════════
+function initScrollReveal() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+}
+
+// ══════════════════════════════════════════════════════════
+// NAVBAR SCROLL
+// ══════════════════════════════════════════════════════════
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('navbar');
+  nav.classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// ══════════════════════════════════════════════════════════
+// PAGE NAVIGATION
+// ══════════════════════════════════════════════════════════
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(id + 'Page').classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  const navEl = document.getElementById('nav' + id.charAt(0).toUpperCase() + id.slice(1));
+  if (navEl) navEl.classList.add('active');
+  const footer = document.getElementById('siteFooter');
+  footer.style.display = (id === 'admin') ? 'none' : 'block';
+  window.scrollTo(0, 0);
+  if (id === 'shop') { loadShopCatFilter(); loadShopProducts(); }
+  if (id === 'custom' && currentProfile) {
+    const cfname = document.getElementById('cf_name'); if(cfname && !cfname.value) cfname.value = currentProfile.full_name || '';
+    const cfphone = document.getElementById('cf_phone'); if(cfphone && !cfphone.value) cfphone.value = currentProfile.phone || '';
+    const cfemail = document.getElementById('cf_email'); if(cfemail && !cfemail.value) cfemail.value = currentUser?.email || '';
+  }
+  if (id === 'bridal') loadBridalProducts();
+  if (id === 'admin') { checkAdminAccess(); loadAdminDashboard(); }
+  if (id === 'dashboard') { loadUserDashboard(); }
+  if (id === 'wishlist') renderWishlistPage();
+}
+
+function toggleMobileMenu() {
+  const nl = document.getElementById('navLinks');
+  nl.style.display = nl.style.display === 'flex' ? 'none' : 'flex';
+}
+function toggleSearch() { toast('Search feature coming soon!', 'info'); }
+
+// ══════════════════════════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════════════════════════
+async function initAuth() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) await setUser(session.user);
+  sb.auth.onAuthStateChange(async (event, session) => {
+    if (session) { await setUser(session.user); }
+    else { clearUser(); }
+  });
+}
+
+async function setUser(user) {
+  currentUser = user;
+  let prof = null;
+  for (let i = 0; i < 3; i++) {
+    const { data, error } = await sb.from('profiles').select('*').eq('id', user.id).single();
+    if (data) { prof = data; break; }
+    if (error && error.code === 'PGRST116') {
+      await sb.from('profiles').insert({ id: user.id, full_name: user.user_metadata?.full_name || '', role: 'customer' });
+      await new Promise(r => setTimeout(r, 500));
+    } else {
+      await new Promise(r => setTimeout(r, 300));
+    }
+  }
+  currentProfile = prof;
+  updateAuthUI();
+  await loadCartFromDB();
+  await loadWishlistFromDB();
+}
+
+function clearUser() {
+  currentUser = null; currentProfile = null;
+  cartItems = []; wishlistIds = new Set();
+  updateAuthUI(); renderCartSidebar();
+}
+
+function updateAuthUI() {
+  const btn = document.getElementById('authBtn');
+  const adminNav = document.getElementById('adminNavItem');
+  if (currentUser) {
+    btn.textContent = '👤';
+    btn.title = currentProfile?.full_name || currentUser.email;
+    const isAdmin = currentProfile?.role === 'admin' || currentProfile?.role === 'superadmin'
+      || currentUser.email === 'avinashnaruka89@gmail.com';
+    if (isAdmin) {
+      adminNav.classList.remove('hidden');
+    }
+  } else {
+    btn.textContent = '👤';
+    adminNav.classList.add('hidden');
+  }
+}
+
+function handleAuthBtn() {
+  if (currentUser) showPage('dashboard');
+  else openAuth();
+}
+
+function openAuth(tab='login') { document.getElementById('authModal').classList.remove('hidden'); switchTab(tab); }
+function closeAuth() { document.getElementById('authModal').classList.add('hidden'); }
+
+function switchTab(tab) {
+  ['loginForm','signupForm','forgotForm'].forEach(f => document.getElementById(f).classList.add('hidden'));
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+  if (tab === 'login') { document.getElementById('loginForm').classList.remove('hidden'); document.querySelectorAll('.auth-tab')[0].classList.add('active'); }
+  if (tab === 'signup') { document.getElementById('signupForm').classList.remove('hidden'); document.querySelectorAll('.auth-tab')[1].classList.add('active'); }
+  if (tab === 'forgot') document.getElementById('forgotForm').classList.remove('hidden');
+}
+
+function showForgotPass() { switchTab('forgot'); }
+
+async function handleLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const errEl = document.getElementById('loginErr');
+  errEl.classList.add('hidden');
+  if (!email || !pass) { errEl.textContent = 'Please enter email and password'; errEl.classList.remove('hidden'); return; }
+  const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+  if (error) { errEl.textContent = error.message; errEl.classList.remove('hidden'); }
+  else { closeAuth(); toast('Welcome back! 💛', 'success'); }
+}
+
+async function handleSignup() {
+  const name = document.getElementById('signupName').value.trim();
+  const phone = document.getElementById('signupPhone').value.trim();
+  const email = document.getElementById('signupEmail').value.trim();
+  const pass = document.getElementById('signupPass').value;
+  const errEl = document.getElementById('signupErr');
+  const okEl = document.getElementById('signupOk');
+  errEl.classList.add('hidden'); okEl.classList.add('hidden');
+  if (!name || !email || !pass) { errEl.textContent = 'Please fill all required fields'; errEl.classList.remove('hidden'); return; }
+  if (pass.length < 6) { errEl.textContent = 'Password must be at least 6 characters'; errEl.classList.remove('hidden'); return; }
+  const { error } = await sb.auth.signUp({ email, password: pass, options: { data: { full_name: name, phone } } });
+  if (error) { errEl.textContent = error.message; errEl.classList.remove('hidden'); }
+  else {
+    okEl.textContent = 'Account created! Please check your email to verify.';
+    okEl.classList.remove('hidden');
+    // Update phone in profile
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) await sb.from('profiles').update({ full_name: name, phone }).eq('id', session.user.id);
+  }
+}
+
+async function handleForgot() {
+  const email = document.getElementById('forgotEmail').value.trim();
+  if (!email) return;
+  const { error } = await sb.auth.resetPasswordForEmail(email);
+  const msgEl = document.getElementById('forgotMsg');
+  msgEl.textContent = error ? error.message : 'Reset link sent! Check your email.';
+  msgEl.classList.remove('hidden');
+}
+
+async function handleLogout() {
+  await sb.auth.signOut();
+  showPage('home');
+  toast('Logged out successfully', 'success');
+}
+
+// ══════════════════════════════════════════════════════════
+// CATEGORIES
+// ══════════════════════════════════════════════════════════
+async function loadCategories() {
+  const { data } = await sb.from('categories').select('*').eq('is_active', true).order('sort_order');
+  if (data) {
+    allCategories = data;
+    populateCatDropdowns();
+  }
+}
+
+function renderHomeCats() {
+  const grid = document.getElementById('homeCatGrid');
+  if (!allCategories.length) { setTimeout(renderHomeCats, 500); return; }
+  grid.innerHTML = allCategories.slice(0,10).map(c => `
+    <div class="cat-card reveal" onclick="filterByCategory('${c.id}')">
+      <div class="cat-bg"></div><div class="cat-pat"></div>
+      <div class="cat-em">${c.icon || '💍'}</div>
+      <div class="cat-name">${c.name.toUpperCase()}</div>
+    </div>`).join('');
+  initScrollReveal();
+}
+
+function populateCatDropdowns() {
+  const selects = ['shopCatFilter','adminProdCatFilter','p_category'];
+  selects.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const hasAll = id !== 'p_category';
+    el.innerHTML = (hasAll ? '<option value="">All Categories</option>' : '<option value="">Select…</option>') +
+      allCategories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+  });
+}
+
+function filterByCategory(catId) {
+  showPage('shop');
+  setTimeout(() => {
+    document.getElementById('shopCatFilter').value = catId;
+    loadShopProducts();
+  }, 100);
+}
+
+// ══════════════════════════════════════════════════════════
+// PRODUCTS
+// ══════════════════════════════════════════════════════════
+async function loadHomeProducts() {
+  const { data } = await sb.from('products').select('*,categories(name)').eq('is_active', true).or('is_bestseller.eq.true,is_featured.eq.true').limit(8);
+  renderProductGrid('featuredProds', data || [], 4);
+}
+
+async function loadShopProducts() {
+  const catId = document.getElementById('shopCatFilter').value;
+  const sort = document.getElementById('shopSortFilter').value;
+  const search = document.getElementById('shopSearch').value.trim();
+  let q = sb.from('products').select('*,categories(name)').eq('is_active', true);
+  if (catId) q = q.eq('category_id', catId);
+  if (search) q = q.ilike('name', `%${search}%`);
+  if (sort === 'price_asc') q = q.order('price', { ascending: true });
+  else if (sort === 'price_desc') q = q.order('price', { ascending: false });
+  else if (sort === 'rating_avg') q = q.order('rating_avg', { ascending: false });
+  else if (sort === 'sold_count') q = q.order('sold_count', { ascending: false });
+  else q = q.order('created_at', { ascending: false });
+  const { data } = await q;
+  renderProductGrid('shopProdGrid', data || [], 4);
+}
+
+async function loadBridalProducts() {
+  const cat = allCategories.find(c => c.slug === 'bridal');
+  if (!cat) { setTimeout(loadBridalProducts, 600); return; }
+  const { data } = await sb.from('products').select('*,categories(name)').eq('is_active', true).eq('category_id', cat.id).limit(8);
+  renderProductGrid('bridalProds', data || [], 4);
+}
+
+function loadShopCatFilter() { populateCatDropdowns(); }
+
+function renderProductGrid(gridId, products, cols) {
+  const grid = document.getElementById(gridId);
+  if (!products.length) {
+    grid.innerHTML = `<div style="grid-column:span ${cols};text-align:center;padding:3rem;color:var(--text-muted)">No products found.</div>`;
+    return;
+  }
+  grid.innerHTML = products.map(p => productCardHTML(p)).join('');
+  initScrollReveal();
+}
+
+function productCardHTML(p) {
+  const disc = p.mrp && p.mrp > p.price ? Math.round((1 - p.price/p.mrp)*100) : 0;
+  const inWish = wishlistIds.has(p.id);
+  const img = p.images && p.images[0] ? `<img src="${p.images[0]}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">` : (p.icon || '💍');
+  return `
+  <div class="prod-card reveal">
+    <div class="prod-img">
+      ${img}
+      ${p.badge ? `<div class="prod-badge">${p.badge}</div>` : ''}
+      <div class="prod-wish ${inWish?'active':''}" onclick="toggleWishlist('${p.id}',this)">♡</div>
+    </div>
+    <div class="prod-info">
+      <div class="prod-cat">${p.categories?.name || ''}</div>
+      <div class="prod-name">${p.name}</div>
+      ${p.weight_grams ? `<div class="prod-wt">${p.material || ''} · ${p.weight_grams}g · ${p.purity || ''} <span style='color:var(--gold);cursor:pointer;font-size:.6rem' onclick='openSizeGuide()'>SIZE GUIDE</span></div>` : `<div class="prod-wt">${p.material || ''}</div>`}
+      ${p.rating_count > 0 ? `<div style="display:flex;align-items:center;gap:.4rem"><span class="stars">${'★'.repeat(Math.round(p.rating_avg))}${'☆'.repeat(5-Math.round(p.rating_avg))}</span><span class="rat-count">(${p.rating_count})</span></div>` : ''}
+      <div class="prod-price-row">
+        <span class="prod-price">₹${Number(p.price).toLocaleString('en-IN')}</span>
+        ${p.mrp && p.mrp > p.price ? `<span class="prod-mrp">₹${Number(p.mrp).toLocaleString('en-IN')}</span><span class="prod-disc">${disc}% OFF</span>` : ''}
+      </div>
+      ${p.stock_quantity > 0 && p.stock_quantity <= 5 ? `<div class="stock-txt">⚠ Only ${p.stock_quantity} left!</div><div class="stock-bar"><div class="stock-fill" style="width:${p.stock_quantity*20}%"></div></div>` : ''}
+      <div class="prod-actions">
+        <button class="btn-cart" onclick="addToCart(${JSON.stringify(p).replace(/"/g,'&quot;')})">ADD TO CART</button>
+        <button class="btn-buy" onclick="buyNow(${JSON.stringify(p).replace(/"/g,'&quot;')})">BUY NOW</button>
+      </div>
+      <div style="display:flex;gap:.4rem;margin-top:.4rem">
+        <button class="inq-btn" style="flex:1" onclick='openInquiry(${JSON.stringify(p).replace(/'/g,"\'")})'  >INQUIRE</button>
+        <button class="wa-order-btn" style="flex:1;justify-content:center;font-size:.55rem;padding:.35rem .5rem" onclick='whatsappProduct(${JSON.stringify(p).replace(/'/g,"\'")})'>💬 WA</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════════
+// WISHLIST
+// ══════════════════════════════════════════════════════════
+async function loadWishlistFromDB() {
+  if (!currentUser) return;
+  const { data } = await sb.from('wishlists').select('product_id').eq('user_id', currentUser.id);
+  if (data) {
+    wishlistIds = new Set(data.map(w => w.product_id));
+    updateWishBadge();
+  }
+}
+
+function updateWishBadge() {
+  const b = document.getElementById('wishBadge');
+  if (wishlistIds.size > 0) { b.textContent = wishlistIds.size; b.classList.remove('hidden'); }
+  else b.classList.add('hidden');
+}
+
+async function toggleWishlist(productId, btn) {
+  if (!currentUser) { openAuth(); return; }
+  if (wishlistIds.has(productId)) {
+    await sb.from('wishlists').delete().eq('user_id', currentUser.id).eq('product_id', productId);
+    wishlistIds.delete(productId);
+    btn.classList.remove('active');
+    toast('Removed from wishlist');
+  } else {
+    await sb.from('wishlists').insert({ user_id: currentUser.id, product_id: productId });
+    wishlistIds.add(productId);
+    btn.classList.add('active');
+    toast('Added to wishlist 💛', 'success');
+  }
+  updateWishBadge();
+}
+
+async function renderWishlistPage() {
+  if (!currentUser) { openAuth(); return; }
+  const { data } = await sb.from('wishlists').select('product_id, products(*)').eq('user_id', currentUser.id);
+  const prods = data ? data.map(w => w.products) : [];
+  renderProductGrid('wishlistGrid', prods, 4);
+}
+
+// ══════════════════════════════════════════════════════════
+// CART
+// ══════════════════════════════════════════════════════════
+async function loadCartFromDB() {
+  if (!currentUser) return;
+  const { data } = await sb.from('cart_items').select('*,products(*)').eq('user_id', currentUser.id);
+  if (data) { cartItems = data; renderCartSidebar(); }
+}
+
+function toggleCart() {
+  const sidebar = document.getElementById('cartSidebar');
+  const bg = document.getElementById('cartBg');
+  sidebar.classList.toggle('open');
+  bg.classList.toggle('show');
+}
+
+async function addToCart(product) {
+  if (!currentUser) { openAuth(); return; }
+  const existing = cartItems.find(i => i.product_id === product.id);
+  if (existing) {
+    const newQty = existing.quantity + 1;
+    await sb.from('cart_items').update({ quantity: newQty }).eq('id', existing.id);
+    existing.quantity = newQty;
+  } else {
+    const { data } = await sb.from('cart_items').upsert({
+      user_id: currentUser.id, product_id: product.id, quantity: 1
+    }, { onConflict: 'user_id,product_id' }).select('*,products(*)').single();
+    if (data) cartItems.push(data);
+  }
+  renderCartSidebar();
+  toast('Added to bag! 🛍️', 'success');
+}
+
+function buyNow(product) {
+  addToCart(product).then(() => toggleCart());
+}
+
+async function updateCartQty(itemId, delta) {
+  const item = cartItems.find(i => i.id === itemId);
+  if (!item) return;
+  const newQty = item.quantity + delta;
+  if (newQty <= 0) { await removeCartItem(itemId); return; }
+  await sb.from('cart_items').update({ quantity: newQty }).eq('id', itemId);
+  item.quantity = newQty;
+  renderCartSidebar();
+}
+
+async function removeCartItem(itemId) {
+  await sb.from('cart_items').delete().eq('id', itemId);
+  cartItems = cartItems.filter(i => i.id !== itemId);
+  renderCartSidebar();
+}
+
+function renderCartSidebar() {
+  const list = document.getElementById('cartItemsList');
+  const badge = document.getElementById('cartBadge');
+  badge.textContent = cartItems.reduce((a,i) => a + i.quantity, 0);
+  if (!cartItems.length) {
+    list.innerHTML = `<div class="cart-empty"><div>🛍️</div>Your bag is empty<br><small>Add some jewellery to get started</small></div>`;
+    document.getElementById('cartCount').textContent = '';
+  } else {
+    document.getElementById('cartCount').textContent = `(${cartItems.length} items)`;
+    list.innerHTML = cartItems.map(item => {
+      const prod = item.products || {};
+      return `
+      <div class="cart-item">
+        <div class="cart-item-img">${prod.images?.[0] ? `<img src="${prod.images[0]}" style="width:100%;height:100%;object-fit:cover">` : '💍'}</div>
+        <div class="cart-item-info">
+          <div class="cart-item-name">${prod.name || 'Product'}</div>
+          <div class="cart-item-price">₹${Number(prod.price||0).toLocaleString('en-IN')}</div>
+          <div class="cart-item-qty">
+            <button class="qty-btn" onclick="updateCartQty('${item.id}',-1)">−</button>
+            <span class="qty-val">${item.quantity}</span>
+            <button class="qty-btn" onclick="updateCartQty('${item.id}',1)">+</button>
+            <button class="cart-remove" onclick="removeCartItem('${item.id}')">✕ Remove</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  updateCartTotals();
+}
+
+function updateCartTotals() {
+  const subtotal = cartItems.reduce((a,i) => a + (i.products?.price||0) * i.quantity, 0);
+  const shipping = subtotal > 2999 ? 0 : (subtotal > 0 ? 99 : 0);
+  const discounted = subtotal - couponDiscount;
+  const total = discounted + shipping;
+  document.getElementById('cartSubtotal').textContent = '₹' + subtotal.toLocaleString('en-IN');
+  document.getElementById('cartDiscount').textContent = couponDiscount > 0 ? '-₹' + couponDiscount.toLocaleString('en-IN') : '-₹0';
+  document.getElementById('cartShipping').textContent = shipping === 0 ? 'FREE' : '₹' + shipping;
+  document.getElementById('cartTotal').textContent = '₹' + total.toLocaleString('en-IN');
+}
+
+async function applyCoupon() {
+  const code = document.getElementById('couponInput').value.trim().toUpperCase();
+  if (!code) return;
+  const { data, error } = await sb.from('coupons').select('*').eq('code', code).eq('is_active', true).single();
+  if (error || !data) { toast('Invalid or expired coupon', 'error'); return; }
+  const subtotal = cartItems.reduce((a,i) => a + (i.products?.price||0) * i.quantity, 0);
+  if (subtotal < data.min_order_amount) { toast(`Minimum order ₹${data.min_order_amount} required`, 'error'); return; }
+  if (data.valid_until && new Date(data.valid_until) < new Date()) { toast('Coupon expired', 'error'); return; }
+  appliedCoupon = data;
+  couponDiscount = data.discount_type === 'percent'
+    ? Math.min(subtotal * data.discount_value / 100, data.max_discount || Infinity)
+    : data.discount_value;
+  updateCartTotals();
+  toast(`Coupon applied! Saving ₹${couponDiscount.toFixed(0)} 🎉`, 'success');
+}
+
+function proceedCheckout() {
+  if (!currentUser) { closeCart(); openAuth(); return; }
+  if (!cartItems.length) { toast('Add items to your cart first', 'error'); return; }
+  closeCart();
+  openPayModal();
+}
+
+function openPayModal() {
+  const total = cartItems.reduce((a,i) => a + (i.products?.price||0) * i.quantity, 0) - couponDiscount;
+  const shipping = total > 2999 ? 0 : 99;
+  document.getElementById('payTotalAmt').textContent = '₹' + (total + shipping).toLocaleString('en-IN');
+  // Autofill from profile
+  if (currentProfile) {
+    document.getElementById('pay_name').value = currentProfile.full_name || '';
+    document.getElementById('pay_phone').value = currentProfile.phone || '';
+  }
+  document.getElementById('payModal').classList.remove('hidden');
+}
+
+function closePayModal() {
+  document.getElementById('payModal').classList.add('hidden');
+}
+
+let selectedPayMethod = 'upi';
+function selectPayMethod(method) {
+  selectedPayMethod = method;
+  document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('selected'));
+  document.getElementById('pm_' + method).classList.add('selected');
+  document.getElementById('upi_details').style.display = method === 'upi' ? 'block' : 'none';
+  document.getElementById('bank_details').style.display = method === 'bank' ? 'block' : 'none';
+}
+
+let payScreenshotFile = null;
+function handleScreenshot(input) {
+  payScreenshotFile = input.files[0];
+  const nameEl = input.id === 'upiScreenshot' ? 'screenshotName' : 'bankScreenshotName';
+  document.getElementById(nameEl).textContent = '✓ ' + (payScreenshotFile?.name || '');
+}
+
+async function confirmOrder() {
+  const name = document.getElementById('pay_name').value.trim();
+  const phone = document.getElementById('pay_phone').value.trim();
+  const addr = document.getElementById('pay_addr').value.trim();
+  const city = document.getElementById('pay_city').value.trim();
+  const pin = document.getElementById('pay_pin').value.trim();
+  if (!name || !phone || !addr || !city || !pin) { toast('Please fill all delivery details', 'error'); return; }
+  const txnId = selectedPayMethod === 'upi'
+    ? document.getElementById('pay_utr').value.trim()
+    : document.getElementById('pay_ref').value.trim();
+  if (!txnId) { toast('Please enter transaction ID / reference', 'error'); return; }
+  const subtotal = cartItems.reduce((a,i) => a + (i.products?.price||0) * i.quantity, 0);
+  const shipping = subtotal > 2999 ? 0 : 99;
+  const total = subtotal - couponDiscount + shipping;
+  const shippingAddr = { name, phone, address: addr, city, state: document.getElementById('pay_state').value, pincode: pin };
+  const orderNum = 'KNK-' + Date.now().toString(36).toUpperCase();
+  const { data: order, error } = await sb.from('orders').insert({
+    order_number: orderNum,
+    user_id: currentUser.id,
+    subtotal, discount_amount: couponDiscount, shipping_amount: shipping, total_amount: total,
+    payment_method: selectedPayMethod === 'upi' ? 'UPI' : 'Bank Transfer',
+    payment_id: txnId,
+    payment_status: 'pending',
+    shipping_address: shippingAddr,
+    coupon_code: appliedCoupon?.code || null
+  }).select().single();
+  if (error) { toast('Error placing order: ' + error.message, 'error'); return; }
+  // Insert order items
+  const items = cartItems.map(i => ({
+    order_id: order.id,
+    product_id: i.product_id,
+    product_name: i.products?.name || '',
+    product_image: i.products?.images?.[0] || '',
+    quantity: i.quantity,
+    unit_price: i.products?.price || 0,
+    total_price: (i.products?.price || 0) * i.quantity
+  }));
+  await sb.from('order_items').insert(items);
+  // Clear cart
+  await sb.from('cart_items').delete().eq('user_id', currentUser.id);
+  cartItems = []; appliedCoupon = null; couponDiscount = 0;
+  renderCartSidebar();
+  // Send WhatsApp confirmation
+  const waParts = ['*New Order - KANIKAARA*', 'Order: '+orderNum, 'Customer: '+name, 'Phone: '+phone, 'Total: Rs.'+total.toLocaleString('en-IN'), 'Payment: '+selectedPayMethod.toUpperCase(), 'Txn ID: '+txnId, 'Address: '+addr+', '+city+', '+pin];
+  const waMsg = encodeURIComponent(waParts.join('\n'));
+  const msgEl = document.getElementById('payOrderMsg');
+  msgEl.innerHTML = "<strong>Order Placed!</strong><br>Order #" + orderNum + "<br>We will confirm via WhatsApp soon.<br><a href='https://wa.me/917400000053?text=" + waMsg + "'  target='_blank' style='color:var(--gold)'>Send order on WhatsApp</a>";
+  msgEl.classList.remove('hidden');
+  toast('Order placed! 🎉', 'success');
+}
+
+function closeCart() {
+  document.getElementById('cartSidebar').classList.remove('open');
+  document.getElementById('cartBg').classList.remove('show');
+}
+
+// ══════════════════════════════════════════════════════════
+// CUSTOM ORDER
+// ══════════════════════════════════════════════════════════
+async function submitCustomOrder() {
+  const name = document.getElementById('cf_name').value.trim();
+  const phone = document.getElementById('cf_phone').value.trim();
+  if (!name || !phone) { toast('Name and phone are required', 'error'); return; }
+  const { error } = await sb.from('custom_order_requests').insert({
+    user_id: currentUser?.id || null,
+    full_name: name, phone,
+    email: document.getElementById('cf_email').value,
+    jewellery_type: document.getElementById('cf_type').value,
+    occasion: document.getElementById('cf_occasion').value,
+    budget_range: document.getElementById('cf_budget').value,
+    description: document.getElementById('cf_desc').value
+  });
+  if (error) { toast('Error submitting request', 'error'); return; }
+  const msg = document.getElementById('customFormMsg');
+  msg.textContent = 'Your custom order request has been submitted! We will contact you within 24 hours.';
+  msg.classList.remove('hidden');
+  ['cf_name','cf_phone','cf_email','cf_desc'].forEach(id => document.getElementById(id).value = '');
+  toast('Custom order submitted! 🎉', 'success');
+}
+
+// ══════════════════════════════════════════════════════════
+// EMAIL SUBSCRIPTION
+// ══════════════════════════════════════════════════════════
+async function subscribeEmail() {
+  const email = document.getElementById('popupEmail').value.trim();
+  if (!email) return;
+  await sb.from('email_subscriptions').upsert({ email, source: 'popup' }, { onConflict: 'email' });
+  localStorage.setItem('kk_popup_seen', '1');
+  document.getElementById('emailPopup').classList.add('hidden');
+  toast('Subscribed! Use WELCOME10 for 10% off 🎉', 'success');
+}
+function closePopup() { document.getElementById('emailPopup').classList.add('hidden'); localStorage.setItem('kk_popup_seen','1'); }
+
+// ══════════════════════════════════════════════════════════
+// SETTINGS
+// ══════════════════════════════════════════════════════════
+async function loadSettings() {
+  const { data } = await sb.from('site_settings').select('*');
+  if (data) {
+    data.forEach(s => { siteSettings[s.key] = s.value; });
+    if (siteSettings.announcement_text) document.getElementById('annBar').textContent = siteSettings.announcement_text;
+    if (siteSettings.gold_rate_22k) document.getElementById('r22k').textContent = '₹' + Number(siteSettings.gold_rate_22k).toLocaleString('en-IN');
+    if (siteSettings.gold_rate_24k) document.getElementById('r24k').textContent = '₹' + Number(siteSettings.gold_rate_24k).toLocaleString('en-IN');
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// USER DASHBOARD
+// ══════════════════════════════════════════════════════════
+async function loadUserDashboard() {
+  if (!currentUser) { openAuth(); return; }
+  const p = currentProfile;
+  document.getElementById('dashName').textContent = p?.full_name || 'Customer';
+  document.getElementById('dashEmail').textContent = currentUser.email;
+  document.getElementById('prof_name').value = p?.full_name || '';
+  document.getElementById('prof_phone').value = p?.phone || '';
+  document.getElementById('prof_email').value = currentUser.email;
+  // Autofill loyalty section if exists
+  const loyaltyEl = document.getElementById('dashLoyalty');
+  if (loyaltyEl) loyaltyEl.innerHTML = renderLoyaltyCard();
+  document.getElementById('prof_dob').value = p?.date_of_birth || '';
+  document.getElementById('prof_anniv').value = p?.anniversary_date || '';
+  const lc = document.getElementById('dashLoyaltyContent'); if(lc) lc.innerHTML = renderLoyaltyCard();
+  loadUserOrders();
+  loadUserAddresses();
+  loadUserCustomRequests();
+}
+
+function switchDash(section) {
+  document.querySelectorAll('.dash-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.dash-nav li').forEach(l => l.classList.remove('active'));
+  document.getElementById('dash' + section.charAt(0).toUpperCase() + section.slice(1)).classList.add('active');
+  document.getElementById('dnav' + section.charAt(0).toUpperCase() + section.slice(1)).classList.add('active');
+  if (section === 'wishlist') { loadDashWishlist(); }
+  if (section === 'loyalty') {
+    document.getElementById('dashLoyaltyContent').innerHTML = renderLoyaltyCard();
+  }
+}
+
+async function loadUserOrders() {
+  const { data } = await sb.from('orders').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
+  const el = document.getElementById('userOrdersList');
+  if (!data || !data.length) { el.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted)">No orders yet. Start shopping!</div>'; return; }
+  el.innerHTML = `<table class="orders-table"><thead><tr><th>ORDER #</th><th>DATE</th><th>ITEMS</th><th>TOTAL</th><th>STATUS</th></tr></thead><tbody>${
+    data.map(o => `<tr>
+      <td class="gold">${o.order_number}</td>
+      <td>${new Date(o.created_at).toLocaleDateString('en-IN')}</td>
+      <td>${o.total_amount ? '—' : '—'}</td>
+      <td class="gold">₹${Number(o.total_amount).toLocaleString('en-IN')}</td>
+      <td><span class="status-badge status-${o.status}">${o.status.toUpperCase()}</span></td>
+    </tr>`).join('')
+  }</tbody></table>`;
+}
+
+async function loadDashWishlist() {
+  const { data } = await sb.from('wishlists').select('products(*)').eq('user_id', currentUser.id);
+  const prods = data ? data.map(w => w.products) : [];
+  renderProductGrid('dashWishGrid', prods, 4);
+}
+
+async function loadUserAddresses() {
+  const { data } = await sb.from('addresses').select('*').eq('user_id', currentUser.id);
+  const el = document.getElementById('addressesList');
+  if (!data || !data.length) { el.innerHTML = '<div style="color:var(--text-muted);font-size:.8rem">No saved addresses</div>'; return; }
+  el.innerHTML = data.map(a => `
+    <div style="background:var(--navy-mid);border:1px solid var(--border-gold);padding:1rem;margin-bottom:.8rem">
+      <div style="font-family:Cinzel,serif;font-size:.65rem;color:var(--gold);margin-bottom:.4rem">${a.label} ${a.is_default ? '(DEFAULT)' : ''}</div>
+      <div style="font-size:.8rem;color:var(--text-muted)">${a.full_name} | ${a.phone}<br>${a.address_line1}, ${a.city}, ${a.state} - ${a.pincode}</div>
+    </div>`).join('');
+}
+
+function showAddAddressForm() { document.getElementById('addAddressForm').classList.toggle('hidden'); }
+
+async function saveAddress() {
+  if (!currentUser) return;
+  const addr = {
+    user_id: currentUser.id,
+    full_name: document.getElementById('addr_name').value,
+    phone: document.getElementById('addr_phone').value,
+    address_line1: document.getElementById('addr_line1').value,
+    address_line2: document.getElementById('addr_line2').value,
+    city: document.getElementById('addr_city').value,
+    state: document.getElementById('addr_state').value,
+    pincode: document.getElementById('addr_pin').value
+  };
+  if (!addr.full_name || !addr.address_line1 || !addr.city) { toast('Please fill required fields', 'error'); return; }
+  await sb.from('addresses').insert(addr);
+  toast('Address saved!', 'success');
+  document.getElementById('addAddressForm').classList.add('hidden');
+  loadUserAddresses();
+}
+
+async function updateProfile() {
+  if (!currentUser) return;
+  const { error } = await sb.from('profiles').update({
+    full_name: document.getElementById('prof_name').value,
+    phone: document.getElementById('prof_phone').value,
+    date_of_birth: document.getElementById('prof_dob').value || null,
+    anniversary_date: document.getElementById('prof_anniv').value || null
+  }).eq('id', currentUser.id);
+  if (error) toast('Error updating profile', 'error');
+  else { toast('Profile updated! 💛', 'success'); const {data} = await sb.from('profiles').select('*').eq('id',currentUser.id).single(); currentProfile = data; updateAuthUI(); }
+}
+
+async function loadUserCustomRequests() {
+  if (!currentUser) return;
+  const { data } = await sb.from('custom_order_requests').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
+  const el = document.getElementById('customRequestsList');
+  if (!data || !data.length) { el.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted)">No custom order requests yet.</div>'; return; }
+  el.innerHTML = data.map(r => `
+    <div style="background:var(--navy-mid);border:1px solid var(--border-gold);padding:1rem;margin-bottom:.8rem">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem">
+        <span style="font-family:Cinzel,serif;font-size:.68rem;color:var(--gold)">${r.jewellery_type || 'Custom Order'}</span>
+        <span class="status-badge status-${r.status === 'new' ? 'pending' : 'processing'}">${r.status.toUpperCase()}</span>
+      </div>
+      <div style="font-size:.75rem;color:var(--text-muted)">${r.description || '—'}</div>
+      <div style="font-size:.7rem;color:var(--text-muted);margin-top:.3rem">${new Date(r.created_at).toLocaleDateString('en-IN')}</div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════════════════════
+// ADMIN
+// ══════════════════════════════════════════════════════════
+function checkAdminAccess() {
+  const isAdmin = currentProfile && ['admin','superadmin'].includes(currentProfile.role)
+    || (currentUser && currentUser.email === 'avinashnaruka89@gmail.com');
+  if (!isAdmin) {
+    toast('Admin access required', 'error');
+    showPage('home');
+  }
+}
+
+function switchAdmin(section) {
+  document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.admin-nav li').forEach(l => l.classList.remove('active'));
+  document.getElementById('admin' + section.charAt(0).toUpperCase() + section.slice(1)).classList.add('active');
+  document.getElementById('anav' + section.charAt(0).toUpperCase() + section.slice(1))?.classList.add('active');
+  // Load section data
+  const loaders = {
+    dashboard: loadAdminDashboard, products: loadAdminProducts,
+    categories: loadAdminCats, orders: loadAdminOrders,
+    customers: loadAdminCustomers, customOrders: loadAdminCustom,
+    reviews: loadAdminReviews, coupons: loadAdminCoupons,
+    subscriptions: loadAdminSubs, settings: loadAdminSettings
+  };
+  loaders[section]?.();
+}
+
+async function loadAdminDashboard() {
+  const [orders, products, customers, pending, customReqs] = await Promise.all([
+    sb.from('orders').select('total_amount,created_at'),
+    sb.from('products').select('id,name,stock_quantity').eq('is_active',true),
+    sb.from('profiles').select('id').neq('role','superadmin').neq('role','admin'),
+    sb.from('orders').select('id').eq('status','pending'),
+    sb.from('custom_order_requests').select('*').eq('status','new').order('created_at',{ascending:false}).limit(5)
+  ]);
+  const revenue = orders.data?.reduce((a,o) => a + Number(o.total_amount||0), 0) || 0;
+  document.getElementById('sTotalRev').textContent = '₹' + revenue.toLocaleString('en-IN');
+  document.getElementById('sTotalOrders').textContent = orders.data?.length || 0;
+  document.getElementById('sTotalCust').textContent = customers.data?.length || 0;
+  document.getElementById('sPending').textContent = pending.data?.length || 0;
+  // Sales chart
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const monthly = {};
+  (orders.data||[]).forEach(o => {
+    const m = new Date(o.created_at).getMonth();
+    monthly[m] = (monthly[m]||0) + Number(o.total_amount||0);
+  });
+  const maxVal = Math.max(...Object.values(monthly), 1);
+  const now = new Date().getMonth();
+  const chartEl = document.getElementById('adminSalesChart');
+  if (chartEl) {
+    let html = '';
+    for (let i = Math.max(0,now-5); i<=now; i++) {
+      const v = monthly[i]||0;
+      html += '<div class="chart-bar-row"><div class="chart-bar-label">' + months[i] + '</div><div class="chart-bar-bg"><div class="chart-bar-fill" style="width:' + Math.round(v/maxVal*100) + '%"></div></div><div class="chart-bar-val">Rs.' + Math.round(v/1000) + 'K</div></div>';
+    }
+    chartEl.innerHTML = html || '<div style="color:var(--text-muted);font-size:.75rem">No sales data yet</div>';
+  }
+  // Low stock
+  const lowStockEl = document.getElementById('adminLowStock');
+  if (lowStockEl && products.data) {
+    const low = products.data.filter(p => p.stock_quantity > 0 && p.stock_quantity <= 5);
+    const out = products.data.filter(p => p.stock_quantity === 0);
+    if (low.length || out.length) {
+      lowStockEl.innerHTML = out.map(p => '<div style="display:flex;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid var(--border-gold);font-size:.75rem"><span>' + p.name + '</span><span class="low-stock">OUT OF STOCK</span></div>').join('')
+        + low.map(p => '<div style="display:flex;justify-content:space-between;padding:.4rem 0;border-bottom:1px solid var(--border-gold);font-size:.75rem"><span>' + p.name + '</span><span class="low-stock">ONLY ' + p.stock_quantity + ' LEFT</span></div>').join('');
+      lowStockEl.style.display = 'block';
+    }
+  }
+
+  const { data: recentOrders } = await sb.from('orders').select('*').order('created_at',{ascending:false}).limit(5);
+  document.getElementById('recentOrdersList').innerHTML = (recentOrders||[]).map(o => `
+    <div style="display:flex;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid rgba(201,168,76,.08);font-size:.75rem">
+      <span class="gold">${o.order_number}</span>
+      <span style="color:var(--text-muted)">₹${Number(o.total_amount).toLocaleString('en-IN')}</span>
+      <span class="status-badge status-${o.status}">${o.status}</span>
+    </div>`).join('') || '<div style="color:var(--text-muted);font-size:.75rem">No orders yet</div>';
+
+  document.getElementById('recentCustomList').innerHTML = (customReqs.data||[]).map(r => `
+    <div style="padding:.5rem 0;border-bottom:1px solid rgba(201,168,76,.08);font-size:.75rem">
+      <div class="gold">${r.full_name} — ${r.jewellery_type || 'Custom'}</div>
+      <div style="color:var(--text-muted)">${r.phone} | ${r.budget_range || '—'}</div>
+    </div>`).join('') || '<div style="color:var(--text-muted);font-size:.75rem">No new requests</div>';
+}
+
+async function loadAdminProducts() {
+  populateCatDropdowns();
+  const catFilter = document.getElementById('adminProdCatFilter')?.value || '';
+  const search = document.getElementById('adminProdSearch')?.value.trim() || '';
+  let q = sb.from('products').select('*,categories(name)').order('created_at',{ascending:false});
+  if (catFilter) q = q.eq('category_id', catFilter);
+  if (search) q = q.ilike('name', `%${search}%`);
+  const { data } = await q;
+  const el = document.getElementById('adminProdsTable');
+  if (!data?.length) { el.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted)">No products found.</div>'; return; }
+  el.innerHTML = `<table class="admin-table"><thead><tr><th>NAME</th><th>CATEGORY</th><th>PRICE</th><th>STOCK</th><th>STATUS</th><th>FEATURED</th><th>ACTIONS</th></tr></thead><tbody>${
+    data.map(p => `<tr>
+      <td class="gold">${p.name}</td>
+      <td>${p.categories?.name || '—'}</td>
+      <td>₹${Number(p.price).toLocaleString('en-IN')}</td>
+      <td style="color:${p.stock_quantity < 5 ? 'var(--danger)' : 'var(--text-muted)'}">${p.stock_quantity}</td>
+      <td><label class="toggle-switch"><input type="checkbox" ${p.is_active?'checked':''} onchange="toggleProduct('${p.id}','is_active',this.checked)"><span class="slider"></span></label></td>
+      <td><label class="toggle-switch"><input type="checkbox" ${p.is_featured?'checked':''} onchange="toggleProduct('${p.id}','is_featured',this.checked)"><span class="slider"></span></label></td>
+      <td><button class="action-btn" onclick="editProduct(${JSON.stringify(p).replace(/"/g,'&quot;')})">Edit</button> <button class="action-btn del" onclick="deleteProduct('${p.id}')">Del</button></td>
+    </tr>`).join('')
+  }</tbody></table>`;
+}
+
+async function toggleProduct(id, field, val) {
+  await sb.from('products').update({ [field]: val }).eq('id', id);
+}
+
+function showAddProduct() {
+  editingProductId = null;
+  document.getElementById('p_editId').value = '';
+  document.getElementById('prodFormTitle').textContent = 'ADD NEW PRODUCT';
+  ['p_name','p_price','p_mrp','p_weight','p_material','p_purity','p_badge','p_desc','p_images','p_stone'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('p_stock').value = '10';
+  document.getElementById('p_delivery').value = '5';
+  ['p_featured','p_bestseller','p_new_arrival','p_customizable'].forEach(id => document.getElementById(id).checked = false);
+  document.getElementById('addProductForm').classList.remove('hidden');
+}
+function hideAddProduct() { document.getElementById('addProductForm').classList.add('hidden'); }
+
+function editProduct(p) {
+  editingProductId = p.id;
+  document.getElementById('prodFormTitle').textContent = 'EDIT PRODUCT';
+  document.getElementById('p_editId').value = p.id;
+  document.getElementById('p_name').value = p.name || '';
+  document.getElementById('p_price').value = p.price || '';
+  document.getElementById('p_mrp').value = p.mrp || '';
+  document.getElementById('p_weight').value = p.weight_grams || '';
+  document.getElementById('p_material').value = p.material || '';
+  document.getElementById('p_purity').value = p.purity || '';
+  document.getElementById('p_stock').value = p.stock_quantity || '';
+  document.getElementById('p_badge').value = p.badge || '';
+  document.getElementById('p_delivery').value = p.delivery_days || 5;
+  document.getElementById('p_desc').value = p.description || '';
+  document.getElementById('p_images').value = (p.images || []).join('\n');
+  document.getElementById('p_stone').value = p.stone_details || '';
+  document.getElementById('p_category').value = p.category_id || '';
+  document.getElementById('p_featured').checked = p.is_featured;
+  document.getElementById('p_bestseller').checked = p.is_bestseller;
+  document.getElementById('p_new_arrival').checked = p.is_new_arrival;
+  document.getElementById('p_customizable').checked = p.is_customizable;
+  document.getElementById('addProductForm').classList.remove('hidden');
+  document.getElementById('addProductForm').scrollIntoView({behavior:'smooth'});
+}
+
+async function saveProduct() {
+  const name = document.getElementById('p_name').value.trim();
+  const price = parseFloat(document.getElementById('p_price').value);
+  const catId = document.getElementById('p_category').value;
+  if (!name || !price) { toast('Name and price are required', 'error'); return; }
+  const images = document.getElementById('p_images').value.split('\n').map(s => s.trim()).filter(Boolean);
+  const payload = {
+    name, price, category_id: catId || null,
+    mrp: parseFloat(document.getElementById('p_mrp').value) || null,
+    weight_grams: parseFloat(document.getElementById('p_weight').value) || null,
+    material: document.getElementById('p_material').value,
+    purity: document.getElementById('p_purity').value,
+    stock_quantity: parseInt(document.getElementById('p_stock').value) || 0,
+    badge: document.getElementById('p_badge').value || null,
+    delivery_days: parseInt(document.getElementById('p_delivery').value) || 5,
+    description: document.getElementById('p_desc').value,
+    stone_details: document.getElementById('p_stone').value,
+    images,
+    is_featured: document.getElementById('p_featured').checked,
+    is_bestseller: document.getElementById('p_bestseller').checked,
+    is_new_arrival: document.getElementById('p_new_arrival').checked,
+    is_customizable: document.getElementById('p_customizable').checked,
+    slug: name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') + '-' + Date.now()
+  };
+  const editId = document.getElementById('p_editId').value;
+  let error;
+  if (editId) {
+    delete payload.slug;
+    ({ error } = await sb.from('products').update(payload).eq('id', editId));
+  } else {
+    ({ error } = await sb.from('products').insert(payload));
+  }
+  if (error) { toast('Error saving product: ' + error.message, 'error'); return; }
+  toast(editId ? 'Product updated!' : 'Product added! 💛', 'success');
+  hideAddProduct();
+  loadAdminProducts();
+  loadHomeProducts();
+}
+
+async function deleteProduct(id) {
+  if (!confirm('Delete this product?')) return;
+  await sb.from('products').delete().eq('id', id);
+  toast('Product deleted', 'success');
+  loadAdminProducts();
+}
+
+async function loadAdminCats() {
+  const { data } = await sb.from('categories').select('*').order('sort_order');
+  const el = document.getElementById('adminCatsTable');
+  el.innerHTML = `<table class="admin-table"><thead><tr><th>ICON</th><th>NAME</th><th>SLUG</th><th>ACTIVE</th><th>ACTIONS</th></tr></thead><tbody>${
+    (data||[]).map(c => `<tr>
+      <td style="font-size:1.2rem">${c.icon||'—'}</td>
+      <td class="gold">${c.name}</td><td style="color:var(--text-muted)">${c.slug}</td>
+      <td><label class="toggle-switch"><input type="checkbox" ${c.is_active?'checked':''} onchange="sb.from('categories').update({is_active:this.checked}).eq('id','${c.id}').then(()=>loadAdminCats())"><span class="slider"></span></label></td>
+      <td><button class="action-btn del" onclick="sb.from('categories').delete().eq('id','${c.id}').then(()=>{loadAdminCats();loadCategories();})">Del</button></td>
+    </tr>`).join('')
+  }</tbody></table>`;
+}
+function showAddCat() { document.getElementById('addCatForm').classList.toggle('hidden'); }
+async function saveCategory() {
+  const name = document.getElementById('cat_name').value.trim();
+  const slug = document.getElementById('cat_slug').value.trim() || name.toLowerCase().replace(/\s+/g,'-');
+  const icon = document.getElementById('cat_icon').value.trim();
+  if (!name) return;
+  await sb.from('categories').insert({ name, slug, icon });
+  toast('Category added!', 'success');
+  document.getElementById('addCatForm').classList.add('hidden');
+  loadAdminCats(); loadCategories();
+}
+
+async function loadAdminOrders() {
+  const status = document.getElementById('adminOrderStatus')?.value;
+  let q = sb.from('orders').select('*').order('created_at',{ascending:false}).limit(50);
+  if (status) q = q.eq('status', status);
+  const { data } = await q;
+  document.getElementById('adminOrdersTable').innerHTML = `<table class="admin-table"><thead><tr><th>ORDER #</th><th>DATE</th><th>AMOUNT</th><th>PAYMENT</th><th>STATUS</th><th>UPDATE</th></tr></thead><tbody>${
+    (data||[]).map(o => `<tr>
+      <td class="gold">${o.order_number}</td>
+      <td>${new Date(o.created_at).toLocaleDateString('en-IN')}</td>
+      <td>₹${Number(o.total_amount).toLocaleString('en-IN')}</td>
+      <td><span class="status-badge status-${o.payment_status==='paid'?'delivered':'pending'}">${o.payment_status}</span></td>
+      <td><span class="status-badge status-${o.status}">${o.status}</span></td>
+      <td>
+        <select class="filter-select" style="padding:.25rem .5rem;font-size:.65rem" onchange="updateOrderStatus('${o.id}',this.value)">
+          ${['pending','confirmed','processing','packed','shipped','delivered','cancelled'].map(s => `<option ${s===o.status?'selected':''}>${s}</option>`).join('')}
+        </select>
+      </td>
+    </tr>`).join('')
+  }</tbody></table>`;
+}
+
+async function updateOrderStatus(orderId, status) {
+  await sb.from('orders').update({ status }).eq('id', orderId);
+  toast('Order status updated', 'success');
+}
+
+async function loadAdminCustomers() {
+  const { data } = await sb.from('profiles').select('*').order('created_at',{ascending:false}).limit(100);
+  document.getElementById('adminCustTable').innerHTML = `<table class="admin-table"><thead><tr><th>NAME</th><th>EMAIL</th><th>PHONE</th><th>ORDERS</th><th>SPENT</th><th>POINTS</th><th>MAKE ADMIN</th></tr></thead><tbody>${
+    (data||[]).map(c => `<tr>
+      <td class="gold">${c.full_name||'—'}</td>
+      <td style="color:var(--text-muted)">${'—'}</td>
+      <td>${c.phone||'—'}</td>
+      <td>${c.total_orders}</td>
+      <td>₹${Number(c.total_spent).toLocaleString('en-IN')}</td>
+      <td>${c.loyalty_points}</td>
+      <td><button class="action-btn" onclick="makeAdmin('${c.id}')">Make Admin</button></td>
+    </tr>`).join('')
+  }</tbody></table>`;
+}
+
+async function makeAdmin(id) {
+  if (!confirm('Make this user an admin?')) return;
+  await sb.from('profiles').update({ role: 'admin' }).eq('id', id);
+  toast('User is now admin', 'success');
+  loadAdminCustomers();
+}
+
+async function loadAdminCustom() {
+  const status = document.getElementById('adminCustomStatus')?.value;
+  let q = sb.from('custom_order_requests').select('*').order('created_at',{ascending:false}).limit(50);
+  if (status) q = q.eq('status', status);
+  const { data } = await q;
+  document.getElementById('adminCustomTable').innerHTML = `<table class="admin-table"><thead><tr><th>DATE</th><th>NAME</th><th>PHONE</th><th>TYPE</th><th>BUDGET</th><th>STATUS</th><th>UPDATE</th></tr></thead><tbody>${
+    (data||[]).map(r => `<tr>
+      <td>${new Date(r.created_at).toLocaleDateString('en-IN')}</td>
+      <td class="gold">${r.full_name}</td>
+      <td>${r.phone}</td>
+      <td>${r.jewellery_type||'—'}</td>
+      <td>${r.budget_range||'—'}</td>
+      <td><span class="status-badge status-pending">${r.status}</span></td>
+      <td>
+        <select class="filter-select" style="padding:.25rem .5rem;font-size:.65rem" onchange="sb.from('custom_order_requests').update({status:this.value}).eq('id','${r.id}').then(()=>toast('Updated','success'))">
+          ${['new','reviewing','quoted','accepted','in_production','completed','cancelled'].map(s => `<option ${s===r.status?'selected':''}>${s}</option>`).join('')}
+        </select>
+      </td>
+    </tr>`).join('')
+  }</tbody></table>`;
+}
+
+async function loadAdminReviews() {
+  const { data } = await sb.from('reviews').select('*,products(name)').eq('is_approved', false).order('created_at',{ascending:false});
+  document.getElementById('adminRevsTable').innerHTML = `<table class="admin-table"><thead><tr><th>PRODUCT</th><th>RATING</th><th>REVIEW</th><th>DATE</th><th>ACTIONS</th></tr></thead><tbody>${
+    (data||[]).map(r => `<tr>
+      <td class="gold">${r.products?.name||'—'}</td>
+      <td>${'★'.repeat(r.rating)}</td>
+      <td style="max-width:300px;font-size:.7rem">${r.body||'—'}</td>
+      <td>${new Date(r.created_at).toLocaleDateString('en-IN')}</td>
+      <td>
+        <button class="action-btn" onclick="approveReview('${r.id}')">Approve</button>
+        <button class="action-btn del" onclick="sb.from('reviews').delete().eq('id','${r.id}').then(()=>loadAdminReviews())">Del</button>
+      </td>
+    </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--text-muted)">No pending reviews</td></tr>'
+  }</tbody></table>`;
+}
+
+async function approveReview(id) {
+  await sb.from('reviews').update({ is_approved: true }).eq('id', id);
+  toast('Review approved', 'success');
+  loadAdminReviews();
+}
+
+async function loadAdminCoupons() {
+  const { data } = await sb.from('coupons').select('*').order('created_at',{ascending:false});
+  document.getElementById('adminCouponsTable').innerHTML = `<table class="admin-table"><thead><tr><th>CODE</th><th>TYPE</th><th>VALUE</th><th>MIN ORDER</th><th>USED</th><th>ACTIVE</th><th>DEL</th></tr></thead><tbody>${
+    (data||[]).map(c => `<tr>
+      <td class="gold" style="letter-spacing:.1em">${c.code}</td>
+      <td>${c.discount_type}</td>
+      <td>${c.discount_type==='percent' ? c.discount_value+'%' : '₹'+c.discount_value}</td>
+      <td>₹${c.min_order_amount||0}</td>
+      <td>${c.used_count||0}${c.usage_limit ? '/'+c.usage_limit : ''}</td>
+      <td><label class="toggle-switch"><input type="checkbox" ${c.is_active?'checked':''} onchange="sb.from('coupons').update({is_active:this.checked}).eq('id','${c.id}').then(()=>{})"><span class="slider"></span></label></td>
+      <td><button class="action-btn del" onclick="sb.from('coupons').delete().eq('id','${c.id}').then(()=>loadAdminCoupons())">Del</button></td>
+    </tr>`).join('')
+  }</tbody></table>`;
+}
+function showAddCoupon() { document.getElementById('addCouponForm').classList.toggle('hidden'); }
+async function saveCoupon() {
+  const code = document.getElementById('coup_code').value.trim().toUpperCase();
+  const val = parseFloat(document.getElementById('coup_val').value);
+  if (!code || !val) return;
+  const { error } = await sb.from('coupons').insert({
+    code, discount_type: document.getElementById('coup_type').value,
+    discount_value: val,
+    min_order_amount: parseFloat(document.getElementById('coup_min').value) || 0,
+    usage_limit: parseInt(document.getElementById('coup_limit').value) || null,
+    valid_until: document.getElementById('coup_until').value || null,
+    description: document.getElementById('coup_desc').value
+  });
+  if (error) { toast('Error: ' + (error.message.includes('duplicate') ? 'Code already exists' : error.message), 'error'); return; }
+  toast('Coupon created! 🎫', 'success');
+  document.getElementById('addCouponForm').classList.add('hidden');
+  loadAdminCoupons();
+}
+
+async function loadAdminSubs() {
+  const { data } = await sb.from('email_subscriptions').select('*').order('created_at',{ascending:false}).limit(100);
+  document.getElementById('adminSubsTable').innerHTML = `<div style="margin-bottom:.8rem;font-size:.75rem;color:var(--text-muted)">Total: ${data?.length||0} subscribers</div>
+  <table class="admin-table"><thead><tr><th>EMAIL</th><th>NAME</th><th>SOURCE</th><th>DATE</th><th>ACTIVE</th></tr></thead><tbody>${
+    (data||[]).map(s => `<tr>
+      <td class="gold">${s.email}</td>
+      <td>${s.name||'—'}</td>
+      <td>${s.source||'—'}</td>
+      <td>${new Date(s.created_at).toLocaleDateString('en-IN')}</td>
+      <td>${s.is_active ? '✓' : '✗'}</td>
+    </tr>`).join('')
+  }</tbody></table>`;
+}
+
+async function loadAdminSettings() {
+  const { data } = await sb.from('site_settings').select('*').order('key');
+  const el = document.getElementById('adminSettingsForm');
+  el.innerHTML = (data||[]).map(s => `
+    <div class="form-group" style="margin-bottom:.8rem">
+      <label class="form-label">${s.label || s.key}</label>
+      <input type="text" class="form-input" id="setting_${s.key}" value="${s.value||''}" style="max-width:500px">
+    </div>`).join('');
+  el._settings = data || [];
+}
+
+async function saveSettings() {
+  const form = document.getElementById('adminSettingsForm');
+  const settings = form._settings || [];
+  for (const s of settings) {
+    const el = document.getElementById('setting_' + s.key);
+    if (el) await sb.from('site_settings').update({ value: el.value }).eq('key', s.key);
+  }
+  toast('Settings saved!', 'success');
+  loadSettings();
+}
+
+
+// ══════════════════════════════════════════════════════════
+// PRODUCT INQUIRY & WHATSAPP
+// ══════════════════════════════════════════════════════════
+let currentInquiryProduct = null;
+
+function openInquiry(product) {
+  currentInquiryProduct = product;
+  document.getElementById('inqProductName').textContent = product.name;
+  if (currentProfile) {
+    document.getElementById('inq_name').value = currentProfile.full_name || '';
+    document.getElementById('inq_phone').value = currentProfile.phone || '';
+  }
+  document.getElementById('inqModal').classList.remove('hidden');
+}
+
+async function submitInquiry() {
+  const name = document.getElementById('inq_name').value.trim();
+  const phone = document.getElementById('inq_phone').value.trim();
+  if (!name || !phone) { toast('Name and phone required', 'error'); return; }
+  await sb.from('product_enquiries').insert({
+    product_id: currentInquiryProduct?.id,
+    user_id: currentUser?.id || null,
+    name, phone,
+    message: document.getElementById('inq_msg').value,
+    status: 'new'
+  });
+  document.getElementById('inqModal').classList.add('hidden');
+  toast('Inquiry sent! We will contact you soon.', 'success');
+}
+
+function whatsappInquiry() {
+  if (!currentInquiryProduct) return;
+  const msg = encodeURIComponent(`Hi KANIKAARA! I am interested in:
+*${currentInquiryProduct.name}*
+Price: Rs.${Number(currentInquiryProduct.price).toLocaleString('en-IN')}
+Please share more details.`);
+  window.open('https://wa.me/917400000053?text=' + msg, '_blank');
+  document.getElementById('inqModal').classList.add('hidden');
+}
+
+function whatsappProduct(product) {
+  const msg = encodeURIComponent(`Hi KANIKAARA! I want to buy:
+*${product.name}*
+Price: Rs.${Number(product.price).toLocaleString('en-IN')}
+Please confirm availability.`);
+  window.open('https://wa.me/917400000053?text=' + msg, '_blank');
+}
+
+// ══════════════════════════════════════════════════════════
+// FLASH SALE TIMER
+// ══════════════════════════════════════════════════════════
+function startFlashTimer() {
+  // Set sale end to 48 hours from page load
+  const stored = localStorage.getItem('kk_sale_end');
+  let saleEnd;
+  if (stored) {
+    saleEnd = parseInt(stored);
+  } else {
+    saleEnd = Date.now() + (48 * 60 * 60 * 1000);
+    localStorage.setItem('kk_sale_end', saleEnd);
+  }
+  function tick() {
+    const diff = saleEnd - Date.now();
+    if (diff <= 0) {
+      document.getElementById('flashSaleBar').style.display = 'none';
+      return;
+    }
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    document.getElementById('th').textContent = String(h).padStart(2,'0');
+    document.getElementById('tm').textContent = String(m).padStart(2,'0');
+    document.getElementById('ts').textContent = String(s).padStart(2,'0');
+  }
+  tick();
+  setInterval(tick, 1000);
+}
+
+// ══════════════════════════════════════════════════════════
+// SIZE GUIDE
+// ══════════════════════════════════════════════════════════
+function openSizeGuide() {
+  document.getElementById('sizeModal').classList.remove('hidden');
+}
+
+// ══════════════════════════════════════════════════════════
+// LOYALTY POINTS
+// ══════════════════════════════════════════════════════════
+function getLoyaltyTier(points) {
+  if (points >= 5000) return { name: 'PLATINUM', next: 10000, color: '#e2e8f0' };
+  if (points >= 2000) return { name: 'GOLD', next: 5000, color: '#c9a84c' };
+  if (points >= 500) return { name: 'SILVER', next: 2000, color: '#94a3b8' };
+  return { name: 'BRONZE', next: 500, color: '#cd7f32' };
+}
+
+function renderLoyaltyCard() {
+  const pts = currentProfile?.loyalty_points || 0;
+  const tier = getLoyaltyTier(pts);
+  const referCode = 'KNK' + (currentUser?.email?.substring(0,4) || 'USER').toUpperCase();
+  return `
+    <div class="loyalty-card" style="margin-bottom:1.2rem">
+      <div class="loyalty-label" style="color:${tier.color}">${tier.name} MEMBER</div>
+      <div class="loyalty-pts">${pts.toLocaleString('en-IN')}</div>
+      <div class="loyalty-label">LOYALTY POINTS</div>
+      <div class="loyalty-bar"><div class="loyalty-fill" style="width:${Math.min(pts/tier.next*100,100)}%"></div></div>
+      <div style="font-size:.65rem;color:var(--text-muted)">${tier.next - pts} points to ${tier.name === 'BRONZE' ? 'SILVER' : tier.name === 'SILVER' ? 'GOLD' : tier.name === 'GOLD' ? 'PLATINUM' : 'MAX'}</div>
+      <div style="font-size:.7rem;color:var(--text-muted);margin-top:.5rem">1 point = Re.1 discount on next order</div>
+    </div>
+    <div class="refer-box">
+      <div style="font-family:'Cinzel',serif;font-size:.65rem;color:var(--gold);letter-spacing:.15em">REFER & EARN</div>
+      <div style="font-size:.75rem;color:var(--text-muted);margin:.5rem 0">Share your code. Friend gets 10% off, you get 200 points!</div>
+      <div class="refer-code">${referCode}</div>
+      <button class="btn-outline" style="font-size:.6rem;padding:.4rem 1.2rem" onclick="navigator.clipboard.writeText('${referCode}').then(()=>toast('Code copied! 🎉','success'))">COPY CODE</button>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════════════════
+// PWA INSTALL
+// ══════════════════════════════════════════════════════════
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  setTimeout(() => document.getElementById('pwaBanner').classList.remove('hidden'), 5000);
+});
+
+async function installPWA() {
+  if (!deferredInstallPrompt) {
+    toast('To install: Use browser menu → "Add to Home Screen"', 'info');
+    return;
+  }
+  deferredInstallPrompt.prompt();
+  const result = await deferredInstallPrompt.userChoice;
+  if (result.outcome === 'accepted') toast('App installed! 🎉', 'success');
+  document.getElementById('pwaBanner').classList.add('hidden');
+  deferredInstallPrompt = null;
+}
+
+// PWA Manifest (inline)
+function setupPWA() {
+  const manifest = {
+    name: "KANIKAARA Jewellery",
+    short_name: "KANIKAARA",
+    description: "Grace in Gold, Stories Untold",
+    start_url: "./",
+    display: "standalone",
+    background_color: "#07112a",
+    theme_color: "#0d1b3e",
+    icons: [{ src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💍</text></svg>", sizes: "any", type: "image/svg+xml" }]
+  };
+  const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.getElementById('pwaManifest');
+  if (link) link.href = url;
+}
+
+</script>
+</body>
+</html>
