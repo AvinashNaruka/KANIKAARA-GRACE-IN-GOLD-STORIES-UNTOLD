@@ -1081,9 +1081,27 @@ footer{background:var(--navy-deep);border-top:1px solid var(--border-gold);paddi
             <div class="admin-form-grid">
               <div class="form-group"><label class="form-label">PRODUCT NAME *</label><input type="text" class="form-input" id="p_name"></div>
               <div class="form-group"><label class="form-label">CATEGORY *</label><select class="form-select" id="p_category"></select></div>
-              <div class="form-group"><label class="form-label">PRICE (₹) *</label><input type="number" class="form-input" id="p_price"></div>
+              <div class="form-group">
+                <label class="form-label">PRICE (₹) *</label>
+                <input type="number" class="form-input" id="p_price">
+                <div id="priceCalcHint" style="font-size:.65rem;color:var(--gold);margin-top:.3rem;display:none">
+                  💡 <span id="priceCalcText"></span>
+                  <button type="button" onclick="applyAutoPrice()" style="margin-left:.5rem;background:var(--gold-dark);color:var(--navy-deep);border:none;padding:.2rem .6rem;font-family:'Cinzel',serif;font-size:.55rem;cursor:pointer;letter-spacing:.08em">APPLY</button>
+                </div>
+              </div>
               <div class="form-group"><label class="form-label">MRP (₹)</label><input type="number" class="form-input" id="p_mrp"></div>
-              <div class="form-group"><label class="form-label">WEIGHT (grams)</label><input type="number" class="form-input" id="p_weight" step="0.001"></div>
+              <div class="form-group"><label class="form-label">WEIGHT (grams)</label><input type="number" class="form-input" id="p_weight" step="0.001" oninput="autoCalculatePrice()"></div>
+              <div class="form-group"><label class="form-label">METAL TYPE (rate ke liye)</label>
+                <select class="form-select" id="p_metal_type" onchange="autoCalculatePrice()">
+                  <option value="">-- Select Metal --</option>
+                  <option value="gold_24k">Gold 24K</option>
+                  <option value="gold_22k">Gold 22K</option>
+                  <option value="gold_18k">Gold 18K</option>
+                  <option value="gold_14k">Gold 14K</option>
+                  <option value="silver">Silver</option>
+                  <option value="other">Other / Manual</option>
+                </select>
+              </div>
               <div class="form-group"><label class="form-label">MATERIAL</label><input type="text" class="form-input" id="p_material" placeholder="e.g. 22K Gold, Diamond, Silver"></div>
               <div class="form-group"><label class="form-label">PURITY / HALLMARK</label><input type="text" class="form-input" id="p_purity" placeholder="e.g. BIS 22K, IGI Certified"></div>
               <div class="form-group"><label class="form-label">STOCK QUANTITY</label><input type="number" class="form-input" id="p_stock" value="10"></div>
@@ -1223,6 +1241,44 @@ footer{background:var(--navy-deep);border-top:1px solid var(--border-gold);paddi
           </div>
 
           <!-- ANNOUNCEMENT & GOLD RATES -->
+          <!-- GOLD / SILVER RATE MANAGER -->
+          <div style="background:var(--navy);border:1px solid var(--gold);padding:1.5rem;margin-bottom:1.5rem">
+            <div style="font-family:'Cinzel',serif;font-size:.8rem;letter-spacing:.15em;color:var(--gold);margin-bottom:.4rem">🪙 METAL RATE MANAGER</div>
+            <div style="font-size:.72rem;color:var(--text-muted);margin-bottom:1rem;font-style:italic">Rate update karo → Sabhi products ke prices automatically recalculate honge</div>
+            <div class="admin-form-grid" style="gap:.8rem">
+              <div class="form-group">
+                <label class="form-label">GOLD 24K RATE (₹/gram)</label>
+                <input type="number" class="form-input" id="rate_gold_24k" placeholder="e.g. 7200" style="max-width:200px">
+              </div>
+              <div class="form-group">
+                <label class="form-label">GOLD 22K RATE (₹/gram)</label>
+                <input type="number" class="form-input" id="rate_gold_22k" placeholder="e.g. 6600" style="max-width:200px">
+              </div>
+              <div class="form-group">
+                <label class="form-label">GOLD 18K RATE (₹/gram)</label>
+                <input type="number" class="form-input" id="rate_gold_18k" placeholder="e.g. 5400" style="max-width:200px">
+              </div>
+              <div class="form-group">
+                <label class="form-label">GOLD 14K RATE (₹/gram)</label>
+                <input type="number" class="form-input" id="rate_gold_14k" placeholder="e.g. 4200" style="max-width:200px">
+              </div>
+              <div class="form-group">
+                <label class="form-label">SILVER RATE (₹/gram)</label>
+                <input type="number" class="form-input" id="rate_silver" placeholder="e.g. 95" style="max-width:200px">
+              </div>
+              <div class="form-group">
+                <label class="form-label">MAKING CHARGES % (extra on metal cost)</label>
+                <input type="number" class="form-input" id="rate_making_pct" placeholder="e.g. 15" style="max-width:200px">
+              </div>
+            </div>
+            <div style="display:flex;gap:.8rem;margin-top:1rem;flex-wrap:wrap;align-items:center">
+              <button class="btn-primary" onclick="saveMetalRates()">💾 RATE SAVE KARO</button>
+              <button class="btn-primary" style="background:linear-gradient(135deg,#16a34a,#22c55e)" onclick="bulkUpdateProductPrices()">🔄 SABHI PRODUCTS UPDATE KARO</button>
+              <div id="bulkUpdateStatus" style="font-size:.72rem;color:var(--text-muted)"></div>
+            </div>
+            <div id="metalRatePreview" style="margin-top:1rem;font-size:.72rem;color:var(--text-muted);line-height:1.8"></div>
+          </div>
+
           <div id="adminSettingsForm"></div>
           <button class="btn-primary" style="margin-top:1rem" onclick="saveSettings()">SAVE ALL SETTINGS</button>
         </div>
@@ -1457,6 +1513,7 @@ let editingProductId = null;
 document.addEventListener('DOMContentLoaded', async () => {
   await loadCategories();
   await loadSettings();
+  await loadMetalRates();
   await initAuth();
   loadHomeProducts();
   renderHomeCats();
@@ -2344,6 +2401,8 @@ function showAddProduct() {
   document.getElementById('p_editId').value = '';
   document.getElementById('prodFormTitle').textContent = 'ADD NEW PRODUCT';
   ['p_name','p_price','p_mrp','p_weight','p_material','p_purity','p_badge','p_desc','p_images','p_stone'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('p_metal_type').value = '';
+  document.getElementById('priceCalcHint').style.display = 'none';
   document.getElementById('p_stock').value = '10';
   document.getElementById('p_delivery').value = '5';
   ['p_featured','p_bestseller','p_new_arrival','p_customizable'].forEach(id => document.getElementById(id).checked = false);
@@ -2359,6 +2418,7 @@ function editProduct(p) {
   document.getElementById('p_price').value = p.price || '';
   document.getElementById('p_mrp').value = p.mrp || '';
   document.getElementById('p_weight').value = p.weight_grams || '';
+  document.getElementById('p_metal_type').value = p.metal_type || '';
   document.getElementById('p_material').value = p.material || '';
   document.getElementById('p_purity').value = p.purity || '';
   document.getElementById('p_stock').value = p.stock_quantity || '';
@@ -2386,6 +2446,7 @@ async function saveProduct() {
     name, price, category_id: catId || null,
     mrp: parseFloat(document.getElementById('p_mrp').value) || null,
     weight_grams: parseFloat(document.getElementById('p_weight').value) || null,
+    metal_type: document.getElementById('p_metal_type').value || null,
     material: document.getElementById('p_material').value,
     purity: document.getElementById('p_purity').value,
     stock_quantity: parseInt(document.getElementById('p_stock').value) || 0,
@@ -2586,6 +2647,8 @@ async function loadAdminSubs() {
 }
 
 async function loadAdminSettings() {
+  // Load metal rates first
+  await loadAndShowMetalRates();
   // Load sale settings
   const { data: saleData } = await sb.from('site_settings').select('*').in('key',['sale_enabled','sale_percent','sale_title','sale_end_date']);
   const saleMap = {};
@@ -2593,7 +2656,7 @@ async function loadAdminSettings() {
   const saleEl = document.getElementById('saleEnabled');
   if (saleEl) {
     saleEl.checked = saleMap['sale_enabled'] === 'true';
-    document.getElementById('saleStatusTxt').textContent = saleEl.checked ? '✅ Sale openi' : '❌ Sale closed';
+    document.getElementById('saleStatusTxt').textContent = saleEl.checked ? '✅ Sale chal rahi hai' : '❌ Sale band hai';
     document.getElementById('salePercent').value = saleMap['sale_percent'] || '';
     document.getElementById('saleTitle').value = saleMap['sale_title'] || '';
     document.getElementById('saleEndDate').value = saleMap['sale_end_date'] || '';
@@ -2632,6 +2695,131 @@ async function saveSaleSettings() {
   toast(enabled ? `Sale live! ${percent}% off — "${title}" 🎉` : 'Sale band kar di ✅', 'success');
   // Reload flash bar on website
   loadSettings();
+}
+
+// ══════════════════════════════════════════════════════════
+// METAL RATE SYSTEM
+// ══════════════════════════════════════════════════════════
+let currentMetalRates = {};
+
+async function loadMetalRates() {
+  const keys = ['rate_gold_24k','rate_gold_22k','rate_gold_18k','rate_gold_14k','rate_silver','rate_making_pct'];
+  const { data } = await sb.from('site_settings').select('*').in('key', keys);
+  (data||[]).forEach(s => { currentMetalRates[s.key] = parseFloat(s.value) || 0; });
+}
+
+function getMetalRateForType(metalType) {
+  const rateMap = {
+    'gold_24k': currentMetalRates['rate_gold_24k'] || 0,
+    'gold_22k': currentMetalRates['rate_gold_22k'] || 0,
+    'gold_18k': currentMetalRates['rate_gold_18k'] || 0,
+    'gold_14k': currentMetalRates['rate_gold_14k'] || 0,
+    'silver':   currentMetalRates['rate_silver']    || 0,
+  };
+  return rateMap[metalType] || 0;
+}
+
+let _autoPriceValue = 0;
+function autoCalculatePrice() {
+  const weight = parseFloat(document.getElementById('p_weight').value) || 0;
+  const metalType = document.getElementById('p_metal_type').value;
+  const hint = document.getElementById('priceCalcHint');
+  const hintText = document.getElementById('priceCalcText');
+  if (!weight || !metalType || metalType === 'other') { hint.style.display = 'none'; return; }
+  const ratePerGram = getMetalRateForType(metalType);
+  if (!ratePerGram) {
+    hintText.textContent = 'Pehle Settings mein ' + metalType.toUpperCase() + ' rate set karo';
+    hint.style.display = '';
+    _autoPriceValue = 0;
+    return;
+  }
+  const makingPct = currentMetalRates['rate_making_pct'] || 0;
+  const metalCost = weight * ratePerGram;
+  const makingCharge = metalCost * makingPct / 100;
+  const totalPrice = Math.round(metalCost + makingCharge);
+  _autoPriceValue = totalPrice;
+  const metalLabel = {'gold_24k':'Gold 24K','gold_22k':'Gold 22K','gold_18k':'Gold 18K','gold_14k':'Gold 14K','silver':'Silver'}[metalType] || metalType;
+  hintText.textContent = `${weight}g × ₹${ratePerGram}/g${makingPct ? ' + ' + makingPct + '% making' : ''} = ₹${totalPrice.toLocaleString('en-IN')} (${metalLabel})`;
+  hint.style.display = '';
+}
+
+function applyAutoPrice() {
+  if (_autoPriceValue > 0) {
+    document.getElementById('p_price').value = _autoPriceValue;
+    toast('Price apply ho gaya! ₹' + _autoPriceValue.toLocaleString('en-IN'), 'success');
+  }
+}
+
+async function saveMetalRates() {
+  const keys = ['rate_gold_24k','rate_gold_22k','rate_gold_18k','rate_gold_14k','rate_silver','rate_making_pct'];
+  const labels = {
+    rate_gold_24k: 'Gold 24K Rate (₹/g)',
+    rate_gold_22k: 'Gold 22K Rate (₹/g)',
+    rate_gold_18k: 'Gold 18K Rate (₹/g)',
+    rate_gold_14k: 'Gold 14K Rate (₹/g)',
+    rate_silver:   'Silver Rate (₹/g)',
+    rate_making_pct: 'Making Charges %'
+  };
+  for (const key of keys) {
+    const val = document.getElementById(key)?.value?.trim();
+    if (val !== '') {
+      await sb.from('site_settings').upsert({ key, value: val, label: labels[key] }, { onConflict: 'key' });
+      currentMetalRates[key] = parseFloat(val) || 0;
+    }
+  }
+  toast('Metal rates save ho gaye! 🪙', 'success');
+  // Preview update karo
+  showMetalRatePreview();
+}
+
+function showMetalRatePreview() {
+  const el = document.getElementById('metalRatePreview');
+  if (!el) return;
+  const lines = [];
+  if (currentMetalRates['rate_gold_24k']) lines.push(`Gold 24K: ₹${currentMetalRates['rate_gold_24k']}/g`);
+  if (currentMetalRates['rate_gold_22k']) lines.push(`Gold 22K: ₹${currentMetalRates['rate_gold_22k']}/g`);
+  if (currentMetalRates['rate_gold_18k']) lines.push(`Gold 18K: ₹${currentMetalRates['rate_gold_18k']}/g`);
+  if (currentMetalRates['rate_gold_14k']) lines.push(`Gold 14K: ₹${currentMetalRates['rate_gold_14k']}/g`);
+  if (currentMetalRates['rate_silver'])   lines.push(`Silver: ₹${currentMetalRates['rate_silver']}/g`);
+  if (currentMetalRates['rate_making_pct']) lines.push(`Making: ${currentMetalRates['rate_making_pct']}%`);
+  el.innerHTML = lines.length ? '📊 Current Rates: ' + lines.join(' &nbsp;|&nbsp; ') : '';
+}
+
+async function bulkUpdateProductPrices() {
+  const statusEl = document.getElementById('bulkUpdateStatus');
+  statusEl.textContent = '⏳ Products load ho rahe hain...';
+  const metalTypes = ['gold_24k','gold_22k','gold_18k','gold_14k','silver'];
+  const { data: products } = await sb.from('products').select('id,name,metal_type,weight_grams').in('metal_type', metalTypes);
+  if (!products || !products.length) {
+    statusEl.textContent = '⚠️ Koi bhi metal-type product nahi mila (Gold/Silver type set karo product mein)';
+    return;
+  }
+  const makingPct = currentMetalRates['rate_making_pct'] || 0;
+  let updated = 0, skipped = 0;
+  for (const p of products) {
+    if (!p.weight_grams || !p.metal_type) { skipped++; continue; }
+    const rate = getMetalRateForType(p.metal_type);
+    if (!rate) { skipped++; continue; }
+    const metalCost = p.weight_grams * rate;
+    const newPrice = Math.round(metalCost + metalCost * makingPct / 100);
+    await sb.from('products').update({ price: newPrice }).eq('id', p.id);
+    updated++;
+    statusEl.textContent = `⏳ ${updated}/${products.length} update ho rahe hain...`;
+  }
+  statusEl.textContent = `✅ ${updated} products update! ${skipped ? skipped + ' skip (weight/rate missing)' : ''}`;
+  toast(`${updated} products ke prices update ho gaye! 🎉`, 'success');
+  loadAdminProducts();
+  loadHomeProducts();
+}
+
+async function loadAndShowMetalRates() {
+  await loadMetalRates();
+  const keys = ['rate_gold_24k','rate_gold_22k','rate_gold_18k','rate_gold_14k','rate_silver','rate_making_pct'];
+  keys.forEach(key => {
+    const el = document.getElementById(key);
+    if (el && currentMetalRates[key]) el.value = currentMetalRates[key];
+  });
+  showMetalRatePreview();
 }
 
 async function saveSettings() {
