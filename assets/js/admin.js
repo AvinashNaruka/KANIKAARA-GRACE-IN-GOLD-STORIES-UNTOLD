@@ -55,7 +55,45 @@ function showAddProduct(){
   $('#productForm').reset(); $('#productFormId').value = '';
   $('#productFormTitle').textContent = 'Add Product';
   $('#productCat').innerHTML = (window.__adminCats||[]).map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
+  $('#productImgPreview').innerHTML = '';
   $('#productModal').classList.add('open'); $('#overlay').classList.add('open');
+}
+async function uploadProductImages(input){
+  const files = Array.from(input.files || []);
+  if (!files.length) return;
+  const status = $('#uploadStatus');
+  status.textContent = `Uploading ${files.length} image(s)…`;
+  const existing = $('#productImages').value.split(',').map(s=>s.trim()).filter(Boolean);
+  const uploaded = [];
+  for (const file of files) {
+    try {
+      const path = `${Date.now()}-${Math.random().toString(36).slice(2,8)}-${file.name.replace(/[^a-zA-Z0-9.]+/g,'-')}`;
+      const { error } = await sb.storage.from('product-images').upload(path, file, { cacheControl: '3600', upsert: false });
+      if (error) throw error;
+      const { data } = sb.storage.from('product-images').getPublicUrl(path);
+      uploaded.push(data.publicUrl);
+    } catch (err) {
+      toast(`Could not upload ${file.name}: ${err.message || 'unknown error'}`, 'err');
+    }
+  }
+  const all = [...existing, ...uploaded];
+  $('#productImages').value = all.join(', ');
+  renderImgPreview(all);
+  status.textContent = uploaded.length ? `${uploaded.length} image(s) uploaded ✓` : '';
+  input.value = '';
+}
+function renderImgPreview(urls){
+  $('#productImgPreview').innerHTML = urls.map((u,i)=>`
+    <div style="position:relative">
+      <img src="${esc(u)}" style="width:64px;height:64px;object-fit:cover;border:1px solid var(--line-light)">
+      <button type="button" onclick="removeImgFromField(${i})" style="position:absolute;top:-6px;right:-6px;width:18px;height:18px;background:var(--danger);color:#fff;border-radius:50%;font-size:11px;line-height:1">✕</button>
+    </div>`).join('');
+}
+function removeImgFromField(idx){
+  const urls = $('#productImages').value.split(',').map(s=>s.trim()).filter(Boolean);
+  urls.splice(idx,1);
+  $('#productImages').value = urls.join(', ');
+  renderImgPreview(urls);
 }
 function hideAddProduct(){ $('#productModal').classList.remove('open'); }
 function editProduct(id){
@@ -73,6 +111,7 @@ function editProduct(id){
   $('#productPurity').value = p.purity || '';
   $('#productWeight').value = p.weight_grams || '';
   $('#productImages').value = (p.images||[]).join(', ');
+  renderImgPreview(p.images||[]);
   $('#productDesc').value = p.description || '';
   $('#productFeatured').checked = !!p.is_featured;
   $('#productBestseller').checked = !!p.is_bestseller;
@@ -247,4 +286,3 @@ async function saveAllSettings(){
     state.settings = await api.getSettings();
   } catch (err) { toast(err.message||'Could not save settings','err'); }
 }
-
