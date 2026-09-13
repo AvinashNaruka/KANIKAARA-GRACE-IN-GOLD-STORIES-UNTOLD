@@ -177,7 +177,6 @@ const api = {
     if (itemErr) throw itemErr;
     if (order.coupon_code) {
 
-
       try {
         const { data: c } = await sb.from('coupons').select('id, used_count').eq('code', order.coupon_code).maybeSingle();
         if (c) await sb.from('coupons').update({ used_count: (c.used_count || 0) + 1 }).eq('id', c.id);
