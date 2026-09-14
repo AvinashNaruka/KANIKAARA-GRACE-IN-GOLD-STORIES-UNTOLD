@@ -1,3 +1,9 @@
+// ==========================================================================
+// KANIKAARA — Admin panel
+// Only reachable by profiles.role IN ('admin','superadmin') — RLS enforces
+// this server-side too, this is just the UI gate.
+// ==========================================================================
+
 async function openAdmin(){
   if (!state.session) { toast('Please sign in first', 'err'); openAuth('login', openAdmin); return; }
   if (!state.isAdmin) { toast('Admin access only', 'err'); return; }
@@ -17,11 +23,14 @@ function switchAdmin(tab){
   const loaders = {
     dashboard: loadAdminDashboard, products: loadAdminProducts, categories: loadAdminCats,
     orders: loadAdminOrders, coupons: loadAdminCoupons, custom: loadAdminCustom,
-    reviews: loadAdminReviews, customers: loadAdminCustomers, settings: loadAdminSettings
+    reviews: loadAdminReviews, customers: loadAdminCustomers, settings: loadAdminSettings,
+    giftcards: loadAdminGiftCards, corporate: loadAdminCorporate, plans: loadAdminPlans,
+    stores: loadAdminStores, press: loadAdminPress
   };
   loaders[tab]?.();
 }
 
+// ---------------------------------------------------------- dashboard ---
 async function loadAdminDashboard(){
   const s = await api.adminStats();
   $('#adminStats').innerHTML = `
@@ -35,6 +44,7 @@ async function loadAdminDashboard(){
     `<tr><td colspan="4">No orders yet</td></tr>`;
 }
 
+// ------------------------------------------------------------ products ---
 async function loadAdminProducts(){
   const [products, cats] = await Promise.all([api.adminAllProducts(), api.adminAllCategories()]);
   state.categories = cats.length ? cats : state.categories;
@@ -113,6 +123,7 @@ function editProduct(id){
   $('#productImages').value = (p.images||[]).join(', ');
   renderImgPreview(p.images||[]);
   $('#productDesc').value = p.description || '';
+  $('#productTags').value = (p.tags||[]).join(', ');
   $('#productFeatured').checked = !!p.is_featured;
   $('#productBestseller').checked = !!p.is_bestseller;
   $('#productActive').checked = p.is_active !== false;
@@ -133,6 +144,7 @@ async function saveProduct(e){
     weight_grams: $('#productWeight').value ? Number($('#productWeight').value) : null,
     images: $('#productImages').value.split(',').map(s=>s.trim()).filter(Boolean),
     description: $('#productDesc').value,
+    tags: $('#productTags').value.split(',').map(s=>s.trim()).filter(Boolean),
     is_featured: $('#productFeatured').checked,
     is_bestseller: $('#productBestseller').checked,
     is_active: $('#productActive').checked
@@ -151,6 +163,7 @@ async function deleteProduct(id, name){
   catch (err) { toast(err.message||'Could not delete', 'err'); }
 }
 
+// ----------------------------------------------------------- categories ---
 async function loadAdminCats(){
   const cats = await api.adminAllCategories();
   window.__adminCats = cats;
@@ -179,6 +192,7 @@ async function saveCategory(e){
   catch (err) { toast(err.message||'Could not save category','err'); }
 }
 
+// --------------------------------------------------------------- orders ---
 async function loadAdminOrders(){
   const orders = await api.adminAllOrders();
   window.__adminOrders = orders;
@@ -201,6 +215,7 @@ async function adminUpdateOrderStatus(id, status){
   catch (err) { toast(err.message||'Could not update order','err'); }
 }
 
+// -------------------------------------------------------------- coupons ---
 async function loadAdminCoupons(){
   const coupons = await api.adminAllCoupons();
   window.__adminCoupons = coupons;
@@ -234,6 +249,7 @@ async function saveCoupon(e){
   catch (err) { toast(err.message||'Could not save coupon','err'); }
 }
 
+// --------------------------------------------------------- custom orders ---
 async function loadAdminCustom(){
   const rows = await api.adminAllCustomOrders();
   $('#adminCustomTbl').innerHTML = rows.map(r=>`
@@ -251,6 +267,7 @@ async function adminUpdateCustom(id, status){
   catch (err) { toast(err.message||'Could not update','err'); }
 }
 
+// -------------------------------------------------------------- reviews ---
 async function loadAdminReviews(){
   const rows = await api.adminAllReviews();
   $('#adminReviewsTbl').innerHTML = rows.map(r=>`
@@ -264,6 +281,7 @@ async function approveReview(id){
   catch (err) { toast(err.message||'Could not approve','err'); }
 }
 
+// ------------------------------------------------------------ customers ---
 async function loadAdminCustomers(){
   const rows = await api.adminAllCustomers();
   $('#adminCustomersTbl').innerHTML = rows.map(c=>`
@@ -272,17 +290,142 @@ async function loadAdminCustomers(){
     <td><span class="status-badge ${c.role==='customer'?'status-pending':'status-delivered'}">${c.role}</span></td></tr>`).join('');
 }
 
+// -------------------------------------------------------------- settings ---
 async function loadAdminSettings(){
   const settings = await api.getSettings();
-  const fields = ['gold_rate_22k','gold_rate_24k','silver_rate','free_shipping_threshold','announcement_text','whatsapp_number','store_phone','store_email','store_address'];
+  const fields = ['gold_rate_22k','gold_rate_24k','silver_rate','announcement_text','whatsapp_number','store_phone','store_email','store_address'];
   $('#adminSettingsForm').innerHTML = fields.map(k=>`
     <div class="field"><label>${k.replace(/_/g,' ')}</label><input id="set_${k}" value="${esc(settings[k]||'')}"></div>`).join('');
 }
 async function saveAllSettings(){
-  const fields = ['gold_rate_22k','gold_rate_24k','silver_rate','free_shipping_threshold','announcement_text','whatsapp_number','store_phone','store_email','store_address'];
+  const fields = ['gold_rate_22k','gold_rate_24k','silver_rate','announcement_text','whatsapp_number','store_phone','store_email','store_address'];
   try {
     await Promise.all(fields.map(k => api.updateSetting(k, $('#set_'+k).value)));
     toast('Settings saved');
     state.settings = await api.getSettings();
   } catch (err) { toast(err.message||'Could not save settings','err'); }
+}
+
+// ============================================================ gift cards ---
+async function loadAdminGiftCards(){
+  const cards = await api.adminAllGiftCards();
+  $('#adminGiftCardsTbl').innerHTML = cards.map(c=>`
+    <tr><td><b>${esc(c.code)}</b></td><td>${esc(c.profiles?.full_name||'—')}</td>
+    <td>${esc(c.recipient_name||'—')}</td><td>${money(c.initial_amount)}</td><td>${money(c.balance)}</td>
+    <td><span class="status-badge status-${c.status==='active'?'delivered':'cancelled'}">${c.status}</span></td></tr>`).join('') || `<tr><td colspan="6">No gift cards sold yet</td></tr>`;
+}
+
+// ------------------------------------------------------ corporate gifting ---
+async function loadAdminCorporate(){
+  const rows = await api.adminAllCorporateEnquiries();
+  $('#adminCorporateTbl').innerHTML = rows.map(r=>`
+    <tr><td>${esc(r.company_name)}<br><span style="font-size:11px;color:rgba(34,31,28,.5)">${esc(r.contact_name)} · ${esc(r.phone)}</span></td>
+    <td>${esc(r.estimated_quantity||'—')}</td><td style="max-width:240px">${esc(r.requirement||'')}</td>
+    <td><select onchange="adminUpdateCorporate('${r.id}', this.value)">
+      ${['new','contacted','quoted','closed'].map(s=>`<option value="${s}" ${r.status===s?'selected':''}>${s}</option>`).join('')}
+    </select></td>
+    <td>${new Date(r.created_at).toLocaleDateString('en-IN')}</td></tr>`).join('') || `<tr><td colspan="5">No corporate enquiries yet</td></tr>`;
+}
+async function adminUpdateCorporate(id, status){
+  try { await api.adminUpdateCorporateEnquiry(id, status); toast('Enquiry updated'); }
+  catch (err) { toast(err.message||'Could not update','err'); }
+}
+
+// ------------------------------------------------- smart purchase plans ---
+async function loadAdminPlans(){
+  const [plans, subs] = await Promise.all([api.adminAllSavingsPlans(), api.adminAllSubscriptions()]);
+  window.__adminPlans = plans;
+  $('#adminPlansTbl').innerHTML = plans.map(p=>`
+    <tr><td>${esc(p.name)}</td><td>${money(p.monthly_amount)}</td><td>${p.duration_months} mo</td>
+    <td>${p.bonus_percent}%</td><td>${p.is_active?'<span class="status-badge status-delivered">Active</span>':'<span class="status-badge status-cancelled">Off</span>'}</td>
+    <td><button class="action-btn" onclick="editPlan('${p.id}')">Edit</button></td></tr>`).join('') || `<tr><td colspan="6">No plans yet</td></tr>`;
+  $('#adminSubsTbl').innerHTML = subs.map(s=>`
+    <tr><td>${esc(s.profiles?.full_name||'—')}</td><td>${esc(s.savings_plans?.name||'—')}</td>
+    <td>${s.months_paid}</td><td>${money(s.total_paid)}</td>
+    <td><span class="status-badge status-${s.status==='active'?'pending':s.status==='matured'?'delivered':'cancelled'}">${s.status}</span></td></tr>`).join('') || `<tr><td colspan="5">No subscriptions yet</td></tr>`;
+}
+function showAddPlan(){ $('#planForm').reset(); $('#planFormId').value=''; $('#planModal').classList.add('open'); $('#overlay').classList.add('open'); }
+function editPlan(id){
+  const p = (window.__adminPlans||[]).find(x=>x.id===id); if (!p) return;
+  showAddPlan();
+  $('#planFormId').value = p.id; $('#planName').value = p.name; $('#planAmount').value = p.monthly_amount;
+  $('#planMonths').value = p.duration_months; $('#planBonus').value = p.bonus_percent; $('#planDesc').value = p.description||'';
+  $('#planActive').checked = p.is_active !== false;
+}
+async function savePlan(e){
+  e.preventDefault();
+  const payload = {
+    id: $('#planFormId').value || undefined,
+    name: $('#planName').value, monthly_amount: Number($('#planAmount').value),
+    duration_months: Number($('#planMonths').value), bonus_percent: Number($('#planBonus').value||0),
+    description: $('#planDesc').value, is_active: $('#planActive').checked
+  };
+  try { await api.adminSaveSavingsPlan(payload); toast('Plan saved'); $('#planModal').classList.remove('open'); loadAdminPlans(); }
+  catch (err) { toast(err.message||'Could not save plan','err'); }
+}
+
+// -------------------------------------------------------- store locator ---
+async function loadAdminStores(){
+  const stores = await api.adminAllStoreLocations();
+  window.__adminStores = stores;
+  $('#adminStoresTbl').innerHTML = stores.map(s=>`
+    <tr><td>${esc(s.name)}</td><td>${esc(s.city||'—')}</td><td>${esc(s.phone||'—')}</td>
+    <td>${s.is_active?'<span class="status-badge status-delivered">Active</span>':'<span class="status-badge status-cancelled">Hidden</span>'}</td>
+    <td><button class="action-btn" onclick="editStore('${s.id}')">Edit</button> <button class="action-btn" onclick="deleteStore('${s.id}')">Delete</button></td></tr>`).join('') || `<tr><td colspan="5">No store locations yet</td></tr>`;
+}
+function showAddStore(){ $('#storeForm').reset(); $('#storeFormId').value=''; $('#storeModal').classList.add('open'); $('#overlay').classList.add('open'); }
+function editStore(id){
+  const s = (window.__adminStores||[]).find(x=>x.id===id); if (!s) return;
+  showAddStore();
+  $('#storeFormId').value = s.id; $('#storeName').value = s.name; $('#storeAddress').value = s.address;
+  $('#storeCity').value = s.city||''; $('#storeState').value = s.state||''; $('#storePincode').value = s.pincode||'';
+  $('#storePhone').value = s.phone||''; $('#storeHours').value = s.hours||''; $('#storeActive').checked = s.is_active !== false;
+}
+async function saveStore(e){
+  e.preventDefault();
+  const payload = {
+    id: $('#storeFormId').value || undefined,
+    name: $('#storeName').value, address: $('#storeAddress').value, city: $('#storeCity').value,
+    state: $('#storeState').value, pincode: $('#storePincode').value, phone: $('#storePhone').value,
+    hours: $('#storeHours').value, is_active: $('#storeActive').checked
+  };
+  try { await api.adminSaveStoreLocation(payload); toast('Store saved'); $('#storeModal').classList.remove('open'); loadAdminStores(); }
+  catch (err) { toast(err.message||'Could not save store','err'); }
+}
+async function deleteStore(id){
+  if (!confirm('Delete this store location?')) return;
+  try { await api.adminDeleteStoreLocation(id); toast('Store deleted'); loadAdminStores(); }
+  catch (err) { toast(err.message||'Could not delete','err'); }
+}
+
+// ------------------------------------------------------- press mentions ---
+async function loadAdminPress(){
+  const rows = await api.adminAllPressMentions();
+  window.__adminPress = rows;
+  $('#adminPressTbl').innerHTML = rows.map(p=>`
+    <tr><td>${esc(p.publication_name)}</td><td style="max-width:260px">${esc(p.quote||'')}</td>
+    <td>${p.is_active?'<span class="status-badge status-delivered">Active</span>':'<span class="status-badge status-cancelled">Hidden</span>'}</td>
+    <td><button class="action-btn" onclick="editPress('${p.id}')">Edit</button> <button class="action-btn" onclick="deletePress('${p.id}')">Delete</button></td></tr>`).join('') || `<tr><td colspan="4">No press mentions yet</td></tr>`;
+}
+function showAddPress(){ $('#pressForm').reset(); $('#pressFormId').value=''; $('#pressModal').classList.add('open'); $('#overlay').classList.add('open'); }
+function editPress(id){
+  const p = (window.__adminPress||[]).find(x=>x.id===id); if (!p) return;
+  showAddPress();
+  $('#pressFormId').value = p.id; $('#pressName').value = p.publication_name; $('#pressLogo').value = p.logo_url||'';
+  $('#pressUrl').value = p.article_url||''; $('#pressQuote').value = p.quote||''; $('#pressActive').checked = p.is_active !== false;
+}
+async function savePress(e){
+  e.preventDefault();
+  const payload = {
+    id: $('#pressFormId').value || undefined,
+    publication_name: $('#pressName').value, logo_url: $('#pressLogo').value,
+    article_url: $('#pressUrl').value, quote: $('#pressQuote').value, is_active: $('#pressActive').checked
+  };
+  try { await api.adminSavePressMention(payload); toast('Press mention saved'); $('#pressModal').classList.remove('open'); loadAdminPress(); }
+  catch (err) { toast(err.message||'Could not save','err'); }
+}
+async function deletePress(id){
+  if (!confirm('Delete this press mention?')) return;
+  try { await api.adminDeletePressMention(id); toast('Deleted'); loadAdminPress(); }
+  catch (err) { toast(err.message||'Could not delete','err'); }
 }
