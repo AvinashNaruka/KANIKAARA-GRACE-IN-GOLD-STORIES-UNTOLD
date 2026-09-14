@@ -634,10 +634,14 @@ async function payWithPayU(addr, t){
     return;
   }
   try {
-    const res = await fetch(PAYU_INITIATE_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+const res = await fetch(PAYU_INITIATE_URL, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+    'apikey': SUPABASE_ANON_KEY
+  },
+  body: JSON.stringify({
         amount: t.total,
         firstname: state.profile?.full_name || addr?.full_name || 'Customer',
         email: state.session?.user?.email || '',
