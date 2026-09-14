@@ -1,3 +1,8 @@
+/* ==========================================================================
+   KANIKAARA — Design System
+   Ink navy + antique gold, jharokha-arch motif, editorial layout.
+   ========================================================================== */
+
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Manrope:wght@400;500;600;700;800&display=swap');
 
 :root{
@@ -60,6 +65,7 @@ h1,h2,h3,h4,p{ margin:0; }
 
 .wrap{ max-width:var(--maxw); margin:0 auto; padding-left:var(--pad); padding-right:var(--pad); }
 
+/* ---------- Typography helpers ---------- */
 .serif{ font-family:var(--serif); }
 .h-display{ font-family:var(--serif); font-weight:600; line-height:1.04; letter-spacing:-.01em; }
 .h-section{ font-family:var(--serif); font-weight:600; font-size:clamp(28px,3.6vw,44px); line-height:1.1; }
@@ -67,7 +73,7 @@ h1,h2,h3,h4,p{ margin:0; }
 .lede{ font-family:var(--sans); font-size:16.5px; line-height:1.65; color:var(--ink-mute); max-width:52ch; }
 .lede-light{ font-family:var(--sans); font-size:16.5px; line-height:1.65; color:rgba(34,31,28,.68); max-width:52ch; }
 
-
+/* ---------- Buttons ---------- */
 .btn{
   display:inline-flex; align-items:center; justify-content:center; gap:8px;
   padding:14px 30px; font-size:14.5px; font-weight:600; font-family:var(--sans);
@@ -87,12 +93,16 @@ h1,h2,h3,h4,p{ margin:0; }
 .btn-sm{ padding:9px 18px; font-size:13px; }
 .btn[disabled]{ opacity:.45; pointer-events:none; }
 
+/* ---------- Arch motif ---------- */
 .arch{ border-radius:var(--arch); overflow:hidden; position:relative; }
 .arch-frame{
   position:relative; padding:14px; border:1px solid var(--gold-line); border-radius:calc(999px + 14px) calc(999px + 14px) 6px 6px;
 }
 .arch-frame > *{ border-radius:var(--arch); }
 
+/* ==========================================================================
+   Announcement + Header
+   ========================================================================== */
 .announce{
   background:var(--ink); color:var(--ivory);
   font-size:12.5px; letter-spacing:.03em; text-align:center;
@@ -138,6 +148,9 @@ header.site{
 }
 .hamburger{ display:none; }
 
+/* ==========================================================================
+   Hero
+   ========================================================================== */
 .hero{
   background:linear-gradient(180deg, var(--ink) 0%, var(--ink-2) 100%);
   color:var(--ivory); position:relative; overflow:hidden;
@@ -180,7 +193,9 @@ header.site{
 .hero-trust{ animation:rise .8s var(--ease) both; animation-delay:.32s; }
 .hero-visual{ animation:rise 1s var(--ease) both; animation-delay:.2s; }
 
-
+/* ==========================================================================
+   Section shells
+   ========================================================================== */
 section.block{ padding:88px var(--pad); }
 section.block.tight{ padding:56px var(--pad); }
 .block-inner{ max-width:var(--maxw); margin:0 auto; }
@@ -190,6 +205,7 @@ section.block.tight{ padding:56px var(--pad); }
 .on-ink .lede{ color:var(--ink-mute); }
 .on-maroon{ background:var(--maroon); color:var(--ivory); }
 
+/* ---------- Category strip ---------- */
 .cat-scroll{ display:grid; grid-template-columns:repeat(6,1fr); gap:22px; }
 .cat-tile{ text-align:center; }
 .cat-tile .arch-frame{ aspect-ratio:1/1.12; background:var(--ivory-2); border-color:var(--line-light); margin-bottom:14px; }
@@ -198,6 +214,7 @@ section.block.tight{ padding:56px var(--pad); }
 .cat-tile:hover .arch-frame{ border-color:var(--gold); }
 .arch-frame{ transition:border-color .3s; }
 
+/* ---------- Product grid / cards ---------- */
 .p-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:32px 26px; }
 .p-card{ position:relative; }
 .p-card .thumb{
@@ -231,27 +248,32 @@ section.block.tight{ padding:56px var(--pad); }
 .p-card .rating{ font-size:11.5px; color:rgba(34,31,28,.55); margin-top:6px; }
 .p-card .rating .stars{ color:var(--gold); letter-spacing:1px; }
 
+/* ---------- Story / split section ---------- */
 .story{ display:grid; grid-template-columns:.9fr 1.1fr; gap:64px; align-items:center; }
 .story .arch-frame{ aspect-ratio:4/5; background:var(--ivory-2); }
 .story .arch-frame img{ width:100%; height:100%; object-fit:cover; }
 .story-copy .signoff{ margin-top:30px; font-family:var(--serif); font-style:italic; font-size:17px; color:rgba(34,31,28,.7); }
 
+/* ---------- Custom order CTA ---------- */
 .custom-cta{ display:grid; grid-template-columns:1.1fr .9fr; gap:40px; align-items:center; }
 .custom-cta ul{ margin-top:24px; display:grid; gap:12px; }
 .custom-cta li{ display:flex; gap:10px; font-size:14px; color:var(--ink-mute); }
 .custom-cta li::before{ content:'—'; color:var(--gold); }
 
+/* ---------- Reviews ---------- */
 .rev-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:28px; }
 .rev-card{ border:1px solid var(--line-light); padding:28px 26px; background:var(--ivory-2); }
 .rev-card .stars{ color:var(--gold); font-size:14px; letter-spacing:2px; }
 .rev-card p{ font-family:var(--serif); font-size:17px; line-height:1.55; margin-top:14px; font-style:italic; }
 .rev-card .who{ margin-top:18px; font-size:12.5px; font-weight:700; color:rgba(34,31,28,.6); }
 
+/* ---------- Newsletter ---------- */
 .newsletter{ text-align:center; }
 .newsletter form{ display:flex; justify-content:center; gap:10px; margin-top:26px; max-width:440px; margin-inline:auto; flex-wrap:wrap; }
 .newsletter input{ flex:1; min-width:220px; background:transparent; border:1px solid var(--gold-line); color:var(--ivory); padding:13px 16px; font-size:14px; }
 .newsletter input::placeholder{ color:var(--ink-mute-2); }
 
+/* ---------- Footer ---------- */
 footer.site{ background:var(--ink); color:var(--ink-mute); border-top:1px solid var(--line-dark); }
 .foot-grid{ display:grid; grid-template-columns:1.3fr 1fr 1fr 1fr; gap:40px; padding:72px var(--pad) 40px; max-width:var(--maxw); margin:0 auto; }
 .foot-grid h4{ font-size:12.5px; letter-spacing:.08em; color:var(--ivory); margin-bottom:18px; font-weight:700; }
@@ -261,6 +283,9 @@ footer.site{ background:var(--ink); color:var(--ink-mute); border-top:1px solid 
 .foot-brand p{ font-size:13.5px; margin-top:14px; max-width:32ch; line-height:1.6; }
 .foot-bottom{ border-top:1px solid var(--line-dark); padding:20px var(--pad); display:flex; justify-content:space-between; max-width:var(--maxw); margin:0 auto; font-size:12px; color:var(--ink-mute-2); flex-wrap:wrap; gap:10px; }
 
+/* ==========================================================================
+   Shop page
+   ========================================================================== */
 .shop-head{ background:var(--ink); color:var(--ivory); padding:52px var(--pad) 40px; }
 .shop-crumb{ font-size:12px; color:var(--ink-mute-2); }
 .shop-crumb a:hover{ color:var(--gold-soft); }
@@ -277,6 +302,9 @@ footer.site{ background:var(--ink); color:var(--ink-mute); border-top:1px solid 
 .empty-state{ text-align:center; padding:80px 20px; }
 .empty-state .h-section{ margin:16px 0 10px; }
 
+/* ==========================================================================
+   Product detail
+   ========================================================================== */
 .pd{ display:grid; grid-template-columns:1fr 1fr; gap:64px; padding:56px var(--pad) 90px; max-width:var(--maxw); margin:0 auto; }
 .pd-gallery .main-img{ aspect-ratio:1/1; overflow:hidden; border:1px solid var(--line-light); border-radius:2px 2px 60px 60px/2px 2px 90px 90px; background:var(--ivory-2); }
 .pd-gallery .main-img img{ width:100%; height:100%; object-fit:cover; }
@@ -305,6 +333,9 @@ footer.site{ background:var(--ink); color:var(--ink-mute); border-top:1px solid 
 .pd-tab{ padding-bottom:12px; font-size:13.5px; font-weight:700; color:rgba(34,31,28,.45); border-bottom:2px solid transparent; }
 .pd-tab.active{ color:var(--charcoal); border-color:var(--gold); }
 
+/* ==========================================================================
+   Cart drawer
+   ========================================================================== */
 .overlay{ position:fixed; inset:0; background:rgba(14,22,48,.55); backdrop-filter:blur(2px); z-index:90; opacity:0; pointer-events:none; transition:opacity .3s; }
 .overlay.open{ opacity:1; pointer-events:auto; }
 .drawer{
@@ -326,6 +357,9 @@ footer.site{ background:var(--ink); color:var(--ink-mute); border-top:1px solid 
 .sum-row{ display:flex; justify-content:space-between; font-size:13.5px; padding:5px 0; color:rgba(34,31,28,.65); }
 .sum-row.total{ font-size:17px; font-weight:800; color:var(--charcoal); border-top:1px solid var(--line-light); margin-top:8px; padding-top:14px; }
 
+/* ==========================================================================
+   Modals (auth, size guide, quick view)
+   ========================================================================== */
 .modal{
   position:fixed; inset:0; z-index:120; display:grid; place-items:center; padding:24px;
   opacity:0; pointer-events:none; transition:opacity .25s;
@@ -352,6 +386,9 @@ footer.site{ background:var(--ink); color:var(--ink-mute); border-top:1px solid 
 .auth-switch{ text-align:center; font-size:13px; margin-top:18px; color:rgba(34,31,28,.6); }
 .auth-switch a{ color:var(--gold); font-weight:700; text-decoration:underline; }
 
+/* ==========================================================================
+   Auth / account gate pages, dashboard, checkout, admin
+   ========================================================================== */
 .page-head{ background:var(--ink); color:var(--ivory); padding:44px var(--pad) 36px; }
 .page-head .h-section{ color:var(--ivory); }
 
@@ -402,6 +439,9 @@ table.data tr:hover td{ background:rgba(201,162,75,.05); }
 .admin-topbar{ display:flex; justify-content:space-between; align-items:center; margin-bottom:28px; }
 .admin-topbar h1{ font-family:var(--serif); font-size:28px; }
 
+/* ==========================================================================
+   Toasts / loaders / misc
+   ========================================================================== */
 #toastHost{ position:fixed; bottom:24px; right:24px; z-index:200; display:flex; flex-direction:column; gap:10px; }
 .toast{
   background:var(--ink); color:var(--ivory); padding:14px 20px; font-size:13.5px; min-width:240px;
@@ -433,6 +473,9 @@ body.admin-mode #page-admin{ display:block; }
 .chip{ display:inline-block; padding:4px 12px; font-size:11.5px; font-weight:700; border:1px solid var(--line-light); margin:3px 6px 3px 0; }
 .chip.on{ border-color:var(--gold); background:var(--ink); color:var(--gold-soft); }
 
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
 @media (max-width: 1024px){
   .hero-grid{ grid-template-columns:1fr; min-height:auto; }
   .hero-visual{ order:-1; max-width:340px; margin-inline:auto; }
