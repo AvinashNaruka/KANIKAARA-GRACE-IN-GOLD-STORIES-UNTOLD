@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0E1630">
-<meta name="description" content="Kanikara — Grace in Gold, Stories Untold. Fine gold, diamond and bridal jewellery crafted in Rajasthan.">
-<title>Kanikara — Grace in Gold, Stories Untold</title>
+<meta name="description" content="KANIKAARA — Grace in Gold, Stories Untold. Fine gold, diamond and bridal jewellery crafted in Rajasthan.">
+<title>KANIKAARA — Grace in Gold, Stories Untold</title>
 <link rel="icon" href="assets/img/logo.jpeg">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -13,18 +13,26 @@
 
 <div id="toastHost"></div>
 <div class="overlay" id="overlay"></div>
+<a id="waFloat" href="#" target="_blank" rel="noopener" class="hide" title="Chat on WhatsApp"
+   style="position:fixed;bottom:24px;left:24px;z-index:70;width:56px;height:56px;border-radius:50%;background:#25D366;display:grid;place-items:center;box-shadow:0 10px 30px rgba(0,0,0,.25)">
+  <svg viewBox="0 0 24 24" width="28" height="28" fill="#fff"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.44 1.32 4.94L2 22l5.29-1.39a9.87 9.87 0 0 0 4.75 1.21h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm0 18.12h-.01a8.2 8.2 0 0 1-4.18-1.14l-.3-.18-3.14.82.84-3.06-.2-.32a8.19 8.19 0 0 1-1.26-4.4c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.83 2.42a8.18 8.18 0 0 1 2.41 5.83c0 4.55-3.7 8.27-8.24 8.27zm4.52-6.19c-.25-.12-1.47-.72-1.7-.81-.23-.08-.39-.12-.56.13-.17.24-.64.81-.78.97-.14.17-.29.19-.53.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.15.16-.25.24-.42.08-.17.04-.31-.02-.43-.06-.12-.56-1.36-.77-1.86-.2-.48-.41-.42-.56-.43-.14 0-.31-.01-.47-.01-.17 0-.43.06-.66.31-.23.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.57.12.17 1.75 2.67 4.25 3.74.59.26 1.06.41 1.42.53.6.19 1.14.16 1.57.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.08.14-1.18-.06-.1-.23-.16-.48-.28z"/></svg>
+</a>
 
-<div class="announce"><span id="announceText">FREE SHIPPING ON ORDERS ABOVE ₹2999 · BIS HALLMARKED · 15-DAY RETURNS</span></div>
+<!-- ============================== ANNOUNCEMENT ============================== -->
+<div class="announce"><span id="announceText">FREE SHIPPING ON ALL ORDERS · BIS HALLMARKED · 15-DAY RETURNS</span></div>
 
+<!-- ================================= HEADER ================================= -->
 <header class="site">
   <div class="nav-row">
     <a href="#home" class="brand" onclick="event.preventDefault();showPage('home')">
-      <img src="assets/img/logo.jpeg" alt="Kanikara">
-      <span><span class="name">Kanikara</span><span class="tag">GRACE IN GOLD, STORIES UNTOLD</span></span>
+      <img src="assets/img/logo.jpeg" alt="Kanikaara">
+      <span><span class="name">KANIKAARA</span><span class="tag">GRACE IN GOLD, STORIES UNTOLD</span></span>
     </a>
     <nav class="main-nav">
       <a href="#home" data-page="home" onclick="event.preventDefault();showPage('home')">Home</a>
       <a href="#shop" data-page="shop" onclick="event.preventDefault();showPage('shop')">Shop</a>
+      <a href="#gift-store" data-page="gift-store" onclick="event.preventDefault();showPage('gift-store')">Gift Store</a>
+      <a href="#smart-plan" data-page="smart-plan" onclick="event.preventDefault();showPage('smart-plan')">Smart Plan</a>
       <a href="#custom-order" data-page="custom-order" onclick="event.preventDefault();showPage('custom-order')">Custom Orders</a>
       <a href="#dashboard" data-page="dashboard" onclick="event.preventDefault();showPage('dashboard')">My Orders</a>
       <a href="#" id="adminLink" class="hide" onclick="event.preventDefault();openAdmin()">Admin</a>
@@ -59,13 +67,14 @@
   </div>
 </header>
 
+<!-- ================================== HOME PAGE ================================== -->
 <div class="page active" id="page-home">
   <section class="hero">
     <div class="hero-grid">
       <div class="hero-copy">
         <span class="eyebrow">Heritage Jaipur Craftsmanship</span>
         <h1 class="h-display">Grace in gold,<br><em>stories untold.</em></h1>
-        <p class="lede">Every Kanikara piece is hand-finished by artisans in Rajasthan — hallmarked gold, certified stones, and a little bit of family history in each setting.</p>
+        <p class="lede">Every Kanikaara piece is hand-finished by artisans in Rajasthan — hallmarked gold, certified stones, and a little bit of family history in each setting.</p>
         <div class="hero-cta">
           <a href="#shop" class="btn btn-gold" onclick="event.preventDefault();showPage('shop')">Explore the Collection</a>
           <a href="#custom-order" class="btn btn-line" onclick="event.preventDefault();showPage('custom-order')">Design Something Yours</a>
@@ -77,7 +86,7 @@
         </div>
       </div>
       <div class="hero-visual">
-        <div class="arch-frame"><img src="assets/img/logo.jpeg" alt="Kanikara jewellery"></div>
+        <div class="arch-frame"><img src="assets/img/logo.jpeg" alt="Kanikaara jewellery"></div>
         <div class="float-card"><div class="r">★★★★★</div><p>"The finishing on my bridal set was better than anything I saw in the market."</p></div>
       </div>
     </div>
@@ -111,12 +120,12 @@
 
   <section class="block">
     <div class="block-inner story">
-      <div class="reveal"><div class="arch-frame"><img src="assets/img/logo.jpeg" alt="Kanikara craft"></div></div>
+      <div class="reveal"><div class="arch-frame"><img src="assets/img/logo.jpeg" alt="Kanikaara craft"></div></div>
       <div class="story-copy reveal">
         <span class="eyebrow">Our Craft</span>
         <h2 class="h-section" style="margin-top:10px">Made the way jewellery used to be made</h2>
-        <p class="lede-light" style="margin-top:18px">Kanikara started as a family karigar workshop in Rajasthan. Three generations later, the hands have changed but the standard hasn't — every setting is checked by eye, every hallmark verified, every order small enough that someone still signs off on it personally.</p>
-        <p class="signoff">— The Kanikara workshop, Jaipur</p>
+        <p class="lede-light" style="margin-top:18px">Kanikaara started as a family karigar workshop in Rajasthan. Three generations later, the hands have changed but the standard hasn't — every setting is checked by eye, every hallmark verified, every order small enough that someone still signs off on it personally.</p>
+        <p class="signoff">— The Kanikaara workshop, Jaipur</p>
       </div>
     </div>
   </section>
@@ -168,6 +177,7 @@
   </section>
 </div>
 
+<!-- ================================== SHOP PAGE ================================== -->
 <div class="page" id="page-shop">
   <div class="shop-head">
     <div class="shop-crumb"><a href="#home" onclick="event.preventDefault();showPage('home')">Home</a> / Shop</div>
@@ -192,6 +202,7 @@
         </div>
         <button class="btn btn-line-dark btn-sm" style="margin-top:12px;width:100%" onclick="applyPriceFilter()">Apply</button>
       </div>
+      <div id="tagFilters"></div>
     </aside>
     <div>
       <div class="shop-toolbar">
@@ -208,10 +219,12 @@
   </div>
 </div>
 
+<!-- ================================ PRODUCT PAGE ================================ -->
 <div class="page" id="page-product">
   <div id="pdContent" style="max-width:var(--maxw);margin:0 auto;padding:0 var(--pad)"></div>
 </div>
 
+<!-- ================================ WISHLIST PAGE ================================ -->
 <div class="page" id="page-wishlist">
   <div class="page-head"><h1 class="h-section">Your Wishlist</h1></div>
   <div class="wrap" style="padding:44px var(--pad) 90px">
@@ -219,6 +232,7 @@
   </div>
 </div>
 
+<!-- ================================ CUSTOM ORDER PAGE ================================ -->
 <div class="page" id="page-custom-order">
   <div class="page-head"><span class="eyebrow" style="color:var(--gold-soft)">Bespoke</span><h1 class="h-section" style="margin-top:8px">Design a Custom Piece</h1></div>
   <div class="wrap" style="padding:48px var(--pad) 90px;max-width:640px">
@@ -240,7 +254,115 @@
   </div>
 </div>
 
+<!-- ================================ GIFT STORE PAGE ================================ -->
+<div class="page" id="page-gift-store">
+  <div class="page-head"><span class="eyebrow" style="color:var(--gold-soft)">Gifting</span><h1 class="h-section" style="margin-top:8px">Gift Store</h1></div>
+  <div class="wrap" style="padding:48px var(--pad) 30px">
+    <div class="story" style="align-items:start">
+      <div class="dash-card">
+        <h3 style="font-family:var(--serif);font-size:22px">Send a Gift Card</h3>
+        <p class="lede-light" style="margin-top:8px">Let them pick exactly what they love. Delivered instantly as a code you can share.</p>
+        <form onsubmit="buyGiftCard(event)" style="margin-top:20px">
+          <label style="font-size:12px;font-weight:700;letter-spacing:.03em;color:rgba(34,31,28,.6)">Choose Amount</label>
+          <div style="display:flex;gap:10px;margin:10px 0 16px;flex-wrap:wrap">
+            <button type="button" class="btn btn-line-dark btn-sm gift-amt" onclick="selectGiftAmount(this,1000)">₹1,000</button>
+            <button type="button" class="btn btn-line-dark btn-sm gift-amt" onclick="selectGiftAmount(this,2500)">₹2,500</button>
+            <button type="button" class="btn btn-line-dark btn-sm gift-amt" onclick="selectGiftAmount(this,5000)">₹5,000</button>
+            <button type="button" class="btn btn-line-dark btn-sm gift-amt" onclick="selectGiftAmount(this,10000)">₹10,000</button>
+          </div>
+          <div class="field"><label>Or enter custom amount (₹)</label><input id="giftCustomAmount" type="number" min="500" required></div>
+          <div class="field"><label>Recipient's Name</label><input id="giftRecipientName"></div>
+          <div class="field"><label>Recipient's Email (optional)</label><input id="giftRecipientEmail" type="email"></div>
+          <div class="field"><label>Personal Message</label><textarea id="giftMessage" rows="3"></textarea></div>
+          <button class="btn btn-gold btn-block" type="submit">Buy Gift Card</button>
+        </form>
+      </div>
+      <div>
+        <h3 style="font-family:var(--serif);font-size:22px;margin-bottom:14px">Your Gift Cards</h3>
+        <div id="myGiftCards"><p class="lede-light">Sign in to view gift cards you've purchased.</p></div>
+      </div>
+    </div>
+  </div>
+  <section class="block tight">
+    <div class="block-inner">
+      <div class="block-head"><div><span class="eyebrow">Curated</span><h2 class="h-section">Gifts for Her</h2></div>
+        <a href="#" class="btn-ghost" onclick="event.preventDefault();filterByTag('audience:her')">View all</a></div>
+      <div class="p-grid" id="giftForHer"></div>
+    </div>
+  </section>
+  <section class="block tight on-ink">
+    <div class="block-inner">
+      <div class="block-head"><div><span class="eyebrow">Curated</span><h2 class="h-section" style="color:var(--ivory)">Gifts for Him</h2></div>
+        <a href="#" class="btn-ghost" onclick="event.preventDefault();filterByTag('audience:him')">View all</a></div>
+      <div class="p-grid" id="giftForHim"></div>
+    </div>
+  </section>
+</div>
+
+<!-- ================================ CORPORATE GIFTING PAGE ================================ -->
+<div class="page" id="page-corporate-gifting">
+  <div class="page-head"><span class="eyebrow" style="color:var(--gold-soft)">B2B</span><h1 class="h-section" style="margin-top:8px">Corporate Gifting</h1></div>
+  <div class="wrap" style="padding:48px var(--pad) 90px;max-width:640px">
+    <p class="lede-light" style="margin-bottom:30px">Diwali hampers, employee milestones, client appreciation — bulk-order fine jewellery with custom branding and packaging. Our team responds within 2 business days with a quote.</p>
+    <form onsubmit="submitCorporateEnquiry(event)" class="dash-card">
+      <div class="field"><label>Company Name</label><input id="corpCompany" required></div>
+      <div class="field"><label>Contact Person</label><input id="corpContact" required></div>
+      <div class="field"><label>Phone</label><input id="corpPhone" required></div>
+      <div class="field"><label>Email</label><input id="corpEmail" type="email"></div>
+      <div class="field"><label>Estimated Quantity</label><input id="corpQty" placeholder="e.g. 50-100 pieces"></div>
+      <div class="field"><label>Requirement Details</label><textarea id="corpReq" rows="4" placeholder="Occasion, budget per piece, branding needs…"></textarea></div>
+      <button class="btn btn-gold btn-block" type="submit">Submit Enquiry</button>
+    </form>
+  </div>
+</div>
+
+<!-- ================================ SMART PURCHASE PLAN PAGE ================================ -->
+<div class="page" id="page-smart-plan">
+  <div class="page-head"><span class="eyebrow" style="color:var(--gold-soft)">Save Monthly, Buy Later</span><h1 class="h-section" style="margin-top:8px">Smart Purchase Plan</h1></div>
+  <div class="wrap" style="padding:48px var(--pad) 30px">
+    <p class="lede-light" style="margin-bottom:30px;max-width:60ch">Pay a fixed amount every month, get bonus value added at the end of the term, and redeem the full amount towards any Kanikaara piece — a simple way to save towards that one big purchase.</p>
+    <div class="stat-row" id="planGrid" style="grid-template-columns:repeat(3,1fr)"></div>
+  </div>
+  <div class="wrap" style="padding:0 var(--pad) 90px">
+    <h3 style="font-family:var(--serif);font-size:22px;margin-bottom:14px">My Plans</h3>
+    <div id="mySubscriptions"><p class="lede-light">Sign in to view or start a plan.</p></div>
+  </div>
+</div>
+
+<!-- ================================ STORE LOCATOR PAGE ================================ -->
+<div class="page" id="page-store-locator">
+  <div class="page-head"><span class="eyebrow" style="color:var(--gold-soft)">Visit Us</span><h1 class="h-section" style="margin-top:8px">Store Locator</h1></div>
+  <div class="wrap" style="padding:48px var(--pad) 90px;max-width:720px">
+    <div id="storeList"></div>
+  </div>
+</div>
+
+<!-- ================================ JEWELLERY CARE PAGE ================================ -->
+<div class="page" id="page-jewellery-care">
+  <div class="page-head"><span class="eyebrow" style="color:var(--gold-soft)">Keep It Beautiful</span><h1 class="h-section" style="margin-top:8px">Jewellery Care Guide</h1></div>
+  <div class="wrap" style="padding:48px var(--pad) 90px;max-width:720px">
+    <div class="dash-card" style="margin-bottom:18px">
+      <h3 style="font-family:var(--serif);font-size:20px">Gold Jewellery</h3>
+      <p class="lede-light" style="margin-top:8px">Store separately in a soft-lined box to avoid scratches. Remove before swimming, showering, or applying perfume/lotion. Wipe with a soft, lint-free cloth after each wear. Get a professional polish once a year to restore shine.</p>
+    </div>
+    <div class="dash-card" style="margin-bottom:18px">
+      <h3 style="font-family:var(--serif);font-size:20px">Silver Jewellery</h3>
+      <p class="lede-light" style="margin-top:8px">Silver tarnishes with air exposure — keep it in an airtight pouch when not worn. Clean gently with a silver polishing cloth. Avoid chlorine (pools) and household chemicals.</p>
+    </div>
+    <div class="dash-card" style="margin-bottom:18px">
+      <h3 style="font-family:var(--serif);font-size:20px">Diamond &amp; Gemstone Pieces</h3>
+      <p class="lede-light" style="margin-top:8px">Clean with a soft brush and mild soap solution, then dry thoroughly. Have prongs checked periodically by a jeweller to make sure stones stay secure. Store each piece separately — stones can scratch softer metals and each other.</p>
+    </div>
+    <div class="dash-card">
+      <h3 style="font-family:var(--serif);font-size:20px">General Tips</h3>
+      <p class="lede-light" style="margin-top:8px">Put jewellery on last when dressing and take it off first when undressing. Avoid direct sunlight for long storage periods. When in doubt, bring it in — we're happy to inspect and clean any Kanikaara piece for free.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ================================ DASHBOARD PAGE ================================ -->
 <div class="page" id="page-dashboard">
+
   <div class="page-head"><span class="eyebrow" style="color:var(--gold-soft)">Account</span><h1 class="h-section" id="dashUserName" style="margin-top:8px">My Account</h1></div>
   <div class="dash">
     <nav class="dash-nav">
@@ -267,7 +389,7 @@
   </div>
 </div>
 
-
+<!-- ================================ CHECKOUT PAGE ================================ -->
 <div class="page" id="page-checkout">
   <div class="page-head"><h1 class="h-section">Checkout</h1></div>
   <div class="checkout-grid">
@@ -294,11 +416,8 @@
         <div class="pay-opt selected" data-method="cod" onclick="selectPayMethod('cod')">
           <input type="radio" name="pay" checked> Cash on Delivery
         </div>
-        <div class="pay-opt" data-method="razorpay" onclick="selectPayMethod('razorpay')">
-          <input type="radio" name="pay"> Pay Online — UPI (GPay / PhonePe / Paytm), Cards, NetBanking
-        </div>
-        <div class="pay-opt" data-method="upi" onclick="selectPayMethod('upi')">
-          <input type="radio" name="pay"> UPI — Manual Transfer
+        <div class="pay-opt" data-method="payu" onclick="selectPayMethod('payu')">
+          <input type="radio" name="pay"> Pay Online (PayU) — UPI, Cards, NetBanking
         </div>
       </div>
       <div class="co-step">
@@ -309,19 +428,29 @@
         </div>
         <p id="couponMsg" style="font-size:12.5px;margin-top:8px"></p>
       </div>
+      <div class="co-step">
+        <h3>4. Have a Kanikaara gift card?</h3>
+        <div style="display:flex;gap:10px">
+          <input id="giftCardInput" placeholder="GIFT-XXXX-XXXX" style="flex:1;border:1px solid var(--line-light);padding:11px 13px">
+          <button class="btn btn-line-dark" onclick="applyGiftCard()">Apply</button>
+        </div>
+        <p id="giftCardMsg" style="font-size:12.5px;margin-top:8px"></p>
+      </div>
     </div>
     <div class="co-summary">
       <h3 style="font-family:var(--serif);font-size:19px;margin-bottom:14px">Order Summary</h3>
       <div id="coItems"></div>
       <div class="sum-row"><span>Subtotal</span><span id="coSubtotal">₹0</span></div>
-      <div class="sum-row"><span>Shipping</span><span id="coShipping">₹0</span></div>
+      <div class="sum-row"><span>Shipping</span><span id="coShipping">Free</span></div>
       <div class="sum-row"><span>Discount</span><span id="coDiscount">—</span></div>
+      <div class="sum-row"><span>Gift Card</span><span id="coGiftCard">—</span></div>
       <div class="sum-row total"><span>Total</span><span id="coTotal">₹0</span></div>
       <button class="btn btn-gold btn-block" style="margin-top:18px" onclick="proceedCheckout()">Place Order</button>
     </div>
   </div>
 </div>
 
+<!-- ============================== ORDER CONFIRMATION ============================== -->
 <div class="page" id="page-order-confirm">
   <div class="wrap" style="padding:120px var(--pad);text-align:center;max-width:560px">
     <div style="font-size:44px;color:var(--gold)">✧</div>
@@ -334,10 +463,11 @@
   </div>
 </div>
 
+<!-- ================================= ADMIN PAGE ================================= -->
 <div class="page" id="page-admin">
   <div class="admin-shell">
     <aside class="admin-side">
-      <div class="brand"><span class="name" style="font-size:20px">Kanikara</span><span class="tag">Admin</span></div>
+      <div class="brand"><span class="name" style="font-size:20px">KANIKAARA</span><span class="tag">Admin</span></div>
       <a href="#" data-tab="dashboard" class="active" onclick="event.preventDefault();switchAdmin('dashboard')">Dashboard</a>
       <a href="#" data-tab="products" onclick="event.preventDefault();switchAdmin('products')">Products</a>
       <a href="#" data-tab="categories" onclick="event.preventDefault();switchAdmin('categories')">Categories</a>
@@ -346,6 +476,11 @@
       <a href="#" data-tab="custom" onclick="event.preventDefault();switchAdmin('custom')">Custom Requests</a>
       <a href="#" data-tab="reviews" onclick="event.preventDefault();switchAdmin('reviews')">Reviews</a>
       <a href="#" data-tab="customers" onclick="event.preventDefault();switchAdmin('customers')">Customers</a>
+      <a href="#" data-tab="giftcards" onclick="event.preventDefault();switchAdmin('giftcards')">Gift Cards</a>
+      <a href="#" data-tab="corporate" onclick="event.preventDefault();switchAdmin('corporate')">Corporate Gifting</a>
+      <a href="#" data-tab="plans" onclick="event.preventDefault();switchAdmin('plans')">Smart Plans</a>
+      <a href="#" data-tab="stores" onclick="event.preventDefault();switchAdmin('stores')">Store Locator</a>
+      <a href="#" data-tab="press" onclick="event.preventDefault();switchAdmin('press')">Press Mentions</a>
       <a href="#" data-tab="settings" onclick="event.preventDefault();switchAdmin('settings')">Settings</a>
       <a href="#" onclick="event.preventDefault();closeAdmin()" style="margin-top:20px;border-top:1px solid var(--line-dark);padding-top:16px">← Back to Site</a>
     </aside>
@@ -386,6 +521,28 @@
         <div class="admin-topbar"><h1>Customers</h1></div>
         <table class="data"><thead><tr><th>Name</th><th>Phone</th><th>Orders</th><th>Spent</th><th>Loyalty</th><th>Role</th></tr></thead><tbody id="adminCustomersTbl"></tbody></table>
       </div>
+      <div class="admin-pane hide" data-pane="giftcards">
+        <div class="admin-topbar"><h1>Gift Cards</h1></div>
+        <table class="data"><thead><tr><th>Code</th><th>Purchased By</th><th>Recipient</th><th>Initial</th><th>Balance</th><th>Status</th></tr></thead><tbody id="adminGiftCardsTbl"></tbody></table>
+      </div>
+      <div class="admin-pane hide" data-pane="corporate">
+        <div class="admin-topbar"><h1>Corporate Gifting Enquiries</h1></div>
+        <table class="data"><thead><tr><th>Company</th><th>Est. Quantity</th><th>Requirement</th><th>Status</th><th>Date</th></tr></thead><tbody id="adminCorporateTbl"></tbody></table>
+      </div>
+      <div class="admin-pane hide" data-pane="plans">
+        <div class="admin-topbar"><h1>Smart Purchase Plans</h1><button class="btn btn-gold btn-sm" onclick="showAddPlan()">+ Add Plan</button></div>
+        <table class="data"><thead><tr><th>Name</th><th>Monthly</th><th>Duration</th><th>Bonus</th><th>Status</th><th>Actions</th></tr></thead><tbody id="adminPlansTbl"></tbody></table>
+        <h3 style="font-family:var(--serif);margin:28px 0 14px">Active Subscriptions</h3>
+        <table class="data"><thead><tr><th>Customer</th><th>Plan</th><th>Months Paid</th><th>Total Paid</th><th>Status</th></tr></thead><tbody id="adminSubsTbl"></tbody></table>
+      </div>
+      <div class="admin-pane hide" data-pane="stores">
+        <div class="admin-topbar"><h1>Store Locator</h1><button class="btn btn-gold btn-sm" onclick="showAddStore()">+ Add Store</button></div>
+        <table class="data"><thead><tr><th>Name</th><th>City</th><th>Phone</th><th>Status</th><th>Actions</th></tr></thead><tbody id="adminStoresTbl"></tbody></table>
+      </div>
+      <div class="admin-pane hide" data-pane="press">
+        <div class="admin-topbar"><h1>Press Mentions</h1><button class="btn btn-gold btn-sm" onclick="showAddPress()">+ Add Mention</button></div>
+        <table class="data"><thead><tr><th>Publication</th><th>Quote</th><th>Status</th><th>Actions</th></tr></thead><tbody id="adminPressTbl"></tbody></table>
+      </div>
       <div class="admin-pane hide" data-pane="settings">
         <div class="admin-topbar"><h1>Site Settings</h1><button class="btn btn-gold btn-sm" onclick="saveAllSettings()">Save All</button></div>
         <div class="dash-card" id="adminSettingsForm" style="display:grid;grid-template-columns:1fr 1fr;gap:14px"></div>
@@ -394,10 +551,11 @@
   </div>
 </div>
 
+<!-- ================================== FOOTER ================================== -->
 <footer class="site">
   <div class="foot-grid">
     <div class="foot-brand">
-      <div class="brand"><img src="assets/img/logo.jpeg" alt=""><span class="name" style="font-size:20px">Kanikara</span></div>
+      <div class="brand"><img src="assets/img/logo.jpeg" alt=""><span class="name" style="font-size:20px">KANIKAARA</span></div>
       <p>Fine gold, diamond and bridal jewellery, hand-finished by karigars in Rajasthan since generations.</p>
     </div>
     <div><h4>Shop</h4><ul id="footerCatList"></ul></div>
@@ -408,16 +566,17 @@
     </ul></div>
     <div><h4>Contact</h4><ul>
       <li>Rajasthan, India</li>
-      <li>hello@Kanikara.com</li>
+      <li>hello@kanikaara.com</li>
       <li>+91 74XX XXXX 53</li>
     </ul></div>
   </div>
   <div class="foot-bottom">
-    <span>© 2026 Kanikara. All rights reserved.</span>
+    <span>© 2026 Kanikaara. All rights reserved.</span>
     <span>BIS Hallmarked · Certified Stones</span>
   </div>
 </footer>
 
+<!-- ================================== CART DRAWER ================================== -->
 <div class="drawer" id="cartDrawer">
   <div class="drawer-head"><h3>Your Bag</h3><button class="icon-btn" onclick="closeCart()" style="color:var(--charcoal)">✕</button></div>
   <div class="drawer-body" id="drawerBody"></div>
@@ -429,6 +588,7 @@
   </div>
 </div>
 
+<!-- ================================== AUTH MODAL ================================== -->
 <div class="modal" id="authModal">
   <div class="modal-card">
     <button class="modal-close" onclick="closeAuth()">✕</button>
@@ -457,6 +617,7 @@
   </div>
 </div>
 
+<!-- ================================== SIZE GUIDE MODAL ================================== -->
 <div class="modal" id="sizeGuideModal">
   <div class="modal-card wide">
     <button class="modal-close" onclick="closeAllModals()">✕</button>
@@ -470,6 +631,7 @@
   </div>
 </div>
 
+<!-- ================================== REVIEW MODAL ================================== -->
 <div class="modal" id="reviewModal">
   <div class="modal-card">
     <button class="modal-close" onclick="closeAllModals()">✕</button>
@@ -485,19 +647,21 @@
   </div>
 </div>
 
+<!-- ================================== UPI PAY MODAL ================================== -->
 <div class="modal" id="payModal">
   <div class="modal-card">
     <button class="modal-close" onclick="closePayModal()">✕</button>
     <h2>Pay via UPI</h2>
     <p class="sub">Amount to pay: <b id="payAmount" style="color:var(--charcoal)"></b></p>
     <div class="field"><label>UPI ID</label>
-      <div style="display:flex;gap:10px"><input value="Kanikara@upi" readonly style="flex:1"><button class="btn btn-line-dark btn-sm" onclick="copyUpiId()">Copy</button></div>
+      <div style="display:flex;gap:10px"><input value="kanikaara@upi" readonly style="flex:1"><button class="btn btn-line-dark btn-sm" onclick="copyUpiId()">Copy</button></div>
     </div>
     <p class="lede-light" style="font-size:13px">Pay the amount above to this UPI ID via GPay / PhonePe / Paytm, then confirm below. Our team verifies and confirms your order shortly after.</p>
     <button class="btn btn-gold btn-block" style="margin-top:14px" onclick="confirmPaymentDone()">I've Completed Payment</button>
   </div>
 </div>
 
+<!-- ================================== ADMIN: PRODUCT MODAL ================================== -->
 <div class="modal" id="productModal">
   <div class="modal-card wide">
     <button class="modal-close" onclick="hideAddProduct()">✕</button>
@@ -524,6 +688,11 @@
       </div>
       <div class="field"><label>Image URLs (comma separated — auto-filled by upload above, or paste your own)</label><input id="productImages" placeholder="https://…, https://…" oninput="renderImgPreview(this.value.split(',').map(s=>s.trim()).filter(Boolean))"></div>
       <div class="field"><label>Description</label><textarea id="productDesc" rows="3"></textarea></div>
+      <div class="field">
+        <label>Tags (comma separated — powers Shop filters)</label>
+        <input id="productTags" placeholder="occasion:wedding, theme:evil-eye, recipient:for-her, metal:silver, audience:her">
+        <div style="font-size:11.5px;color:rgba(34,31,28,.5);margin-top:5px">Use "group:value" format. Common groups: occasion, theme, recipient, metal, colour, style, collection, audience (her/him — powers Gift Store).</div>
+      </div>
       <label class="filter-opt"><input type="checkbox" id="productFeatured"> Featured on homepage</label>
       <label class="filter-opt"><input type="checkbox" id="productBestseller"> Mark as bestseller</label>
       <label class="filter-opt"><input type="checkbox" id="productActive" checked> Active / visible</label>
@@ -532,6 +701,7 @@
   </div>
 </div>
 
+<!-- ================================== ADMIN: CATEGORY MODAL ================================== -->
 <div class="modal" id="categoryModal">
   <div class="modal-card">
     <button class="modal-close" onclick="$('#categoryModal').classList.remove('open')">✕</button>
@@ -547,6 +717,7 @@
   </div>
 </div>
 
+<!-- ================================== ADMIN: COUPON MODAL ================================== -->
 <div class="modal" id="couponModal">
   <div class="modal-card">
     <button class="modal-close" onclick="$('#couponModal').classList.remove('open')">✕</button>
@@ -562,6 +733,67 @@
       <div class="field"><label>Min Order Amount (₹)</label><input id="couponMin" type="number" value="0"></div>
       <label class="filter-opt"><input type="checkbox" id="couponActive" checked> Active</label>
       <button class="btn btn-gold btn-block" type="submit" style="margin-top:14px">Save Coupon</button>
+    </form>
+  </div>
+</div>
+
+<!-- ================================== ADMIN: SMART PLAN MODAL ================================== -->
+<div class="modal" id="planModal">
+  <div class="modal-card">
+    <button class="modal-close" onclick="$('#planModal').classList.remove('open')">✕</button>
+    <h2>Smart Purchase Plan</h2>
+    <form id="planForm" onsubmit="savePlan(event)">
+      <input type="hidden" id="planFormId">
+      <div class="field"><label>Plan Name</label><input id="planName" required placeholder="Classic Plan"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="field"><label>Monthly Amount (₹)</label><input id="planAmount" type="number" required></div>
+        <div class="field"><label>Duration (months)</label><input id="planMonths" type="number" required value="11"></div>
+      </div>
+      <div class="field"><label>Bonus % on Maturity</label><input id="planBonus" type="number" step="0.1" value="5"></div>
+      <div class="field"><label>Description</label><textarea id="planDesc" rows="3"></textarea></div>
+      <label class="filter-opt"><input type="checkbox" id="planActive" checked> Active / visible to customers</label>
+      <button class="btn btn-gold btn-block" type="submit" style="margin-top:14px">Save Plan</button>
+    </form>
+  </div>
+</div>
+
+<!-- ================================== ADMIN: STORE LOCATION MODAL ================================== -->
+<div class="modal" id="storeModal">
+  <div class="modal-card">
+    <button class="modal-close" onclick="$('#storeModal').classList.remove('open')">✕</button>
+    <h2>Store Location</h2>
+    <form id="storeForm" onsubmit="saveStore(event)">
+      <input type="hidden" id="storeFormId">
+      <div class="field"><label>Store Name</label><input id="storeName" required placeholder="Kanikaara Flagship, Jaipur"></div>
+      <div class="field"><label>Address</label><textarea id="storeAddress" rows="2" required></textarea></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+        <div class="field"><label>City</label><input id="storeCity"></div>
+        <div class="field"><label>State</label><input id="storeState"></div>
+        <div class="field"><label>Pincode</label><input id="storePincode"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="field"><label>Phone</label><input id="storePhone"></div>
+        <div class="field"><label>Hours</label><input id="storeHours" placeholder="10 AM – 8 PM, all days"></div>
+      </div>
+      <label class="filter-opt"><input type="checkbox" id="storeActive" checked> Active / visible</label>
+      <button class="btn btn-gold btn-block" type="submit" style="margin-top:14px">Save Store</button>
+    </form>
+  </div>
+</div>
+
+<!-- ================================== ADMIN: PRESS MENTION MODAL ================================== -->
+<div class="modal" id="pressModal">
+  <div class="modal-card">
+    <button class="modal-close" onclick="$('#pressModal').classList.remove('open')">✕</button>
+    <h2>Press Mention</h2>
+    <form id="pressForm" onsubmit="savePress(event)">
+      <input type="hidden" id="pressFormId">
+      <div class="field"><label>Publication Name</label><input id="pressName" required placeholder="Vogue India"></div>
+      <div class="field"><label>Logo URL</label><input id="pressLogo" placeholder="https://…"></div>
+      <div class="field"><label>Article URL</label><input id="pressUrl" placeholder="https://…"></div>
+      <div class="field"><label>Quote</label><textarea id="pressQuote" rows="2"></textarea></div>
+      <label class="filter-opt"><input type="checkbox" id="pressActive" checked> Active / visible</label>
+      <button class="btn btn-gold btn-block" type="submit" style="margin-top:14px">Save Mention</button>
     </form>
   </div>
 </div>
