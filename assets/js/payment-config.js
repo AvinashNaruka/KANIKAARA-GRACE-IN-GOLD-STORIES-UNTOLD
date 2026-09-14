@@ -1,1 +1,1 @@
-const RAZORPAY_KEY_ID = 'rzp_test_REPLACE_WITH_YOUR_KEY_ID';
+const PAYU_INITIATE_URL = 'https://gmlfsygirhnutunodeec.supabase.co/functions/v1/payu-initiate';
