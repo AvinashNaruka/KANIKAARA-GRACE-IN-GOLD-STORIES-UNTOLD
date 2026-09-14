@@ -1,3 +1,7 @@
+// ==========================================================================
+// KANIKAARA — App core (state, router, rendering, page logic)
+// ==========================================================================
+
 const $  = (sel, ctx = document) => ctx.querySelector(sel);
 const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
 const money = n => '₹' + Math.round(Number(n || 0)).toLocaleString('en-IN');
@@ -12,13 +16,15 @@ const state = {
   cart: [],
   wishlistIds: new Set(),
   productCache: new Map(),
-  filters: { category: '', sort: 'newest', minPrice: null, maxPrice: null, search: '' },
+  filters: { category: '', sort: 'newest', minPrice: null, maxPrice: null, search: '', tags: [] },
   currentProduct: null,
   selectedAddressId: null,
   selectedPayMethod: 'cod',
-  appliedCoupon: null
+  appliedCoupon: null,
+  appliedGiftCard: null
 };
 
+// ---------------------------------------------------------------- toast ---
 function toast(msg, type = ''){
   const host = $('#toastHost');
   const el = document.createElement('div');
@@ -28,7 +34,8 @@ function toast(msg, type = ''){
   setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; setTimeout(()=>el.remove(), 300); }, 3200);
 }
 
-const PAGES = ['home','shop','product','wishlist','dashboard','checkout','order-confirm','custom-order','account-gate'];
+// --------------------------------------------------------------- router ---
+const PAGES = ['home','shop','product','wishlist','dashboard','checkout','order-confirm','custom-order','account-gate','gift-store','corporate-gifting','smart-plan','store-locator','jewellery-care'];
 function showPage(id, { push = true } = {}){
   PAGES.forEach(p => { const el = $('#page-' + p); if (el) el.classList.remove('active'); });
   const target = $('#page-' + id);
@@ -51,6 +58,9 @@ function routeInit(id){
   if (id === 'dashboard') loadDashboard();
   if (id === 'checkout') loadCheckout();
   if (id === 'custom-order') { /* static form, nothing to load */ }
+  if (id === 'gift-store') loadGiftStore();
+  if (id === 'smart-plan') loadSmartPlan();
+  if (id === 'store-locator') loadStoreLocator();
 }
 
 function goProduct(slug){
@@ -62,6 +72,7 @@ function goProduct(slug){
   closeCart(); closeAllModals();
 }
 
+// ------------------------------------------------------------- reveal ----
 function initScrollReveal(){
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
@@ -69,6 +80,9 @@ function initScrollReveal(){
   $$('.reveal').forEach(el => io.observe(el));
 }
 
+// ==========================================================================
+// AUTH
+// ==========================================================================
 async function initAuth(){
   const session = await api.getSession();
   await applySession(session);
@@ -142,6 +156,9 @@ async function handleLogout(){
   showPage('home');
 }
 
+// ==========================================================================
+// CART
+// ==========================================================================
 async function refreshCart(){
   if (!state.session) return;
   state.cart = await api.getCart(state.session.user.id).catch(()=>[]);
@@ -183,11 +200,20 @@ async function removeCartItem(cartItemId){
 }
 function cartTotals(){
   const subtotal = state.cart.reduce((s,i)=> s + (i.products?.price || 0) * i.quantity, 0);
-  const shipThreshold = Number(state.settings.free_shipping_threshold || 2999);
-  const shipping = subtotal >= shipThreshold || subtotal === 0 ? 0 : 149;
+  const shipping = 0; // shipping is always free
   const discount = state.appliedCoupon?.discount || 0;
-  const total = Math.max(subtotal - discount, 0) + shipping;
-  return { subtotal, shipping, discount, total, shipThreshold };
+  const afterDiscount = Math.max(subtotal - discount, 0) + shipping;
+  const giftCardUsed = state.appliedGiftCard ? Math.min(state.appliedGiftCard.balance, afterDiscount) : 0;
+  const total = Math.max(afterDiscount - giftCardUsed, 0);
+  return { subtotal, shipping, discount, giftCardUsed, total };
+}
+async function applyGiftCard(){
+  const code = $('#giftCardInput').value.trim();
+  if (!code) return;
+  const card = await api.checkGiftCard(code);
+  if (!card) { $('#giftCardMsg').textContent = 'Invalid or already-used gift card code'; $('#giftCardMsg').style.color = 'var(--danger)'; state.appliedGiftCard = null; }
+  else { state.appliedGiftCard = card; $('#giftCardMsg').textContent = `Applied — ${money(card.balance)} available on this card`; $('#giftCardMsg').style.color = 'var(--success)'; }
+  renderCheckoutSummary();
 }
 function renderCartDrawer(){
   const body = $('#drawerBody');
@@ -216,6 +242,9 @@ function renderCartDrawer(){
   $('#drawerCheckoutBtn').disabled = state.cart.length === 0;
 }
 
+// ==========================================================================
+// WISHLIST
+// ==========================================================================
 async function refreshWishlist(){
   if (!state.session) return;
   const rows = await api.getWishlist(state.session.user.id).catch(()=>[]);
@@ -236,6 +265,9 @@ async function toggleWishlist(productId, btnEl){
   toast(nowIn ? 'Added to wishlist' : 'Removed from wishlist');
 }
 
+// ==========================================================================
+// RENDER HELPERS
+// ==========================================================================
 function placeholderImg(){
   return 'data:image/svg+xml;utf8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="600" height="672"><rect width="100%" height="100%" fill="#F0E9D8"/><text x="50%" y="52%" font-family="Georgia" font-size="20" fill="#C9A24B" text-anchor="middle">KANIKAARA</text></svg>`);
 }
@@ -271,6 +303,9 @@ function skeletonGrid(n = 8){
   return Array.from({length:n}).map(()=>`<div class="p-card"><div class="thumb skeleton"></div><div class="info"><div class="skeleton" style="height:12px;width:40%;margin-top:14px"></div><div class="skeleton" style="height:18px;width:80%;margin-top:8px"></div></div></div>`).join('');
 }
 
+// ==========================================================================
+// HOME PAGE
+// ==========================================================================
 let homeLoaded = false;
 async function loadHome(){
   if (homeLoaded) { initScrollReveal(); return; }
@@ -313,13 +348,46 @@ function filterByCategory(slug){
   state.filters.category = slug;
   showPage('shop');
 }
+function filterByTag(tag){
+  state.filters.tags = [tag];
+  state.filters.category = '';
+  showPage('shop');
+}
 
+// ==========================================================================
+// SHOP PAGE
+// ==========================================================================
 async function loadShop(){
   try {
     if (!state.categories.length) state.categories = await api.getCategories();
+    if (!state.tagGroups) state.tagGroups = await api.getAllTagGroups();
     renderShopFilters();
+    renderTagFilters();
     await runShopQuery();
   } catch (e) { console.error(e); toast('Could not load shop', 'err'); }
+}
+const TAG_GROUP_LABELS = { metal:'Metal', colour:'Colour', style:'Style', occasion:'Occasion', theme:'Theme', recipient:'Recipient', collection:'Collection', audience:'Gift For' };
+function renderTagFilters(){
+  const host = $('#tagFilters');
+  if (!host) return;
+  const groups = state.tagGroups || {};
+  const order = ['occasion','recipient','theme','metal','colour','style','collection','audience'];
+  const keys = order.filter(k => groups[k]?.length).concat(Object.keys(groups).filter(k => !order.includes(k) && groups[k]?.length));
+  if (!keys.length) { host.innerHTML = ''; return; }
+  host.innerHTML = keys.map(g => `
+    <div class="filter-group">
+      <h5>${esc(TAG_GROUP_LABELS[g] || g)}</h5>
+      ${groups[g].map(v => `
+        <label class="filter-opt">
+          <input type="checkbox" value="${g}:${v}" onchange="toggleTagFilter('${g}:${v}', this.checked)" ${state.filters.tags.includes(g+':'+v)?'checked':''}>
+          ${esc(v.replace(/-/g,' '))}
+        </label>`).join('')}
+    </div>`).join('');
+}
+function toggleTagFilter(tag, checked){
+  if (checked) { if (!state.filters.tags.includes(tag)) state.filters.tags.push(tag); }
+  else { state.filters.tags = state.filters.tags.filter(t=>t!==tag); }
+  runShopQuery();
 }
 function renderShopFilters(){
   const host = $('#catFilters');
@@ -345,7 +413,8 @@ async function runShopQuery(){
     sort: state.filters.sort,
     minPrice: state.filters.minPrice,
     maxPrice: state.filters.maxPrice,
-    search: state.filters.search || undefined
+    search: state.filters.search || undefined,
+    tags: state.filters.tags.length ? state.filters.tags : undefined
   });
   $('#shopCount').textContent = `${products.length} piece${products.length===1?'':'s'}`;
   $('#shopGrid').innerHTML = products.length ? products.map(productCardHTML).join('') :
@@ -357,6 +426,9 @@ function doSearch(e){
   showPage('shop');
 }
 
+// ==========================================================================
+// PRODUCT PAGE
+// ==========================================================================
 async function loadProductPage(slug){
   $('#pdContent').innerHTML = `<div class="skeleton" style="height:400px"></div>`;
   const p = await api.getProductBySlug(slug);
@@ -457,6 +529,9 @@ async function submitReviewForm(e){
   } catch (err) { toast(err.message||'Could not submit review','err'); }
 }
 
+// ==========================================================================
+// WISHLIST PAGE
+// ==========================================================================
 async function loadWishlistPage(){
   if (!requireAuth(loadWishlistPage)) return;
   const rows = await api.getWishlist(state.session.user.id);
@@ -464,6 +539,9 @@ async function loadWishlistPage(){
     `<div class="empty-state" style="grid-column:1/-1"><div style="font-size:34px">♡</div><p class="h-section" style="font-size:22px">Nothing saved yet</p><p class="lede-light">Tap the heart on any piece to save it here.</p></div>`;
 }
 
+// ==========================================================================
+// CHECKOUT
+// ==========================================================================
 async function loadCheckout(){
   if (!requireAuth(loadCheckout)) return;
   if (!state.cart.length) { toast('Your bag is empty', 'err'); showPage('shop'); return; }
@@ -536,6 +614,7 @@ function renderCheckoutSummary(){
   $('#coSubtotal').textContent = money(t.subtotal);
   $('#coShipping').textContent = t.shipping===0?'Free':money(t.shipping);
   $('#coDiscount').textContent = t.discount ? '−'+money(t.discount) : '—';
+  $('#coGiftCard').textContent = t.giftCardUsed ? '−'+money(t.giftCardUsed) : '—';
   $('#coTotal').textContent = money(t.total);
 }
 async function proceedCheckout(){
@@ -543,9 +622,47 @@ async function proceedCheckout(){
   const t = cartTotals();
   const addresses = await api.getAddresses(state.session.user.id);
   const addr = addresses.find(a=>a.id===state.selectedAddressId);
+  if (t.total <= 0 && t.giftCardUsed > 0) { await placeOrder(addr, t, 'gift_card', 'paid'); return; }
   if (state.selectedPayMethod === 'upi') { openPayModal(t.total); return; }
   if (state.selectedPayMethod === 'razorpay') { openRazorpayCheckout(addr, t); return; }
+  if (state.selectedPayMethod === 'payu') { payWithPayU(addr, t); return; }
   await placeOrder(addr, t, 'cod', 'cod_pending');
+}
+async function payWithPayU(addr, t){
+  if (!PAYU_INITIATE_URL || PAYU_INITIATE_URL.includes('REPLACE')) {
+    toast('PayU not configured yet — add your Edge Function URL in assets/js/payment-config.js', 'err');
+    return;
+  }
+  try {
+    const res = await fetch(PAYU_INITIATE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        amount: t.total,
+        firstname: state.profile?.full_name || addr?.full_name || 'Customer',
+        email: state.session?.user?.email || '',
+        phone: state.profile?.phone || addr?.phone || '',
+        user_id: state.session.user.id,
+        shipping_address: addr,
+        discount_amount: t.discount,
+        coupon_code: state.appliedCoupon?.code || null,
+        shipping_amount: t.shipping
+      })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    // Build and submit a hidden form so the browser POSTs straight to PayU.
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = data.action;
+    ['key','txnid','amount','productinfo','firstname','email','phone','surl','furl','udf1','hash'].forEach(k=>{
+      const input = document.createElement('input');
+      input.type = 'hidden'; input.name = k; input.value = data[k] ?? '';
+      form.appendChild(input);
+    });
+    document.body.appendChild(form);
+    form.submit();
+  } catch (err) { toast(err.message || 'Could not start PayU payment', 'err'); }
 }
 function openRazorpayCheckout(addr, t){
   if (typeof Razorpay === 'undefined') { toast('Payment gateway still loading — try again in a moment', 'err'); return; }
@@ -591,8 +708,11 @@ async function placeOrder(addr, t, method, paymentStatus, paymentId = null){
       total_amount: t.total,
       shipping_address: addr
     }, state.cart);
+    if (state.appliedGiftCard && t.giftCardUsed > 0) {
+      try { await api.redeemGiftCardAmount(state.appliedGiftCard.id, state.appliedGiftCard.balance - t.giftCardUsed); } catch(_){}
+    }
     await api.clearCart(state.session.user.id);
-    state.cart = []; state.appliedCoupon = null;
+    state.cart = []; state.appliedCoupon = null; state.appliedGiftCard = null;
     renderCartBadge();
     closePayModal();
     $('#confirmOrderNum').textContent = order.order_number;
@@ -613,6 +733,9 @@ async function confirmPaymentDone(){
   await placeOrder(addr, t, 'upi', 'pending');
 }
 
+// ==========================================================================
+// CUSTOM ORDER FORM
+// ==========================================================================
 async function submitCustomOrder(e){
   e.preventDefault();
   const payload = {
@@ -632,6 +755,9 @@ async function submitCustomOrder(e){
   } catch (err) { toast(err.message||'Could not submit request','err'); }
 }
 
+// ==========================================================================
+// DASHBOARD
+// ==========================================================================
 async function loadDashboard(tab = 'orders'){
   if (!requireAuth(()=>loadDashboard(tab))) return;
   $('#dashUserName').textContent = state.profile?.full_name || 'Welcome';
@@ -687,6 +813,9 @@ async function saveProfile(e){
   } catch (err) { toast(err.message||'Could not update profile','err'); }
 }
 
+// ==========================================================================
+// NEWSLETTER / CONSULTATION
+// ==========================================================================
 async function subscribeEmail(e){
   e.preventDefault();
   const email = e.target.querySelector('input[type=email]').value;
@@ -694,21 +823,208 @@ async function subscribeEmail(e){
   catch { toast('Already subscribed with this email'); }
 }
 
+// ==========================================================================
+// GIFT STORE — gift cards + curated "Gifts for Him/Her"
+// ==========================================================================
+let giftStoreLoaded = false;
+async function loadGiftStore(){
+  if (!giftStoreLoaded) {
+    giftStoreLoaded = true;
+    try {
+      const [forHer, forHim] = await Promise.all([
+        api.getProducts({ tags: ['audience:her'], limit: 4 }),
+        api.getProducts({ tags: ['audience:him'], limit: 4 })
+      ]);
+      $('#giftForHer').innerHTML = forHer.length ? forHer.map(productCardHTML).join('') : `<p class="lede-light" style="grid-column:1/-1">Tag products with "audience:her" from Admin → Products to feature them here.</p>`;
+      $('#giftForHim').innerHTML = forHim.length ? forHim.map(productCardHTML).join('') : `<p class="lede-light" style="grid-column:1/-1">Tag products with "audience:him" from Admin → Products to feature them here.</p>`;
+    } catch (e) { console.error(e); }
+  }
+  if (state.session) loadMyGiftCards();
+}
+function selectGiftAmount(el, amount){
+  $$('.gift-amt').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  $('#giftCustomAmount').value = amount;
+}
+async function buyGiftCard(e){
+  e.preventDefault();
+  if (!requireAuth(()=>buyGiftCard(e))) return;
+  const amount = Number($('#giftCustomAmount').value);
+  if (!amount || amount < 500) return toast('Minimum gift card amount is ₹500', 'err');
+  const payload = {
+    initial_amount: amount,
+    purchased_by: state.session.user.id,
+    recipient_name: $('#giftRecipientName').value,
+    recipient_email: $('#giftRecipientEmail').value,
+    message: $('#giftMessage').value
+  };
+  if (typeof Razorpay === 'undefined' || !RAZORPAY_KEY_ID || RAZORPAY_KEY_ID.includes('REPLACE')) {
+    toast('Payment gateway not configured yet — add your Razorpay Key ID in assets/js/payment-config.js', 'err');
+    return;
+  }
+  const rzp = new Razorpay({
+    key: RAZORPAY_KEY_ID,
+    amount: Math.round(amount * 100),
+    currency: 'INR',
+    name: 'KANIKAARA',
+    description: 'Gift Card Purchase',
+    image: 'assets/img/logo.jpeg',
+    theme: { color: '#C9A24B' },
+    handler: async function (response) {
+      try {
+        const card = await api.purchaseGiftCard({ ...payload, payment_id: response.razorpay_payment_id });
+        toast(`Gift card created! Code: ${card.code}`);
+        e.target.reset();
+        loadMyGiftCards();
+      } catch (err) { toast(err.message || 'Could not create gift card', 'err'); }
+    }
+  });
+  rzp.open();
+}
+async function loadMyGiftCards(){
+  const host = $('#myGiftCards');
+  if (!host) return;
+  const cards = await api.getUserGiftCards(state.session.user.id);
+  host.innerHTML = cards.length ? cards.map(c=>`
+    <div class="addr-card"><b>${esc(c.code)}</b> <span class="status-badge status-${c.status==='active'?'delivered':'cancelled'}">${c.status}</span>
+    <p>Balance: ${money(c.balance)} of ${money(c.initial_amount)} ${c.recipient_name?'· For: '+esc(c.recipient_name):''}</p></div>`).join('') :
+    `<p class="lede-light">No gift cards purchased yet.</p>`;
+}
+
+// ==========================================================================
+// CORPORATE GIFTING
+// ==========================================================================
+async function submitCorporateEnquiry(e){
+  e.preventDefault();
+  const payload = {
+    company_name: $('#corpCompany').value,
+    contact_name: $('#corpContact').value,
+    phone: $('#corpPhone').value,
+    email: $('#corpEmail').value,
+    estimated_quantity: $('#corpQty').value,
+    requirement: $('#corpReq').value
+  };
+  try {
+    await api.submitCorporateEnquiry(payload);
+    toast('Enquiry received! Our B2B team will reach out within 2 business days.');
+    e.target.reset();
+  } catch (err) { toast(err.message||'Could not submit enquiry','err'); }
+}
+
+// ==========================================================================
+// SMART PURCHASE PLAN (gold savings scheme)
+// ==========================================================================
+async function loadSmartPlan(){
+  const plans = await api.getSavingsPlans();
+  $('#planGrid').innerHTML = plans.length ? plans.map(p=>`
+    <div class="dash-card">
+      <h3 style="font-family:var(--serif);font-size:22px">${esc(p.name)}</h3>
+      <p class="lede-light" style="margin-top:8px">${esc(p.description||'')}</p>
+      <div style="display:flex;align-items:baseline;gap:8px;margin-top:16px">
+        <span style="font-size:26px;font-weight:800">${money(p.monthly_amount)}</span><span style="font-size:13px;color:rgba(34,31,28,.55)">/ month × ${p.duration_months} months</span>
+      </div>
+      <p style="margin-top:6px;color:var(--gold);font-weight:700;font-size:13.5px">+${p.bonus_percent}% bonus value on maturity</p>
+      <button class="btn btn-gold btn-block" style="margin-top:18px" onclick="subscribeSavingsPlan('${p.id}')">Start This Plan</button>
+    </div>`).join('') : `<p class="lede-light">No plans available right now — check back soon.</p>`;
+  if (state.session) loadMySubscriptions();
+}
+async function subscribeSavingsPlan(planId){
+  if (!requireAuth(()=>subscribeSavingsPlan(planId))) return;
+  try {
+    await api.subscribeToPlan(state.session.user.id, planId);
+    toast('Plan started! Pay your first installment below.');
+    loadMySubscriptions();
+  } catch (err) { toast(err.message||'Could not start plan','err'); }
+}
+async function loadMySubscriptions(){
+  const host = $('#mySubscriptions');
+  if (!host) return;
+  const subs = await api.getUserSubscriptions(state.session.user.id);
+  host.innerHTML = subs.length ? subs.map(s=>`
+    <div class="dash-card" style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <b>${esc(s.savings_plans?.name)}</b>
+        <span class="status-badge status-${s.status==='active'?'pending':s.status==='matured'?'delivered':'cancelled'}">${s.status}</span>
+      </div>
+      <p style="font-size:13px;color:rgba(34,31,28,.6);margin-top:6px">${s.months_paid}/${s.savings_plans?.duration_months} months paid · Total saved: ${money(s.total_paid)}</p>
+      ${s.status==='active' ? `<button class="btn btn-line-dark btn-sm" style="margin-top:10px" onclick="paySavingsInstallment('${s.id}', ${s.savings_plans.monthly_amount})">Pay This Month (${money(s.savings_plans.monthly_amount)})</button>` : ''}
+      ${s.status==='matured' ? `<p style="margin-top:8px;font-size:13px;color:var(--success);font-weight:700">Matured! Visit the store or contact us to redeem towards a purchase.</p>` : ''}
+    </div>`).join('') : `<p class="lede-light">No active plans yet.</p>`;
+}
+function paySavingsInstallment(subscriptionId, amount){
+  if (typeof Razorpay === 'undefined' || !RAZORPAY_KEY_ID || RAZORPAY_KEY_ID.includes('REPLACE')) {
+    toast('Payment gateway not configured yet — add your Razorpay Key ID in assets/js/payment-config.js', 'err');
+    return;
+  }
+  const rzp = new Razorpay({
+    key: RAZORPAY_KEY_ID,
+    amount: Math.round(amount * 100),
+    currency: 'INR',
+    name: 'KANIKAARA',
+    description: 'Smart Purchase Plan — monthly installment',
+    theme: { color: '#C9A24B' },
+    handler: async function (response) {
+      try {
+        await api.recordSavingsPayment(subscriptionId, amount, response.razorpay_payment_id);
+        toast('Installment recorded — thank you!');
+        loadMySubscriptions();
+      } catch (err) { toast(err.message||'Could not record payment','err'); }
+    }
+  });
+  rzp.open();
+}
+
+// ==========================================================================
+// STORE LOCATOR
+// ==========================================================================
+async function loadStoreLocator(){
+  const stores = await api.getStoreLocations();
+  $('#storeList').innerHTML = stores.length ? stores.map(s=>`
+    <div class="dash-card" style="margin-bottom:16px">
+      <h3 style="font-family:var(--serif);font-size:20px">${esc(s.name)}</h3>
+      <p class="lede-light" style="margin-top:8px">${esc(s.address)}${s.city?', '+esc(s.city):''}${s.state?', '+esc(s.state):''} ${esc(s.pincode||'')}</p>
+      ${s.phone ? `<p style="font-size:13.5px;margin-top:6px">📞 ${esc(s.phone)}</p>`:''}
+      ${s.hours ? `<p style="font-size:13.5px;margin-top:2px">🕐 ${esc(s.hours)}</p>`:''}
+    </div>`).join('') : `<p class="lede-light">Store locations will appear here once added from the admin panel.</p>`;
+}
+
+// ==========================================================================
+// MOBILE MENU + misc UI
+// ==========================================================================
 function toggleMobileMenu(){ $('#mobileMenu').classList.toggle('open'); }
 function populateCatDropdowns(cats){
   const el = $('#footerCatList');
   if (el) el.innerHTML = cats.slice(0,6).map(c=>`<li><a href="#shop" onclick="event.preventDefault();filterByCategory('${c.slug}')">${esc(c.name)}</a></li>`).join('');
 }
+
+// ==========================================================================
+// INIT
+// ==========================================================================
 async function boot(){
   try {
     state.settings = await api.getSettings();
     if (state.settings.announcement_text) $('#announceText').textContent = state.settings.announcement_text;
+    const wa = (state.settings.whatsapp_number || '').replace(/[^0-9]/g,'');
+    if (wa) { $('#waFloat').href = `https://wa.me/${wa}?text=${encodeURIComponent('Hi! I have a question about a Kanikaara piece.')}`; $('#waFloat').classList.remove('hide'); }
   } catch(e){ console.error(e); }
   await initAuth();
-  const hash = (location.hash || '#home').slice(1);
-  const [pageId, arg] = hash.split('/');
+  const rawHash = (location.hash || '#home').slice(1);
+  const [hashPath, hashQuery] = rawHash.split('?');
+  const [pageId, arg] = hashPath.split('/');
   if (pageId === 'product' && arg) { $('#page-home').classList.remove('active'); goProduct(arg); }
-  else showPage(PAGES.includes(pageId) ? pageId : 'home', { push: false });
+  else if (pageId === 'order-confirm' && arg) {
+    showPage('order-confirm', { push: false });
+    try {
+      const order = await api.getOrderByNumber(arg);
+      if (order) { $('#confirmOrderNum').textContent = order.order_number; $('#confirmTotal').textContent = money(order.total_amount); }
+    } catch(e){ console.error(e); }
+  }
+  else {
+    showPage(PAGES.includes(pageId) ? pageId : 'home', { push: false });
+    if (pageId === 'checkout' && hashQuery?.includes('payu=')) {
+      toast('PayU payment did not complete — please try again or choose another payment method.', 'err');
+    }
+  }
 
   $('#overlay').addEventListener('click', () => { closeCart(); closeAllModals(); });
   initScrollReveal();
