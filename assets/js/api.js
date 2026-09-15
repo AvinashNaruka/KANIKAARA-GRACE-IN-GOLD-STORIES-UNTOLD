@@ -1,11 +1,6 @@
-// ==========================================================================
-// KANIKAARA — API layer
-// Every Supabase query lives here so pages/UI code never touches `sb` directly.
-// Table/column names match kanikaara_fixed_setup.sql exactly.
-// ==========================================================================
 const api = {
 
-  // ---------------- Auth ----------------
+
   async signUp(email, password, fullName, phone){
     const { data, error } = await sb.auth.signUp({
       email, password,
@@ -40,14 +35,12 @@ const api = {
     if (error) throw error;
   },
 
-  // ---------------- Categories ----------------
   async getCategories(){
     const { data, error } = await sb.from('categories').select('*').eq('is_active', true).order('sort_order');
     if (error) throw error;
     return data || [];
   },
 
-  // ---------------- Products ----------------
   async getProducts({ categorySlug, featured, bestseller, newArrival, search, minPrice, maxPrice, sort, limit, tags } = {}){
     let q = sb.from('products').select('*, categories(name, slug)').eq('is_active', true);
     if (featured) q = q.eq('is_featured', true);
@@ -74,8 +67,7 @@ const api = {
     return data || [];
   },
   async getAllTagGroups(){
-    // tags follow a "group:value" convention, e.g. "occasion:wedding".
-    // We compute distinct groups client-side from active products.
+
     const { data, error } = await sb.from('products').select('tags').eq('is_active', true);
     if (error) throw error;
     const groups = {};
@@ -100,7 +92,6 @@ const api = {
     return data || [];
   },
 
-  // ---------------- Reviews ----------------
   async getApprovedReviews(limit = 6){
     const { data, error } = await sb.from('reviews').select('*, profiles(full_name)').eq('is_approved', true).order('created_at', { ascending: false }).limit(limit);
     if (error) throw error;
@@ -116,7 +107,6 @@ const api = {
     if (error) throw error;
   },
 
-  // ---------------- Wishlist ----------------
   async getWishlist(userId){
     const { data, error } = await sb.from('wishlists').select('*, products(*)').eq('user_id', userId);
     if (error) throw error;
@@ -133,7 +123,6 @@ const api = {
     }
   },
 
-  // ---------------- Cart ----------------
   async getCart(userId){
     const { data, error } = await sb.from('cart_items').select('*, products(*)').eq('user_id', userId);
     if (error) throw error;
@@ -160,7 +149,6 @@ const api = {
     await sb.from('cart_items').delete().eq('user_id', userId);
   },
 
-  // ---------------- Addresses ----------------
   async getAddresses(userId){
     const { data, error } = await sb.from('addresses').select('*').eq('user_id', userId).order('is_default', { ascending: false });
     if (error) throw error;
@@ -177,7 +165,6 @@ const api = {
   },
   async deleteAddress(id){ await sb.from('addresses').delete().eq('id', id); },
 
-  // ---------------- Coupons ----------------
   async validateCoupon(code, subtotal){
     const { data, error } = await sb.from('coupons').select('*').eq('code', code.toUpperCase()).eq('is_active', true).maybeSingle();
     if (error || !data) return { valid: false, message: 'Invalid or expired coupon code' };
@@ -188,8 +175,7 @@ const api = {
     if (data.max_discount) discount = Math.min(discount, data.max_discount);
     return { valid: true, coupon: data, discount: Math.round(discount) };
   },
-
-  // ---------------- Orders ----------------
+  
   async createOrder(order, items){
     const { data: created, error } = await sb.from('orders').insert(order).select().single();
     if (error) throw error;
@@ -205,9 +191,7 @@ const api = {
     const { error: itemErr } = await sb.from('order_items').insert(orderItems);
     if (itemErr) throw itemErr;
     if (order.coupon_code) {
-      // Best-effort: customers only have SELECT rights on coupons per RLS, so this
-      // may silently no-op. Wire a SECURITY DEFINER function server-side if exact
-      // usage counts matter — never let it block order placement.
+
       try {
         const { data: c } = await sb.from('coupons').select('id, used_count').eq('code', order.coupon_code).maybeSingle();
         if (c) await sb.from('coupons').update({ used_count: (c.used_count || 0) + 1 }).eq('id', c.id);
@@ -226,7 +210,6 @@ const api = {
     return data;
   },
 
-  // ---------------- Custom order requests ----------------
   async submitCustomOrder(payload){
     const { error } = await sb.from('custom_order_requests').insert(payload);
     if (error) throw error;
@@ -237,15 +220,13 @@ const api = {
     return data || [];
   },
 
-  // ---------------- Consultations & enquiries & newsletter ----------------
   async bookConsultation(payload){ const { error } = await sb.from('consultations').insert(payload); if (error) throw error; },
   async submitEnquiry(payload){ const { error } = await sb.from('product_enquiries').insert(payload); if (error) throw error; },
   async subscribeEmail(email, source = 'footer'){
     const { error } = await sb.from('email_subscriptions').insert({ email, source });
-    if (error && error.code !== '23505') throw error; // ignore duplicate
+    if (error && error.code !== '23505') throw error; 
   },
 
-  // ---------------- Settings ----------------
   async getSettings(){
     const { data, error } = await sb.from('site_settings').select('*');
     if (error) throw error;
@@ -258,7 +239,6 @@ const api = {
     if (error) throw error;
   },
 
-  // ---------------- Banners ----------------
   async getBanners(position){
     let q = sb.from('banners').select('*').eq('is_active', true).order('sort_order');
     if (position) q = q.eq('position', position);
@@ -267,7 +247,6 @@ const api = {
     return data || [];
   },
 
-  // ================= ADMIN =================
   async isAdmin(userId){
     const p = await api.getProfile(userId);
     return p && (p.role === 'admin' || p.role === 'superadmin');
@@ -355,7 +334,6 @@ const api = {
     return data || [];
   },
 
-  // ================= GIFT CARDS =================
   async purchaseGiftCard(payload){
     const code = 'GIFT-' + Math.random().toString(36).slice(2,6).toUpperCase() + '-' + Math.random().toString(36).slice(2,6).toUpperCase();
     const { data, error } = await sb.from('gift_cards').insert({ ...payload, code, balance: payload.initial_amount }).select().single();
@@ -382,7 +360,6 @@ const api = {
     return data || [];
   },
 
-  // ================= CORPORATE GIFTING =================
   async submitCorporateEnquiry(payload){
     const { error } = await sb.from('corporate_enquiries').insert(payload);
     if (error) throw error;
@@ -397,7 +374,6 @@ const api = {
     if (error) throw error;
   },
 
-  // ================= SMART PURCHASE PLAN (savings scheme) =================
   async getSavingsPlans(){
     const { data, error } = await sb.from('savings_plans').select('*').eq('is_active', true).order('monthly_amount');
     if (error) throw error;
@@ -442,7 +418,6 @@ const api = {
     return data || [];
   },
 
-  // ================= STORE LOCATOR =================
   async getStoreLocations(){
     const { data, error } = await sb.from('store_locations').select('*').eq('is_active', true).order('sort_order');
     if (error) throw error;
@@ -459,7 +434,6 @@ const api = {
   },
   async adminDeleteStoreLocation(id){ await sb.from('store_locations').delete().eq('id', id); },
 
-  // ================= PRESS MENTIONS =================
   async getPressMentions(){
     const { data, error } = await sb.from('press_mentions').select('*').eq('is_active', true).order('sort_order');
     if (error) throw error;
