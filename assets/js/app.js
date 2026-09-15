@@ -943,6 +943,7 @@ async function loadMySubscriptions(){
       ${s.status==='matured' ? `<p style="margin-top:8px;font-size:13px;color:var(--success);font-weight:700">Matured! Visit the store or contact us to redeem towards a purchase.</p>` : ''}
     </div>`).join('') : `<p class="lede-light">No active plans yet.</p>`;
 }
+async function cancelSavingsPlan(subscriptionId){ if (!confirm('Are you sure you want to cancel this plan? This cannot be undone.')) return; try { await api.cancelSubscription(subscriptionId); toast('Plan cancelled'); loadMySubscriptions(); } catch (err) { toast(err.message || 'Could not cancel plan', 'err'); } }
 async function paySavingsInstallment(subscriptionId, amount){
   await payWithPayU(null, amount, 'savings_payment', { subscription_id: subscriptionId });
 }
