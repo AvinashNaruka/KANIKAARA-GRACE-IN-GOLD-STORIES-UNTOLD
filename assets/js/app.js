@@ -1,7 +1,3 @@
-// ==========================================================================
-// KANIKAARA — App core (state, router, rendering, page logic)
-// ==========================================================================
-
 const $  = (sel, ctx = document) => ctx.querySelector(sel);
 const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
 const money = n => '₹' + Math.round(Number(n || 0)).toLocaleString('en-IN');
@@ -592,6 +588,28 @@ async function saveNewAddress(e){
     renderAddressList(addrs);
   } catch (err) { toast(err.message||'Could not save address', 'err'); }
 }
+function renderReceipt(addr, items, totalAmount){
+  const host = $('#confirmReceipt');
+  if (!host) return;
+  const addrHtml = addr ? `
+    <p style="margin:4px 0">${esc(addr.full_name||'')}</p>
+    <p style="margin:4px 0">${esc(addr.address_line1||'')}${addr.address_line2?', '+esc(addr.address_line2):''}</p>
+    <p style="margin:4px 0">${esc(addr.city||'')}, ${esc(addr.state||'')} - ${esc(addr.pincode||'')}</p>
+    <p style="margin:4px 0">Phone: ${esc(addr.phone||'')}</p>` : '<p>No address on file</p>';
+  const itemsHtml = (items||[]).map(i=>`
+    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(0,0,0,.08)">
+      <span>${esc(i.name)} × ${i.quantity}</span><span>${money(i.price)}</span>
+    </div>`).join('');
+  host.innerHTML = `
+    <div style="text-align:left;margin-top:24px;padding:20px;border:1px solid rgba(0,0,0,.1);border-radius:8px">
+      <h3 style="margin-bottom:10px">Shipping to</h3>${addrHtml}
+      <h3 style="margin:16px 0 10px">Items</h3>${itemsHtml}
+      <div style="display:flex;justify-content:space-between;font-weight:700;margin-top:12px;padding-top:12px;border-top:2px solid #221f1c">
+        <span>Total</span><span>${money(totalAmount)}</span>
+      </div>
+    </div>
+    <button class="btn btn-line-dark no-print" style="margin-top:20px" onclick="window.print()">🖨 Print Receipt</button>`;
+}
 function selectPayMethod(m){
   state.selectedPayMethod = m;
   $$('.pay-opt').forEach(el=>el.classList.toggle('selected', el.dataset.method===m));
@@ -682,6 +700,7 @@ async function placeOrder(addr, t, method, paymentStatus, paymentId = null){
       try { await api.redeemGiftCardAmount(state.appliedGiftCard.id, state.appliedGiftCard.balance - t.giftCardUsed); } catch(_){}
     }
     await api.clearCart(state.session.user.id);
+    renderReceipt(addr, state.cart.map(i=>({name:i.products?.name||i.name, quantity:i.quantity, price:(i.products?.price??i.price)*i.quantity})), t.total);
     state.cart = []; state.appliedCoupon = null; state.appliedGiftCard = null;
     renderCartBadge();
     closePayModal();
@@ -1022,7 +1041,7 @@ async function boot(){
     showPage('order-confirm', { push: false });
     try {
       const order = await api.getOrderByNumber(arg);
-      if (order) { $('#confirmOrderNum').textContent = order.order_number; $('#confirmTotal').textContent = money(order.total_amount); }
+      if (order) { renderReceipt(order.shipping_address, (order.order_items||[]).map(i=>({name:i.product_name, quantity:i.quantity, price:i.total_price})), order.total_amount); $('#confirmOrderNum').textContent = order.order_number; $('#confirmTotal').textContent = money(order.total_amount); }
     } catch(e){ console.error(e); }
   }
   else {
