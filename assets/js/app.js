@@ -462,7 +462,7 @@ async function loadProductPage(slug){
           ${state.session ? `<button class="btn-ghost" style="margin-top:14px" onclick="openReviewForm('${p.id}')">Write a review</button>` : ''}
         </div>
         <div id="pdTabCare" class="hide" style="margin-top:20px;font-size:13.5px;color:rgba(34,31,28,.65);line-height:1.7">
-          ${esc(p.care_instructions || 'Store in a dry box, avoid contact with perfume and water, polish gently with a soft cloth.')}<br>${esc(p.return_policy || '15 days easy return')}.
+          ${esc(p.care_instructions || 'Store in a dry box, avoid contact with perfume and water, polish gently with a soft cloth.')}<br>${esc(p.return_policy || 'Orders can be cancelled before dispatch. See our Cancellation & Refund Policy for details.')}
         </div>
       </div>
     </div>
