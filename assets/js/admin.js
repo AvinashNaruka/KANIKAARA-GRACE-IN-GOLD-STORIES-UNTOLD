@@ -1,9 +1,3 @@
-// ==========================================================================
-// KANIKAARA — Admin panel
-// Only reachable by profiles.role IN ('admin','superadmin') — RLS enforces
-// this server-side too, this is just the UI gate.
-// ==========================================================================
-
 async function openAdmin(){
   if (!state.session) { toast('Please sign in first', 'err'); openAuth('login', openAdmin); return; }
   if (!state.isAdmin) { toast('Admin access only', 'err'); return; }
@@ -30,7 +24,6 @@ function switchAdmin(tab){
   loaders[tab]?.();
 }
 
-// ---------------------------------------------------------- dashboard ---
 async function loadAdminDashboard(){
   const s = await api.adminStats();
   $('#adminStats').innerHTML = `
@@ -44,7 +37,6 @@ async function loadAdminDashboard(){
     `<tr><td colspan="4">No orders yet</td></tr>`;
 }
 
-// ------------------------------------------------------------ products ---
 async function loadAdminProducts(){
   const [products, cats] = await Promise.all([api.adminAllProducts(), api.adminAllCategories()]);
   state.categories = cats.length ? cats : state.categories;
@@ -68,28 +60,55 @@ function showAddProduct(){
   $('#productImgPreview').innerHTML = '';
   $('#productModal').classList.add('open'); $('#overlay').classList.add('open');
 }
+function compressImage(file, maxDim = 1400, quality = 0.82){
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = () => {
+      img.onerror = reject;
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > maxDim || height > maxDim) {
+          if (width > height) { height = Math.round(height * (maxDim / width)); width = maxDim; }
+          else { width = Math.round(width * (maxDim / height)); height = maxDim; }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width; canvas.height = height;
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+        canvas.toBlob(blob => {
+          if (!blob) return reject(new Error('Compression failed'));
+          resolve(new File([blob], file.name.replace(/\.(png|jpe?g|webp|heic)$/i, '.jpg'), { type: 'image/jpeg' }));
+        }, 'image/jpeg', quality);
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
 async function uploadProductImages(input){
   const files = Array.from(input.files || []);
   if (!files.length) return;
   const status = $('#uploadStatus');
-  status.textContent = `Uploading ${files.length} image(s)…`;
+  status.textContent = `Compressing & uploading ${files.length} image(s)…`;
   const existing = $('#productImages').value.split(',').map(s=>s.trim()).filter(Boolean);
   const uploaded = [];
-  for (const file of files) {
+  for (const original of files) {
     try {
+      const file = await compressImage(original).catch(() => original); // fall back to original if compression fails
       const path = `${Date.now()}-${Math.random().toString(36).slice(2,8)}-${file.name.replace(/[^a-zA-Z0-9.]+/g,'-')}`;
       const { error } = await sb.storage.from('product-images').upload(path, file, { cacheControl: '3600', upsert: false });
       if (error) throw error;
       const { data } = sb.storage.from('product-images').getPublicUrl(path);
       uploaded.push(data.publicUrl);
     } catch (err) {
-      toast(`Could not upload ${file.name}: ${err.message || 'unknown error'}`, 'err');
+      toast(`Could not upload ${original.name}: ${err.message || 'unknown error'}`, 'err');
     }
   }
   const all = [...existing, ...uploaded];
   $('#productImages').value = all.join(', ');
   renderImgPreview(all);
-  status.textContent = uploaded.length ? `${uploaded.length} image(s) uploaded ✓` : '';
+  status.textContent = uploaded.length ? `${uploaded.length} image(s) uploaded ✓ (auto-compressed for fast loading)` : '';
   input.value = '';
 }
 function renderImgPreview(urls){
@@ -192,7 +211,6 @@ async function saveCategory(e){
   catch (err) { toast(err.message||'Could not save category','err'); }
 }
 
-// --------------------------------------------------------------- orders ---
 async function loadAdminOrders(){
   const orders = await api.adminAllOrders();
   window.__adminOrders = orders;
@@ -215,7 +233,6 @@ async function adminUpdateOrderStatus(id, status){
   catch (err) { toast(err.message||'Could not update order','err'); }
 }
 
-// -------------------------------------------------------------- coupons ---
 async function loadAdminCoupons(){
   const coupons = await api.adminAllCoupons();
   window.__adminCoupons = coupons;
@@ -249,7 +266,6 @@ async function saveCoupon(e){
   catch (err) { toast(err.message||'Could not save coupon','err'); }
 }
 
-// --------------------------------------------------------- custom orders ---
 async function loadAdminCustom(){
   const rows = await api.adminAllCustomOrders();
   $('#adminCustomTbl').innerHTML = rows.map(r=>`
@@ -267,7 +283,6 @@ async function adminUpdateCustom(id, status){
   catch (err) { toast(err.message||'Could not update','err'); }
 }
 
-// -------------------------------------------------------------- reviews ---
 async function loadAdminReviews(){
   const rows = await api.adminAllReviews();
   $('#adminReviewsTbl').innerHTML = rows.map(r=>`
@@ -281,7 +296,6 @@ async function approveReview(id){
   catch (err) { toast(err.message||'Could not approve','err'); }
 }
 
-// ------------------------------------------------------------ customers ---
 async function loadAdminCustomers(){
   const rows = await api.adminAllCustomers();
   $('#adminCustomersTbl').innerHTML = rows.map(c=>`
@@ -290,7 +304,6 @@ async function loadAdminCustomers(){
     <td><span class="status-badge ${c.role==='customer'?'status-pending':'status-delivered'}">${c.role}</span></td></tr>`).join('');
 }
 
-// -------------------------------------------------------------- settings ---
 async function loadAdminSettings(){
   const settings = await api.getSettings();
   const fields = ['gold_rate_22k','gold_rate_24k','silver_rate','announcement_text','whatsapp_number','store_phone','store_email','store_address'];
@@ -306,7 +319,6 @@ async function saveAllSettings(){
   } catch (err) { toast(err.message||'Could not save settings','err'); }
 }
 
-// ============================================================ gift cards ---
 async function loadAdminGiftCards(){
   const cards = await api.adminAllGiftCards();
   $('#adminGiftCardsTbl').innerHTML = cards.map(c=>`
@@ -315,7 +327,6 @@ async function loadAdminGiftCards(){
     <td><span class="status-badge status-${c.status==='active'?'delivered':'cancelled'}">${c.status}</span></td></tr>`).join('') || `<tr><td colspan="6">No gift cards sold yet</td></tr>`;
 }
 
-// ------------------------------------------------------ corporate gifting ---
 async function loadAdminCorporate(){
   const rows = await api.adminAllCorporateEnquiries();
   $('#adminCorporateTbl').innerHTML = rows.map(r=>`
@@ -331,7 +342,6 @@ async function adminUpdateCorporate(id, status){
   catch (err) { toast(err.message||'Could not update','err'); }
 }
 
-// ------------------------------------------------- smart purchase plans ---
 async function loadAdminPlans(){
   const [plans, subs] = await Promise.all([api.adminAllSavingsPlans(), api.adminAllSubscriptions()]);
   window.__adminPlans = plans;
@@ -364,7 +374,6 @@ async function savePlan(e){
   catch (err) { toast(err.message||'Could not save plan','err'); }
 }
 
-// -------------------------------------------------------- store locator ---
 async function loadAdminStores(){
   const stores = await api.adminAllStoreLocations();
   window.__adminStores = stores;
@@ -398,7 +407,6 @@ async function deleteStore(id){
   catch (err) { toast(err.message||'Could not delete','err'); }
 }
 
-// ------------------------------------------------------- press mentions ---
 async function loadAdminPress(){
   const rows = await api.adminAllPressMentions();
   window.__adminPress = rows;
