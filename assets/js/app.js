@@ -607,6 +607,7 @@ function renderCheckoutSummary(){
   $('#coTotal').textContent = money(t.total);
 }
 async function proceedCheckout(){
+  if (!$('#agreeTerms').checked) return toast('Please agree to the Terms & Refund Policy to continue', 'err');
   if (!state.selectedAddressId) return toast('Please select or add a delivery address', 'err');
   const t = cartTotals();
   const addresses = await api.getAddresses(state.session.user.id);
