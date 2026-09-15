@@ -581,7 +581,13 @@ function renderReceipt(addr, items, totalAmount){
 }
 function selectPayMethod(m){
   state.selectedPayMethod = m;
-  $$('.pay-opt').forEach(el=>el.classList.toggle('selected', el.dataset.method===m));
+  $$('.pay-opt').forEach(el=>{
+    const isMatch = el.dataset.method===m;
+    el.classList.toggle('selected', isMatch);
+    const radio = el.querySelector('input[type=radio]');
+    if (radio) radio.checked = isMatch;
+  });
+  if ($('#coTotal')) renderCheckoutSummary();
 }
 async function applyCoupon(){
   const code = $('#couponInput').value.trim();
@@ -594,6 +600,7 @@ async function applyCoupon(){
 }
 function renderCheckoutSummary(){
   const t = cartTotals();
+  const codFee = state.selectedPayMethod === 'cod' ? 250 : 0;
   $('#coItems').innerHTML = state.cart.map(i=>`
     <div class="mini-row">
       <img src="${esc((i.products?.images||[])[0]||placeholderImg())}">
@@ -604,12 +611,14 @@ function renderCheckoutSummary(){
   $('#coShipping').textContent = t.shipping===0?'Free':money(t.shipping);
   $('#coDiscount').textContent = t.discount ? '−'+money(t.discount) : '—';
   $('#coGiftCard').textContent = t.giftCardUsed ? '−'+money(t.giftCardUsed) : '—';
-  $('#coTotal').textContent = money(t.total);
+  $('#coCodRow').style.display = codFee ? 'flex' : 'none';
+  $('#coTotal').textContent = money(t.total + codFee);
 }
 async function proceedCheckout(){
   if (!$('#agreeTerms').checked) return toast('Please agree to the Terms & Refund Policy to continue', 'err');
   if (!state.selectedAddressId) return toast('Please select or add a delivery address', 'err');
   const t = cartTotals();
+  if (state.selectedPayMethod === 'cod') t.total += 250;
   const addresses = await api.getAddresses(state.session.user.id);
   const addr = addresses.find(a=>a.id===state.selectedAddressId);
   if (t.total <= 0 && t.giftCardUsed > 0) { await placeOrder(addr, t, 'gift_card', 'paid'); return; }
