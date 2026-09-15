@@ -29,7 +29,7 @@ function toast(msg, type = ''){
   setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; setTimeout(()=>el.remove(), 300); }, 3200);
 }
 
-const PAGES = ['home','shop','product','wishlist','dashboard','checkout','order-confirm','custom-order','account-gate','gift-store','corporate-gifting','smart-plan','store-locator','jewellery-care'];
+const PAGES = ['home','shop','product','wishlist','dashboard','checkout','order-confirm','custom-order','account-gate','gift-store','corporate-gifting','smart-plan','store-locator','jewellery-care','policies'];
 function showPage(id, { push = true } = {}){
   PAGES.forEach(p => { const el = $('#page-' + p); if (el) el.classList.remove('active'); });
   const target = $('#page-' + id);
