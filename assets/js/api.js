@@ -389,6 +389,7 @@ const api = {
     if (error) throw error;
     return data || [];
   },
+  async cancelSubscription(subscriptionId){ const { error } = await sb.from('savings_subscriptions').update({ status: 'cancelled' }).eq('id', subscriptionId); if (error) throw error; },
   async recordSavingsPayment(subscriptionId, amount, paymentId){
     const { error: payErr } = await sb.from('savings_payments').insert({ subscription_id: subscriptionId, amount, payment_id: paymentId });
     if (payErr) throw payErr;
