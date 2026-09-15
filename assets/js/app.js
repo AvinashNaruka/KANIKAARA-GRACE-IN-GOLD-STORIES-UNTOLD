@@ -253,7 +253,7 @@ function renderWishlistBadge(){
   b.classList.toggle('hide', state.wishlistIds.size === 0);
 }
 async function toggleWishlist(productId, btnEl){
-  if (!requireAuth(() => toggleWishlist(productId, btnEl))) return;
+  if (!state.session) { openAuth('login', () => toggleWishlist(productId, btnEl)); return; }
   const nowIn = await api.toggleWishlist(state.session.user.id, productId);
   if (nowIn) state.wishlistIds.add(productId); else state.wishlistIds.delete(productId);
   renderWishlistBadge();
@@ -513,7 +513,7 @@ function switchPdTab(el, which){
 }
 function openSizeGuide(){ $('#sizeGuideModal').classList.add('open'); $('#overlay').classList.add('open'); }
 function openReviewForm(productId){
-  if (!requireAuth(()=>openReviewForm(productId))) return;
+  if (!state.session) { openAuth('login', ()=>openReviewForm(productId)); return; }
   window.__reviewProductId = productId;
   $('#reviewModal').classList.add('open'); $('#overlay').classList.add('open');
 }
@@ -531,7 +531,7 @@ async function submitReviewForm(e){
 // WISHLIST PAGE
 // ==========================================================================
 async function loadWishlistPage(){
-  if (!requireAuth(loadWishlistPage)) return;
+  if (!state.session) { openAuth('login', loadWishlistPage); return; }
   const rows = await api.getWishlist(state.session.user.id);
   $('#wishlistGrid').innerHTML = rows.length ? rows.map(r=>productCardHTML(r.products)).join('') :
     `<div class="empty-state" style="grid-column:1/-1"><div style="font-size:34px">♡</div><p class="h-section" style="font-size:22px">Nothing saved yet</p><p class="lede-light">Tap the heart on any piece to save it here.</p></div>`;
@@ -541,7 +541,7 @@ async function loadWishlistPage(){
 // CHECKOUT
 // ==========================================================================
 async function loadCheckout(){
-  if (!requireAuth(loadCheckout)) return;
+  if (!state.session) { openAuth('login', loadCheckout); return; }
   if (!state.cart.length) { toast('Your bag is empty', 'err'); showPage('shop'); return; }
   const addresses = await api.getAddresses(state.session.user.id);
   renderAddressList(addresses);
@@ -748,7 +748,7 @@ async function submitCustomOrder(e){
 // DASHBOARD
 // ==========================================================================
 async function loadDashboard(tab = 'orders'){
-  if (!requireAuth(()=>loadDashboard(tab))) return;
+  if (!state.session) { openAuth('login', ()=>loadDashboard(tab)); return; }
   $('#dashUserName').textContent = state.profile?.full_name || 'Welcome';
   switchDash(tab);
 }
@@ -916,7 +916,7 @@ function selectGiftAmount(el, amount){
 }
 async function buyGiftCard(e){
   e.preventDefault();
-  if (!requireAuth(()=>buyGiftCard(e))) return;
+  if (!state.session) { openAuth('login', ()=>buyGiftCard(e)); return; }
   const amount = Number($('#giftCustomAmount').value);
   if (!amount || amount < 500) return toast('Minimum gift card amount is ₹500', 'err');
   const recipient_name = $('#giftRecipientName').value;
@@ -972,7 +972,7 @@ async function loadSmartPlan(){
   if (state.session) loadMySubscriptions();
 }
 async function subscribeSavingsPlan(planId){
-  if (!requireAuth(()=>subscribeSavingsPlan(planId))) return;
+  if (!state.session) { openAuth('login', ()=>subscribeSavingsPlan(planId)); return; }
   try {
     await api.subscribeToPlan(state.session.user.id, planId);
     toast('Plan started! Pay your first installment below.');
