@@ -328,6 +328,13 @@ const api = {
     if (error) throw error;
   },
 
+  async addLoyaltyPoints(userId, points){
+    const { data: profile } = await sb.from('profiles').select('loyalty_points').eq('id', userId).maybeSingle();
+    const newTotal = (profile?.loyalty_points || 0) + points;
+    const { error } = await sb.from('profiles').update({ loyalty_points: newTotal }).eq('id', userId);
+    if (error) throw error;
+  },
+  
   async adminAllCustomers(){
     const { data, error } = await sb.from('profiles').select('*').order('created_at', { ascending: false });
     if (error) throw error;
