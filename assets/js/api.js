@@ -334,6 +334,22 @@ const api = {
     return data || [];
   },
 
+    async adminListEmails(ids){
+    const { data, error } = await sb.functions.invoke('admin-customers', { body: { action: 'list_emails', ids } });
+    if (error) throw error;
+    return data.emails || {};
+  },
+  async adminUpdateCustomerEmail(userId, newEmail){
+    const { data, error } = await sb.functions.invoke('admin-customers', { body: { action: 'update_email', target_user_id: userId, new_email: newEmail } });
+    if (error) throw error;
+    if (data?.error) throw new Error(data.error);
+  },
+  async adminDeleteCustomer(userId){
+    const { data, error } = await sb.functions.invoke('admin-customers', { body: { action: 'delete', target_user_id: userId } });
+    if (error) throw error;
+    if (data?.error) throw new Error(data.error);
+  },
+  
   async purchaseGiftCard(payload){
     const code = 'GIFT-' + Math.random().toString(36).slice(2,6).toUpperCase() + '-' + Math.random().toString(36).slice(2,6).toUpperCase();
     const { data, error } = await sb.from('gift_cards').insert({ ...payload, code, balance: payload.initial_amount }).select().single();
