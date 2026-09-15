@@ -199,6 +199,10 @@ const api = {
     }
     return created;
   },
+    async cancelOrder(orderId){
+    const { error } = await sb.from('orders').update({ status: 'cancelled' }).eq('id', orderId);
+    if (error) throw error;
+  },
   async getUserOrders(userId){
     const { data, error } = await sb.from('orders').select('*, order_items(*)').eq('user_id', userId).order('created_at', { ascending: false });
     if (error) throw error;
