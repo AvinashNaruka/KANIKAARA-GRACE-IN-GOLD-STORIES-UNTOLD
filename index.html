@@ -419,6 +419,9 @@
         <div class="pay-opt" data-method="payu" onclick="selectPayMethod('payu')">
           <input type="radio" name="pay"> Pay Online (PayU) — UPI, Cards, NetBanking
         </div>
+        <div class="pay-opt" data-method="upi" onclick="selectPayMethod('upi')">
+          <input type="radio" name="pay"> UPI — Manual Transfer
+        </div>
       </div>
       <div class="co-step">
         <h3>3. Have a coupon?</h3>
@@ -503,7 +506,7 @@
       </div>
       <div class="admin-pane hide" data-pane="orders">
         <div class="admin-topbar"><h1>Orders</h1></div>
-        <table class="data"><thead><tr><th>Order</th><th>Customer</th><th>Date</th><th>Total</th><th>Payment</th><th>Status</th></tr></thead><tbody id="adminOrdersTbl"></tbody></table>
+        <table class="data"><thead><tr><th>Order</th><th>Customer</th><th>Date</th><th>Total</th><th>Payment</th><th>Status</th><th>Invoice</th></tr></thead><tbody id="adminOrdersTbl"></tbody></table>
       </div>
       <div class="admin-pane hide" data-pane="coupons">
         <div class="admin-topbar"><h1>Coupons</h1><button class="btn btn-gold btn-sm" onclick="showAddCoupon()">+ Add Coupon</button></div>
@@ -799,7 +802,8 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
 <script src="assets/js/supabase-client.js"></script>
 <script src="assets/js/payment-config.js"></script>
 <script src="assets/js/api.js"></script>
