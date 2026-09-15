@@ -437,7 +437,6 @@ async function loadProductPage(slug){
         </div>
         <div class="pd-qty">
           <div class="qty-box"><button onclick="pdQty(-1)">−</button><span id="pdQtyVal">1</span><button onclick="pdQty(1)">+</button></div>
-          <span class="lede-light" style="font-size:13px">${p.stock_quantity>0 ? p.stock_quantity+' in stock' : 'Made to order'}</span>
         </div>
         <div class="pd-actions">
           <button class="btn btn-line-dark btn-block" onclick="addToCart('${p.id}', pdQtyGet())">Add to Bag</button>
