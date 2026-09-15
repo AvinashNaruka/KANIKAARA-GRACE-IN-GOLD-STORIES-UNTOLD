@@ -939,7 +939,8 @@ async function loadMySubscriptions(){
         <span class="status-badge status-${s.status==='active'?'pending':s.status==='matured'?'delivered':'cancelled'}">${s.status}</span>
       </div>
       <p style="font-size:13px;color:rgba(34,31,28,.6);margin-top:6px">${s.months_paid}/${s.savings_plans?.duration_months} months paid · Total saved: ${money(s.total_paid)}</p>
-      ${s.status==='active' ? `<button class="btn btn-line-dark btn-sm" style="margin-top:10px" onclick="paySavingsInstallment('${s.id}', ${s.savings_plans.monthly_amount})">Pay This Month (${money(s.savings_plans.monthly_amount)})</button>` : ''}
+${s.status==='active' ? `<button class="btn btn-line-dark btn-sm" style="margin-top:10px" onclick="paySavingsInstallment('${s.id}', ${s.savings_plans.monthly_amount})">Pay This Month (${money(s.savings_plans.monthly_amount)})</button>
+        <button class="btn-ghost btn-sm" style="margin-top:10px;margin-left:8px;color:var(--danger)" onclick="cancelSavingsPlan('${s.id}')">Cancel Plan</button>` : ''}
       ${s.status==='matured' ? `<p style="margin-top:8px;font-size:13px;color:var(--success);font-weight:700">Matured! Visit the store or contact us to redeem towards a purchase.</p>` : ''}
     </div>`).join('') : `<p class="lede-light">No active plans yet.</p>`;
 }
