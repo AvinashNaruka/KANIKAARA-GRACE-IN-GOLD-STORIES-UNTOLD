@@ -20,7 +20,6 @@ const state = {
   appliedGiftCard: null
 };
 
-// ---------------------------------------------------------------- toast ---
 function toast(msg, type = ''){
   const host = $('#toastHost');
   const el = document.createElement('div');
@@ -30,7 +29,6 @@ function toast(msg, type = ''){
   setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; setTimeout(()=>el.remove(), 300); }, 3200);
 }
 
-// --------------------------------------------------------------- router ---
 const PAGES = ['home','shop','product','wishlist','dashboard','checkout','order-confirm','custom-order','account-gate','gift-store','corporate-gifting','smart-plan','store-locator','jewellery-care'];
 function showPage(id, { push = true } = {}){
   PAGES.forEach(p => { const el = $('#page-' + p); if (el) el.classList.remove('active'); });
@@ -68,7 +66,6 @@ function goProduct(slug){
   closeCart(); closeAllModals();
 }
 
-// ------------------------------------------------------------- reveal ----
 function initScrollReveal(){
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
@@ -76,9 +73,6 @@ function initScrollReveal(){
   $$('.reveal').forEach(el => io.observe(el));
 }
 
-// ==========================================================================
-// AUTH
-// ==========================================================================
 async function initAuth(){
   const session = await api.getSession();
   await applySession(session);
@@ -152,9 +146,6 @@ async function handleLogout(){
   showPage('home');
 }
 
-// ==========================================================================
-// CART
-// ==========================================================================
 async function refreshCart(){
   if (!state.session) return;
   state.cart = await api.getCart(state.session.user.id).catch(()=>[]);
@@ -238,9 +229,6 @@ function renderCartDrawer(){
   $('#drawerCheckoutBtn').disabled = state.cart.length === 0;
 }
 
-// ==========================================================================
-// WISHLIST
-// ==========================================================================
 async function refreshWishlist(){
   if (!state.session) return;
   const rows = await api.getWishlist(state.session.user.id).catch(()=>[]);
@@ -261,9 +249,6 @@ async function toggleWishlist(productId, btnEl){
   toast(nowIn ? 'Added to wishlist' : 'Removed from wishlist');
 }
 
-// ==========================================================================
-// RENDER HELPERS
-// ==========================================================================
 function placeholderImg(){
   return 'data:image/svg+xml;utf8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="600" height="672"><rect width="100%" height="100%" fill="#F0E9D8"/><text x="50%" y="52%" font-family="Georgia" font-size="20" fill="#C9A24B" text-anchor="middle">KANIKAARA</text></svg>`);
 }
@@ -299,9 +284,6 @@ function skeletonGrid(n = 8){
   return Array.from({length:n}).map(()=>`<div class="p-card"><div class="thumb skeleton"></div><div class="info"><div class="skeleton" style="height:12px;width:40%;margin-top:14px"></div><div class="skeleton" style="height:18px;width:80%;margin-top:8px"></div></div></div>`).join('');
 }
 
-// ==========================================================================
-// HOME PAGE
-// ==========================================================================
 let homeLoaded = false;
 async function loadHome(){
   if (homeLoaded) { initScrollReveal(); return; }
@@ -350,9 +332,6 @@ function filterByTag(tag){
   showPage('shop');
 }
 
-// ==========================================================================
-// SHOP PAGE
-// ==========================================================================
 async function loadShop(){
   try {
     const jobs = [];
@@ -424,9 +403,6 @@ function doSearch(e){
   showPage('shop');
 }
 
-// ==========================================================================
-// PRODUCT PAGE
-// ==========================================================================
 async function loadProductPage(slug){
   $('#pdContent').innerHTML = `<div class="skeleton" style="height:400px"></div>`;
   const p = await api.getProductBySlug(slug);
@@ -527,9 +503,6 @@ async function submitReviewForm(e){
   } catch (err) { toast(err.message||'Could not submit review','err'); }
 }
 
-// ==========================================================================
-// WISHLIST PAGE
-// ==========================================================================
 async function loadWishlistPage(){
   if (!state.session) { openAuth('login', loadWishlistPage); return; }
   const rows = await api.getWishlist(state.session.user.id);
@@ -537,9 +510,6 @@ async function loadWishlistPage(){
     `<div class="empty-state" style="grid-column:1/-1"><div style="font-size:34px">♡</div><p class="h-section" style="font-size:22px">Nothing saved yet</p><p class="lede-light">Tap the heart on any piece to save it here.</p></div>`;
 }
 
-// ==========================================================================
-// CHECKOUT
-// ==========================================================================
 async function loadCheckout(){
   if (!state.session) { openAuth('login', loadCheckout); return; }
   if (!state.cart.length) { toast('Your bag is empty', 'err'); showPage('shop'); return; }
@@ -722,9 +692,6 @@ async function confirmPaymentDone(){
   await placeOrder(addr, t, 'upi', 'pending');
 }
 
-// ==========================================================================
-// CUSTOM ORDER FORM
-// ==========================================================================
 async function submitCustomOrder(e){
   e.preventDefault();
   const payload = {
@@ -744,9 +711,6 @@ async function submitCustomOrder(e){
   } catch (err) { toast(err.message||'Could not submit request','err'); }
 }
 
-// ==========================================================================
-// DASHBOARD
-// ==========================================================================
 async function loadDashboard(tab = 'orders'){
   if (!state.session) { openAuth('login', ()=>loadDashboard(tab)); return; }
   $('#dashUserName').textContent = state.profile?.full_name || 'Welcome';
@@ -804,12 +768,6 @@ async function saveProfile(e){
   } catch (err) { toast(err.message||'Could not update profile','err'); }
 }
 
-// ==========================================================================
-// NEWSLETTER / CONSULTATION
-// ==========================================================================
-// ==========================================================================
-// INVOICE PDF (used from both customer "My Orders" and Admin Orders)
-// ==========================================================================
 function generateInvoicePDF(order){
   if (typeof window.jspdf === 'undefined') { toast('PDF library still loading — try again in a moment', 'err'); return; }
   const { jsPDF } = window.jspdf;
@@ -891,9 +849,6 @@ async function subscribeEmail(e){
   catch { toast('Already subscribed with this email'); }
 }
 
-// ==========================================================================
-// GIFT STORE — gift cards + curated "Gifts for Him/Her"
-// ==========================================================================
 let giftStoreLoaded = false;
 async function loadGiftStore(){
   if (!giftStoreLoaded) {
@@ -934,9 +889,6 @@ async function loadMyGiftCards(){
     `<p class="lede-light">No gift cards purchased yet.</p>`;
 }
 
-// ==========================================================================
-// CORPORATE GIFTING
-// ==========================================================================
 async function submitCorporateEnquiry(e){
   e.preventDefault();
   const payload = {
@@ -954,9 +906,6 @@ async function submitCorporateEnquiry(e){
   } catch (err) { toast(err.message||'Could not submit enquiry','err'); }
 }
 
-// ==========================================================================
-// SMART PURCHASE PLAN (gold savings scheme)
-// ==========================================================================
 async function loadSmartPlan(){
   const plans = await api.getSavingsPlans();
   $('#planGrid').innerHTML = plans.length ? plans.map(p=>`
@@ -998,9 +947,6 @@ async function paySavingsInstallment(subscriptionId, amount){
   await payWithPayU(null, amount, 'savings_payment', { subscription_id: subscriptionId });
 }
 
-// ==========================================================================
-// STORE LOCATOR
-// ==========================================================================
 async function loadStoreLocator(){
   const stores = await api.getStoreLocations();
   $('#storeList').innerHTML = stores.length ? stores.map(s=>`
@@ -1012,18 +958,12 @@ async function loadStoreLocator(){
     </div>`).join('') : `<p class="lede-light">Store locations will appear here once added from the admin panel.</p>`;
 }
 
-// ==========================================================================
-// MOBILE MENU + misc UI
-// ==========================================================================
 function toggleMobileMenu(){ $('#mobileMenu').classList.toggle('open'); }
 function populateCatDropdowns(cats){
   const el = $('#footerCatList');
   if (el) el.innerHTML = cats.slice(0,6).map(c=>`<li><a href="#shop" onclick="event.preventDefault();filterByCategory('${c.slug}')">${esc(c.name)}</a></li>`).join('');
 }
 
-// ==========================================================================
-// INIT
-// ==========================================================================
 async function boot(){
   const settingsJob = api.getSettings().then(s => {
     state.settings = s;
