@@ -669,6 +669,8 @@ async function placeOrder(addr, t, method, paymentStatus, paymentId = null){
       try { await api.redeemGiftCardAmount(state.appliedGiftCard.id, state.appliedGiftCard.balance - t.giftCardUsed); } catch(_){}
     }
     await api.clearCart(state.session.user.id);
+        const pointsEarned = Math.round(t.total * 0.02);
+    if (pointsEarned > 0) { try { await api.addLoyaltyPoints(state.session.user.id, pointsEarned); } catch(e){ console.error(e); } }
     renderReceipt(addr, state.cart.map(i=>({name:i.products?.name||i.name, quantity:i.quantity, price:(i.products?.price??i.price)*i.quantity})), t.total);
     state.cart = []; state.appliedCoupon = null; state.appliedGiftCard = null;
     renderCartBadge();
