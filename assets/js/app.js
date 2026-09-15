@@ -736,7 +736,13 @@ async function loadUserOrders(){
         <div style="text-align:right"><span class="status-badge status-${o.status}">${o.status.replace(/_/g,' ')}</span><div style="margin-top:6px;font-weight:800">${money(o.total_amount)}</div></div>
       </div>
       <button class="action-btn" style="margin-top:10px" onclick="downloadInvoice('${o.id}')">📄 Download Invoice</button>
+      ${o.status==='pending' ? `<button class="action-btn" style="margin-top:10px;margin-left:8px;color:var(--danger)" onclick="cancelMyOrder('${o.id}')">✕ Cancel Order</button>` : ''}
     </div>`).join('') : `<p class="lede-light">No orders yet. <a href="#shop" onclick="showPage('shop')" style="color:var(--gold);text-decoration:underline">Start shopping →</a></p>`;
+}
+async function cancelMyOrder(orderId){
+  if (!confirm('Cancel this order? If you already paid online, refund will be processed manually to your original payment method within 7-10 business days.')) return;
+  try { await api.cancelOrder(orderId); toast('Order cancelled'); loadUserOrders(); }
+  catch (err) { toast(err.message || 'Could not cancel order', 'err'); }
 }
 async function loadDashWishlist(){
   const rows = await api.getWishlist(state.session.user.id);
