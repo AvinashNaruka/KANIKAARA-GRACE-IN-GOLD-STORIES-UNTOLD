@@ -298,10 +298,27 @@ async function approveReview(id){
 
 async function loadAdminCustomers(){
   const rows = await api.adminAllCustomers();
+  let emails = {};
+  try { emails = await api.adminListEmails(rows.map(r=>r.id)); } catch(e){ console.error(e); }
   $('#adminCustomersTbl').innerHTML = rows.map(c=>`
-    <tr><td>${esc(c.full_name||'—')}</td><td>${esc(c.phone||'—')}</td><td>${c.total_orders||0}</td>
+    <tr><td>${esc(c.full_name||'—')}</td><td>${esc(c.phone||'—')}</td><td>${esc(emails[c.id]||'—')}</td><td>${c.total_orders||0}</td>
     <td>${money(c.total_spent||0)}</td><td>${c.loyalty_points||0} pts</td>
-    <td><span class="status-badge ${c.role==='customer'?'status-pending':'status-delivered'}">${c.role}</span></td></tr>`).join('');
+    <td><span class="status-badge ${c.role==='customer'?'status-pending':'status-delivered'}">${c.role}</span></td>
+    <td>${c.role==='customer' ? `
+      <button class="action-btn" onclick="editCustomerEmail('${c.id}','${esc(emails[c.id]||'')}')">✏️ Email</button>
+      <button class="action-btn" style="color:var(--danger)" onclick="deleteCustomer('${c.id}','${esc(c.full_name||'this customer')}')">🗑 Delete</button>
+    ` : ''}</td></tr>`).join('');
+}
+async function editCustomerEmail(userId, currentEmail){
+  const newEmail = prompt('Enter new email for this customer:', currentEmail);
+  if (!newEmail || newEmail === currentEmail) return;
+  try { await api.adminUpdateCustomerEmail(userId, newEmail); toast('Email updated'); loadAdminCustomers(); }
+  catch (err) { toast(err.message || 'Could not update email', 'err'); }
+}
+async function deleteCustomer(userId, name){
+  if (!confirm(`Delete ${name}? This permanently removes their login and profile. Their past orders stay in Orders history.`)) return;
+  try { await api.adminDeleteCustomer(userId); toast('Customer deleted'); loadAdminCustomers(); }
+  catch (err) { toast(err.message || 'Could not delete customer', 'err'); }
 }
 
 async function loadAdminSettings(){
